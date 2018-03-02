@@ -148,9 +148,10 @@ contract AccountLevelsTest is AccountLevels {
   }
 }
 
-contract EtherDelta is SafeMath {
+contract _0xDex is SafeMath {
 
-
+  address basePairToken;
+  //check account balances for this token; we do not use ether
 
 
   address public admin; //the admin address
@@ -169,7 +170,11 @@ contract EtherDelta is SafeMath {
   event Deposit(address token, address user, uint amount, uint balance);
   event Withdraw(address token, address user, uint amount, uint balance);
 
-  function EtherDelta(address admin_, address feeAccount_, address accountLevelsAddr_, uint feeMake_, uint feeTake_, uint feeRebate_) {
+  function _0xDex(address admin_, address feeAccount_, address accountLevelsAddr_, uint feeMake_, uint feeTake_, uint feeRebate_) {
+    basePairToken = 0xb6ed7644c69416d67b522e20bc294a9a9b405b31;
+
+
+
     admin = admin_;
     feeAccount = feeAccount_;
     accountLevelsAddr = accountLevelsAddr_;

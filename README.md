@@ -1,71 +1,13 @@
- 
- ## 0xBitcoin 
- 
- 
-![0xbitcoin_small](https://user-images.githubusercontent.com/36060731/35717032-b47d34d0-07aa-11e8-9d1a-48dafbbb2ca0.png)
 
- 
- #### An ERC20 token that is mined using PoW through a SmartContract 
-  
-  * No pre-mine 
-  * No ICO
-  * 21,000,000 tokens total
-  * Difficulty target auto-adjusts with PoW hashrate
-  * Rewards decrease as more tokens are minted 
-  * Compatible with all services that support ERC20 tokens
-  
-  
-   
- #### How does it work?
- 
-Typically, ERC20 tokens will grant all tokens to the owner or will have an ICO and demand that large amounts of Ether be sent to the owner.   Instead of granting tokens to the 'contract owner', all 0xbitcoin tokens are locked within the smart contract initially.  These tokens are dispensed, 50 at a time, by calling the function 'mint' and using Proof of Work, just like mining bitcoin.  Here is what that looks like: 
+ ## 0xDex
 
 
-     function mint(uint256 nonce, bytes32 challenge_digest) public returns (bool success) {
+ #### A Decentralized Token Exchange using 0xBTC as a base pair
 
-       
-        uint reward_amount = getMiningReward();
+Most decentralized exchanges previous to 2018 use Ether as a base pair.  This does make sense since Ether is the lifeblood of the Ethereum network.  However, Ether is not a token and it is not meant to be used as a currency.  The primary goal of Ether is to keep the Ethereum network secure as stated by the Ethereum Development team.  In order to provide the Ethereum community with a solution, a token called 0xBTC was created by the community which is mined using proof of work exactly like Ether.  
 
-        
-        bytes32 digest =  keccak256(challengeNumber, msg.sender, nonce );
+0xBTC token is built from the ground-up to be a payment mechanism and nothing else.  It is distributed using decentralized proof of work exactly like Bitcoin and Ether.  Thus, it serves as the perfect second base pair for Ethereum Decentralized Exchanges and is the most well-equipped currency to use on token-only exchanges since it is Bitcoin which lives inside of Ethereum.   
 
-         
-        if (digest != challenge_digest) revert();
-
-        //the digest must be smaller than the target
-        if(uint256(digest) > miningTarget) revert();
-     
-
-         uint hashFound = rewardHashesFound[digest];
-         rewardHashesFound[digest] = epochCount;
-         if(hashFound != 0) revert();  //prevent the same answer from awarding twice
-
-        balances[msg.sender] = balances[msg.sender].add(reward_amount);
-
-        tokensMinted = tokensMinted.add(reward_amount);
-
-        //set readonly diagnostics data
-        lastRewardTo = msg.sender;
-        lastRewardAmount = reward_amount;
-        lastRewardEthBlockNumber = block.number;
-        
-        //start a new round of mining with a new 'challengeNumber'
-         _startNewMiningEpoch();
-
-          Mint(msg.sender, reward_amount, epochCount, challengeNumber );
-
-       return true;
-
-    }
- 
- 
-As you can see, a special number called a 'nonce' has to be passed into this function in order for tokens to be dispensed.  This number has to fit a special 'puzzle' similar to a sudoku puzzle, and this is called Proof of Work.   To find this special number, it is necessary to run a mining program.  A cpu miner exists for mining 0xbitcoin tokens and it can be downloaded here: 
-
-https://github.com/0xbitcoin/0xbitcoin-miner
-
-
- 
- 
 ## HOW TO TEST
 
 npm install -g ethereumjs-testrpc  (https://github.com/ethereumjs/testrpc)
@@ -73,14 +15,6 @@ testrpc
 
 truffle test
 
- 
-### Published contracts on ROPSTEN
-see http://0xbitcoin.org 
- 
- 
- Compiler: 
-(http://remix.ethereum.org/#optimize=false&version=soljson-v0.4.19+commit.c4cbbb05.js ,.4.19+commit.c4cbbb05.Emscripten.clang )
- 
 
- 
- 
+### No Published contracts on ROPSTEN yet
+ (will use remix)
