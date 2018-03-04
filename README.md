@@ -11,9 +11,10 @@ Most decentralized exchanges previous to 2018 use Ether as a base pair.  This is
 This decentralized exchange is forked from ForkDelta and will allow the exchange of any RC20 token for 0xBTC and vice versa.  It uses a market maker/market taker order book architecture.  
 
 ## HOW TO TEST
-
+npm install -g truffle
 npm install -g ethereumjs-testrpc  (https://github.com/ethereumjs/testrpc)
-testrpc
+
+testrpc (in a separate terminal)
 
 truffle test
 

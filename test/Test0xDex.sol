@@ -2,9 +2,9 @@ pragma solidity ^0.4.2;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/_0xBitcoinToken.sol";
+import "../contracts/_0xDex.sol";
 
-contract Test0xBitcoinToken {
+contract Test0xDex {
 
   function testInitialBalanceUsingDeployedContract() {
 
