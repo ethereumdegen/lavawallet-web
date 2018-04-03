@@ -23,6 +23,8 @@ import navbar from './navbar'
 
 import EthHelper from './ethhelper'
 
+import MicroDexHelper from './micro-dex-helper'
+
 import HomeDashboard from './home-dashboard'
 
 
@@ -32,6 +34,7 @@ var alertRenderer = new AlertRenderer();
 var ethHelper = new EthHelper();
 
 
+var microDexHelper = new MicroDexHelper();
 
 var navbarComponent = new Vue({
   el: '#navbar',
@@ -56,6 +59,7 @@ $(document).ready(function(){
 
     navbar.init();
 
+    microDexHelper.init(alertRenderer,ethHelper);
 
 
 });
