@@ -3,6 +3,12 @@ const $ = require('jquery');
 
 import Vue from 'vue'
 
+var microDexABI = require('../contracts/MicroDex.json')
+var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
+
+var deployedContractInfo = require('../contracts/DeployedContractInfo.json')
+var microDexContract;
+var _0xBitcoinContract;
 
 var balanceText;
 var accountAddress;
@@ -19,8 +25,27 @@ export default class MicroDexHelper {
       this.alertRenderer=alertRenderer;
       this.ethHelper=ethHelper;
 
-      $(".transfer-form-fields").hide();
 
+  await new Promise(async resolve => {
+    web3.version.getNetwork((err, netId) => {
+      switch (netId) {
+        case "1":
+          console.log('Web3 is using mainnet');
+          microDexContract = deployedContractInfo.networks.mainnet.contracts.microdex;
+          _0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
+          break
+        case "3":
+          console.log('Web3 is using ropsten test network.');
+          microDexContract = deployedContractInfo.networks.ropsten.contracts.microdex;
+          _0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
+          break
+        default:
+          console.log('This is an unknown network.')
+      }
+
+      resolve();
+    })
+  })
 
 
      this.web3 = this.detectInjectedWeb3();
@@ -28,7 +53,7 @@ export default class MicroDexHelper {
 
      await this.updateWalletRender();
 
-     console.log(accountAddress)
+
 
     var app = new Vue({
        el: '#wallet-titlebar',
@@ -58,19 +83,29 @@ export default class MicroDexHelper {
 
 
      if(this.web3 != null){
+       console.log('show the app')
+       //show the app
        $(".transfer-form-fields").show();
 
 
        var self = this;
 
-       $(".start-transfer-button").on('click',function(){
+       $('.btn-deposit-ether').on('click',function(){
 
-         self.startTransfer(transfer.amount, transfer.recipient_address, function(error,response){
+
+         self.depositEther(transfer.amount,  function(error,response){
 
            console.log(response)
          });
+
        })
+
+
      }
+
+
+
+
 
 
   }
@@ -80,6 +115,9 @@ export default class MicroDexHelper {
   {
 
     console.log('detect')
+    console.log(web3)
+
+
     if (typeof web3 !== 'undefined') {
       web3 = new Web3(web3.currentProvider);
 
@@ -93,7 +131,7 @@ export default class MicroDexHelper {
       }else{
 
           console.log(web3.eth)
-            console.log(web3.eth.accounts[0])
+            console.log('acct',web3.eth.accounts[0])
 
 
         this.alertRenderer.renderError("No Web3 interface found.  Please login to Metamask or an Ethereum enabled browser.")
@@ -151,11 +189,91 @@ export default class MicroDexHelper {
   }
 
 
+
+
+  async depositEther(amountRaw,callback)
+  {
+     console.log('deposit ether',amountRaw);
+
+     amountRaw = 100000000000;
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       microDexContract.blockchain_address,
+       microDexABI.abi
+     );
+
+     console.log(contract)
+
+     contract.deposit.sendTransaction(  {amount: amountRaw}, callback);
+
+  }
+
+  async withdrawEther(amountRaw,callback)
+  {
+     console.log
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       microDexContract.blockchain_address,
+       microDexABI.abi
+     );
+
+     console.log(contract)
+
+     contract.withdraw.sendTransaction( amountRaw, callback);
+
+  }
+
+
+
+  //should be using approve and call!!!
+  async ApproveAndCallDepositToken(tokenAddress,amountRaw,callback)
+  {
+     console.log('deposit token',tokenAddress,amountRaw);
+
+     var remoteCallData = '0x01';
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       _0xBitcoinContract.blockchain_address,
+       _0xBitcoinABI.abi
+     );
+
+     console.log(contract)
+
+     var approvedContractAddress = microDexContract.blockchain_address;
+
+     contract.approveAndCall.sendTransaction( approvedContractAddress, amountRaw, remoteCallData , callback);
+
+  }
+
+  async withdrawToken(tokenAddress,amountRaw,callback)
+  {
+     console.log('withdraw token',tokenAddress,amountRaw);
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       microDexContract.blockchain_address,
+       microDexABI.abi
+     );
+
+     console.log(contract)
+
+     contract.withdrawToken.sendTransaction( tokenAddress, amountRaw , callback);
+
+  }
+
+
+
+  //Use as a reference only!!!
   async startTransfer(amountRaw,recipient,callback)
   {
 
 
-    var contract = this.ethHelper.getWeb3ContractInstance(this.web3);
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3
+    );
 
 
     let getDecimals = new Promise(resolve => {

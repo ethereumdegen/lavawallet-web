@@ -19,7 +19,7 @@ import Vue from 'vue'
 import AlertRenderer from './alert-renderer'
 import HomeRenderer from './home-renderer'
 
-import navbar from './navbar'
+import Navbar from './navbar'
 
 import EthHelper from './ethhelper'
 
@@ -32,9 +32,17 @@ var homeRenderer= new HomeRenderer()
 
 var alertRenderer = new AlertRenderer();
 var ethHelper = new EthHelper();
-
+var navbar = new Navbar();
 
 var microDexHelper = new MicroDexHelper();
+
+
+
+import WalletDashboard from './wallet-dashboard'
+
+var wallet = new WalletDashboard();
+
+
 
 var navbarComponent = new Vue({
   el: '#navbar',
@@ -50,16 +58,17 @@ var navbarComponent = new Vue({
 $(document).ready(function(){
 
 
-    if($("#home").length > 0){
-      var web3 = ethHelper.init( alertRenderer);
 
-      homeRenderer.init(ethHelper);
-    }
+    //  var web3 = ethHelper.init( alertRenderer);
 
+      //homeRenderer.init(ethHelper);
+
+      console.log('load free shift')
+  //  wallet.init(alertRenderer,ethHelper);
 
     navbar.init();
 
-    microDexHelper.init(alertRenderer,ethHelper);
+   microDexHelper.init(alertRenderer,ethHelper);
 
 
 });

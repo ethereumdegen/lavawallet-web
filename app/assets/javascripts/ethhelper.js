@@ -130,7 +130,7 @@ export default class EthHelper {
 
     getContractAddress()
     {
-       return deployedContractInfo.contracts._0xbitcointoken.blockchain_address;
+       return deployedContractInfo.networks.mainnet.contracts._0xbitcointoken.blockchain_address;
     }
 
     getContractABI()
