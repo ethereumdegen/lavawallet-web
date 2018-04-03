@@ -109,6 +109,23 @@ export default class MicroDexHelper {
          }
       });
 
+      var order = new Vue({
+         el: '#order-form',
+         data: {
+
+           bidTokenGet: 0,
+           bidTokenGive: 0,
+           askTokenGet: 0,
+           askTokenGive: 0
+              },
+
+         methods: {
+            update: function () {
+
+            }
+          }
+       });
+
 
 
      if(this.web3 != null){
@@ -144,6 +161,26 @@ export default class MicroDexHelper {
             console.log(response)
          });
        })
+
+
+
+
+
+
+       $('.btn-bid-order').on('click',function(){
+         self.createOrder(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+            console.log(response)
+         });
+       })
+
+       $('.btn-ask-order').on('click',function(){
+         self.createOrder(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+            console.log(response)
+         });
+       })
+
+
+
 
      }
 
@@ -302,6 +339,33 @@ export default class MicroDexHelper {
      console.log(contract)
 
      contract.withdrawToken.sendTransaction( tokenAddress, amountRaw , callback);
+
+  }
+
+
+
+//nonce should just be a securerandom number !
+
+  //initiated from a little form - makes a listrow
+  async createOrder(tokenGet,amountGet,tokenGive,amountGive,expires,nonce,callback)
+  {
+     console.log('withdraw token',tokenAddress,amountRaw);
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       microDexContract.blockchain_address,
+       microDexABI.abi
+     );
+
+     console.log(contract)
+
+     contract.order.sendTransaction( tokenAddress, amountRaw , callback);
+
+  }
+
+  //initiated from a click
+  async performTrade(tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
+  {
 
   }
 
