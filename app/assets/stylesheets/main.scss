@@ -162,20 +162,10 @@ a
   }
 }
 
-.code-terminal-container
+.balance-container
 {
-    height: 350px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: #f0f0f0;
-    text-shadow: #000 0px 1px 0px;
-    font-family: "Consolas", "Courier New", "Courier";
-    font-size: 1.45em;
-    line-height: 1.40em;
-    font-weight: 500;
-    text-align: left;
-    padding:5px;
-    overflow-x: auto;
+  padding:20px;
+  font-size: 2em;
 }
 
 .code-terminal
