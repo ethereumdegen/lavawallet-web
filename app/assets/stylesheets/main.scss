@@ -1,0 +1,299 @@
+
+
+
+html
+{
+  //color: white;
+  //background-color: pink;
+  font-family: "Arial, Helvetica, sans-serif";
+
+
+}
+
+a
+{
+  color: #ff7209;
+}
+
+.page-container
+{
+  max-width: 940px;
+  margin: auto;
+
+}
+
+.orange-gradient
+{
+      background: radial-gradient(ellipse at bottom left, #e48951 60%, #ff7209 62%);
+}
+
+.font-primary-title
+{
+
+    font-family: 'Anton', sans-serif;
+    line-height: 1.5;
+     font-size: 2.4rem
+
+}
+
+
+
+.color-primary
+{
+  color: #ff7209;
+}
+
+.button-primary
+{
+  color: white;
+
+   background: linear-gradient(#ff7209, #ff6206);
+}
+
+.button-primary:hover
+{
+  background: linear-gradient(#ee7209, #ee6206);
+}
+
+.button-secondary
+{
+  color: #ff7209;
+
+   background: linear-gradient(#fff, #eee);
+}
+
+.button-secondary:hover
+{
+  background: linear-gradient(#eee, #ddd);
+}
+
+.button-bubble
+{
+  padding:8px;
+  border: 1px solid black;
+  border-radius: 3px;
+  display: inline-block;
+}
+
+.button-strong
+{
+  font-weight: bold;
+  font-size:22px;
+  padding:10px 15px;
+}
+
+.navbar-item
+{
+  padding: 2px;
+}
+
+@media only screen and (max-width: 768px) {
+
+  .has-small-text-mobile
+  {
+    font-size: 10px;
+  }
+}
+
+.list-strong
+{
+  text-align: left;
+  font-size: 1.5em;
+  line-height: 1.5;
+
+
+
+  @media only screen and (max-width: 768px) {
+    font-size: 1.0em;
+  }
+
+  li
+  {
+    margin-bottom:20px;
+  }
+}
+
+
+.orange-theme
+{
+  background-color: #ff7209;
+
+  a
+  {
+    color: #eee;
+    text-decoration: underline;
+  }
+
+
+  .navbar
+  {
+    a
+    {
+      color:  #000;
+      text-decoration: none;
+    }
+  }
+
+  .section-white-theme
+  {
+    a
+    {
+      color:  #ff7209;
+      text-decoration: underline;
+    }
+  }
+
+
+  .color-primary
+  {
+    color: white;
+  }
+
+  .button-primary
+  {
+  //  color: #ff7209;
+
+  }
+
+  .button-secondary
+  {
+  //  color: black;
+
+  }
+}
+
+.code-terminal-container
+{
+    height: 350px;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.85);
+    color: #f0f0f0;
+    text-shadow: #000 0px 1px 0px;
+    font-family: "Consolas", "Courier New", "Courier";
+    font-size: 1.45em;
+    line-height: 1.40em;
+    font-weight: 500;
+    text-align: left;
+    padding:5px;
+    overflow-x: auto;
+}
+
+.code-terminal
+{
+      white-space: pre;
+        text-align: left;
+}
+
+.acts-as-link
+{
+  cursor: pointer;
+}
+
+
+.mining-pools-section
+{
+  background-color: #FF7007;
+
+}
+
+.mining-pools-section
+{
+position: relative;
+
+}
+.mining-pools-section:after
+{
+   content: url(/app/assets/img/pool_mining_shadow.png);
+   position: absolute;
+   top: 15%;
+   opacity: 0.05;
+   right: 4%;
+}
+
+.pools-feature-container
+{
+  padding-top:20px;
+  max-width:400px;
+  margin: 0 auto;
+}
+
+.pool-tile-container
+{
+
+  height:380px;
+  padding: 15px;
+  padding-top: 40px;
+  text-align:center;
+
+  background-color: #21252b;
+   box-shadow: 2px 2px #888888;
+  border-radius:5px;
+
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+
+  .pool-title
+  {
+      font-size:32px;
+  }
+
+
+  .pool-image
+  {
+    img{
+      max-height: 200px;
+      margin: 30px auto;
+    }
+  }
+
+
+}
+
+
+.color-fun-primary
+{
+    color: #e2c08d;
+}
+
+.color-fun-secondary
+{
+    color: #73c990;
+}
+
+.backgound-slate-primary
+{
+  background-color: #21252b;
+}
+.backgound-slate-secondary
+{
+  background-color: #282c34;
+}
+
+.faded-in
+{
+  opacity:0;
+}
+
+.navbar-collapse-mobile
+{
+  font-size: 1.8em;
+
+  .navbar-item
+  {
+    font-size: 1.5em;
+    margin-top: 10px;
+  }
+}
+
+.footer
+{
+  color: black;
+
+  a
+  {
+    color:  #ff7209;
+    text-decoration: underline;
+  }
+
+}

@@ -1,0 +1,69 @@
+.navbar-padded
+{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+
+.navbar-container
+{
+  max-width: 1000px;
+  margin: 0 auto;
+
+  align-items: stretch;
+  display: flex;
+}
+
+.navbar-start
+{
+      margin-right: 50px;
+
+}
+
+.navbar-end
+{
+    margin-left:50px;
+}
+
+.has-dropdown.is-active
+{
+  .navbar-dropdown
+  {
+    display: none;
+  }
+
+}
+
+
+.youtube-mining-tutorial
+{
+    @media screen and (max-width: 720px) {
+      iframe
+      {
+        width:320px;
+        height:220px;
+      }
+    }
+}
+
+
+.acts-as-links
+{
+  cursor:pointer;
+}
+
+
+.navbar-brand
+{
+
+}
+
+.navbar-menu
+{
+
+}
+
+.navbar-item
+{
+
+}
