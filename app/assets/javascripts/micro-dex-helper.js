@@ -68,10 +68,39 @@ export default class MicroDexHelper {
         }
      });
 
+
+     var microDexContract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       microDexContract.blockchain_address,
+       microDexABI.abi
+     );
+
+     var activeAccount = web3.eth.accounts[0];
+
+
+     var etherBalance = await new Promise(resolve => {
+        microDexContract.balanceOf(0,activeAccount,function(err,result){
+          resolve(result)
+        });
+      });
+     var tokenBalance = await new Promise(resolve => {
+       microDexContract.balanceOf(_0xBitcoinContract.blockchain_address,activeAccount, function(err,result){
+           resolve(result)
+          }) ;
+         });
+
+
      var transfer = new Vue({
         el: '#transfer-form',
-        data: {amount: 0,
-                 recipient_address: null},
+        data: {
+          etherBalance: etherBalance.toNumber(),
+          tokenBalance: tokenBalance.toNumber(),
+
+          depositEtherAmount: 0,
+          withdrawEtherAmount: 0,
+          depositTokenAmount: 0,
+          withdrawTokenAmount: 0
+             },
 
         methods: {
            update: function () {
@@ -93,33 +122,30 @@ export default class MicroDexHelper {
        var tokenAddress = _0xBitcoinContract.blockchain_address;
 
        $('.btn-deposit-ether').on('click',function(){
-         self.depositEther(transfer.amount,  function(error,response){
+         self.depositEther(transfer.depositEtherAmount,  function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-withdraw-ether').on('click',function(){
-         self.withdrawEther(transfer.amount,  function(error,response){
+         self.withdrawEther(transfer.withdrawEtherAmount,  function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-deposit-0xbtc').on('click',function(){
-         self.ApproveAndCallDepositToken(tokenAddress,transfer.amount,  function(error,response){
+         self.ApproveAndCallDepositToken(tokenAddress,transfer.depositTokenAmount,  function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-withdraw-0xbtc').on('click',function(){
-         self.withdrawToken(tokenAddress,transfer.amount,  function(error,response){
+         self.withdrawToken(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
             console.log(response)
          });
        })
 
      }
-
-
-
 
 
 
@@ -210,7 +236,7 @@ export default class MicroDexHelper {
   {
      console.log('deposit ether',amountRaw);
 
-     amountRaw = 100000000000;
+     //amountRaw = 100000000000;
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -220,7 +246,7 @@ export default class MicroDexHelper {
 
      console.log(contract)
 
-     contract.deposit.sendTransaction(  {amount: amountRaw}, callback);
+     contract.deposit.sendTransaction(  {value: amountRaw}, callback);
 
   }
 
@@ -279,7 +305,7 @@ export default class MicroDexHelper {
 
   }
 
-
+/*
 
   //Use as a reference only!!!
   async startTransfer(amountRaw,recipient,callback)
@@ -308,5 +334,5 @@ export default class MicroDexHelper {
 
   }
 
-
+*/
 }

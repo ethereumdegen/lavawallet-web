@@ -9,8 +9,8 @@
     },
     "ropsten":{
       "contracts": {
-        "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},
-        "microdex": {"name":"micro-dex", "blockchain_address":"0x821d4300dd916db9f5e79f6b8a93fe010962404c"}
+        "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},
+        "microdex": {"name":"micro-dex", "blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"}
       }
     }
 

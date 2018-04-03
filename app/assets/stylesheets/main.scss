@@ -114,6 +114,17 @@ a
 }
 
 
+.gray-theme
+{
+ background-color: #7a908d;
+
+ .color-primary
+ {
+   color: white;
+ }
+
+}
+
 .orange-theme
 {
   background-color: #ff7209;
@@ -210,7 +221,12 @@ position: relative;
 .transfer-form-fields
 {
   max-width:180px;
-  margin: 10px auto;
+  margin: 20px auto;
+
+  .button
+  {
+    margin: 10px;
+  }
 }
 
 

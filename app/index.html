@@ -29,7 +29,7 @@
 
       <section class="hero   ">
         <div class="hero-body">
-          <div class="  has-text-centered">
+          <div id="transfer-form" class="  has-text-centered">
 
 
             <div class="columns">
@@ -37,16 +37,16 @@
               <div class="column">
                 <div class="subtitle">Ether Balance</div>
 
-                <div class="balance-container">  0 </div>
+                <div class="balance-container">  {{etherBalance}} </div>
 
 
                 <div class="transfer-form-fields">
-                   <input class="input" v-model="amount" placeholder="amount">
+                   <input class="input" v-model="depositEtherAmount" placeholder="amount">
                   <a class="button is-primary btn-deposit-ether">Deposit Ether</a>
                 </div>
 
                 <div class="transfer-form-fields">
-                   <input class="input" v-model="amount" placeholder="amount">
+                   <input class="input" v-model="withdrawEtherAmount" placeholder="amount">
                   <a class="button is-primary is-outlined btn-withdraw-ether">Withdraw Ether</a>
                 </div>
 
@@ -56,15 +56,15 @@
               <div class="column">
                 <div class="subtitle">0xBitcoin Balance</div>
 
-                <div class="balance-container">  0 </div>
+                <div class="balance-container">  {{tokenBalance}} </div>
 
                 <div class="transfer-form-fields">
-                   <input class="input" v-model="amount" placeholder="amount">
+                   <input class="input" v-model="depositTokenAmount" placeholder="amount">
                    <a class="button is-primary btn-deposit-0xbtc">Deposit 0xBitcoin</a>
                   </div>
 
                 <div class="transfer-form-fields">
-                   <input class="input" v-model="amount" placeholder="amount">
+                   <input class="input" v-model="withdrawTokenAmount" placeholder="amount">
                    <a class="button is-primary is-outlined btn-withdraw-0xbtc">Withdraw 0xBitcoin</a>
                </div>
 
@@ -86,7 +86,7 @@
 
 
 
-      <div id="guide" class="box has-text-centered orange-theme  ">
+      <div id="guide" class="box has-text-centered gray-theme  ">
 
         <div class="columns">
 
