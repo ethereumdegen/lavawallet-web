@@ -69,7 +69,7 @@ export default class MicroDexHelper {
      });
 
 
-     var microDexContract = this.ethHelper.getWeb3ContractInstance(
+     var dexContract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        microDexContract.blockchain_address,
        microDexABI.abi
@@ -79,12 +79,12 @@ export default class MicroDexHelper {
 
 
      var etherBalance = await new Promise(resolve => {
-        microDexContract.balanceOf(0,activeAccount,function(err,result){
+        dexContract.balanceOf(0,activeAccount,function(err,result){
           resolve(result)
         });
       });
      var tokenBalance = await new Promise(resolve => {
-       microDexContract.balanceOf(_0xBitcoinContract.blockchain_address,activeAccount, function(err,result){
+       dexContract.balanceOf(_0xBitcoinContract.blockchain_address,activeAccount, function(err,result){
            resolve(result)
           }) ;
          });
