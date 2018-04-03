@@ -90,16 +90,31 @@ export default class MicroDexHelper {
 
        var self = this;
 
+       var tokenAddress = _0xBitcoinContract.blockchain_address;
+
        $('.btn-deposit-ether').on('click',function(){
-
-
          self.depositEther(transfer.amount,  function(error,response){
-
-           console.log(response)
+            console.log(response)
          });
-
        })
 
+       $('.btn-withdraw-ether').on('click',function(){
+         self.withdrawEther(transfer.amount,  function(error,response){
+            console.log(response)
+         });
+       })
+
+       $('.btn-deposit-0xbtc').on('click',function(){
+         self.ApproveAndCallDepositToken(tokenAddress,transfer.amount,  function(error,response){
+            console.log(response)
+         });
+       })
+
+       $('.btn-withdraw-0xbtc').on('click',function(){
+         self.withdrawToken(tokenAddress,transfer.amount,  function(error,response){
+            console.log(response)
+         });
+       })
 
      }
 

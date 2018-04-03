@@ -39,8 +39,17 @@
 
                 <div class="balance-container">  0 </div>
 
-                <a class="button is-primary btn-deposit-ether">Deposit Ether</a>
-                <a class="button is-primary is-outlined btn-withdraw-ether">Withdraw Ether</a>
+
+                <div class="transfer-form-fields">
+                   <input class="input" v-model="amount" placeholder="amount">
+                  <a class="button is-primary btn-deposit-ether">Deposit Ether</a>
+                </div>
+
+                <div class="transfer-form-fields">
+                   <input class="input" v-model="amount" placeholder="amount">
+                  <a class="button is-primary is-outlined btn-withdraw-ether">Withdraw Ether</a>
+                </div>
+
 
               </div>
 
@@ -49,8 +58,16 @@
 
                 <div class="balance-container">  0 </div>
 
-                <a class="button is-primary btn-deposit-0xbtc">Deposit 0xBitcoin</a>
-                <a class="button is-primary is-outlined btn-withdraw-0xbtc">Withdraw 0xBitcoin</a>
+                <div class="transfer-form-fields">
+                   <input class="input" v-model="amount" placeholder="amount">
+                   <a class="button is-primary btn-deposit-0xbtc">Deposit 0xBitcoin</a>
+                  </div>
+
+                <div class="transfer-form-fields">
+                   <input class="input" v-model="amount" placeholder="amount">
+                   <a class="button is-primary is-outlined btn-withdraw-0xbtc">Withdraw 0xBitcoin</a>
+               </div>
+
 
               </div>
 
