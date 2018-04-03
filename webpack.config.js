@@ -32,7 +32,7 @@ var webpackPlugins = [
 
 const routesData = {
   routes: [
-    {url: '/', title: '0xDex', template: 'app/index.html', filename: 'index.html'}
+    {url: '/', title: 'FreeShift', template: 'app/index.html', filename: 'index.html'}
    ]
 }
 
