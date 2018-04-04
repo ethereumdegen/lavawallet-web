@@ -98,6 +98,22 @@ export default class MicroDexHelper {
          });
 
 
+     var jumbotron = new Vue({
+        el: '#jumbotron',
+        data: {
+          address: microDexContract.blockchain_address,
+             }
+
+      });
+
+      var footer = new Vue({
+         el: '#footer',
+         data: {
+           address: microDexContract.blockchain_address,
+              }
+
+       });
+
      var transfer = new Vue({
         el: '#transfer-form',
         data: {
@@ -331,7 +347,7 @@ export default class MicroDexHelper {
         && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
     {
       order_element.order_type = "bid";
-      order_element.cost_ratio = order_element.amount_get / order_element.amount_give;
+      order_element.cost_ratio = order_element.amount_give / order_element.amount_get;
     }
 
     //asks get eth
@@ -339,7 +355,7 @@ export default class MicroDexHelper {
         &&  order_element.token_give.toLowerCase() ==  base_pair_token_address.toLowerCase())
     {
       order_element.order_type = "ask";
-      order_element.cost_ratio = order_element.amount_get / order_element.amount_give;
+      order_element.cost_ratio = order_element.amount_give / order_element.amount_get;
     }
 
     order_hash_table[order_element.tx_hash] = JSON.stringify( order_element );

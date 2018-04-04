@@ -222,6 +222,14 @@ a
 
     background-color:gray;
   }
+
+  thead
+  {
+    td
+    {
+      padding: 5px;
+    }
+  }
 }
 
 .order-row
@@ -232,9 +240,11 @@ a
   margin-bottom:5px;
   background-color:white;
 
+  padding:5px;
+
   .order-row-cell
   {
-   
+   padding:5px;
   }
 
 }

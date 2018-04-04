@@ -18,12 +18,14 @@
 <div class="page-container" id="home">
 
 
-      <div class=" ">
+      <div id="jumbotron" class=" ">
 
 
         <div class="title has-text-centered is-hidden-mobile">Shift 0xBitcoin and Ether</div>
 
         <div class="whitespace-sm"></div>
+
+
 
       </div>
 
@@ -151,9 +153,35 @@
                   <a class="button is-primary btn-ask-order">Place Ask</a>
                 </div>
 
-                <div class="order-list">
-                  --orders--
+
+
+
+                <div class="order-list-container">
+                  <div class="order-list">
+
+                    <table>
+                      <thead>
+                        <tr >
+                          <td> Token Get </td>
+                          <td> Ether Give </td>
+                          <td> Cost Ratio </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="order-row acts-as-link" v-for="(item, index) in asks.ask_list" v-bind:data-txhash="item.tx_hash" >
+                        <td class="order-row-cell amount-get">{{item.amount_get}}</td>
+                        <td class="order-row-cell amount-give">{{item.amount_give}}</td>
+                        <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
+                      </tr>
+                    </tbody>
+                    </table>
+
+                   </div>
                 </div>
+
+
+
+
               </div>
 
 
