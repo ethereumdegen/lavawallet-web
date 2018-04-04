@@ -182,20 +182,21 @@ export default class MicroDexHelper {
 
 
 
-       var expires = 10000;
 
+       var current_block = await this.getCurrentEthBlockNumber();
+       var expires = current_block + 10000;
 
       //  tokenGet,amountGet,tokenGive,amountGive,expires,nonce
 
 
        $('.btn-bid-order').on('click',function(){
-         self.createOrder(tokenAddress,order.bidTokenGet,0,order.bidTokenGive, expires, function(error,response){
+         self.createOrder(tokenAddress,orderContainer.bidTokenGet,0,orderContainer.bidTokenGive, expires, function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-ask-order').on('click',function(){
-         self.createOrder(0,order.askTokenGet,tokenAddress,order.askTokenGive, expires, function(error,response){
+         self.createOrder(0,orderContainer.askTokenGet,tokenAddress,orderContainer.askTokenGive, expires, function(error,response){
             console.log(response)
          });
        })
@@ -238,58 +239,24 @@ export default class MicroDexHelper {
       var amount_get = order_element.amount_get;
       var amount_give = order_element.amount_give;
       var expires = order_element.expires;
-      var nonce = order_element.nonce;
+      var nonce = "0x"+order_element.nonce.toString();
 
-      var activeAccount = web3.eth.accounts[0];
+      var makerAddress = order_element.user;
 
 
       //amount get ...pegged at the entire order for now
       var trade_order_amount = order_element.amount_get;
 
 
-
       var micro_dex_address = microDexContract.blockchain_address;
 
-      //NEED TO FIX MESSAGE SIGNING
-
-      console.log(micro_dex_address)
-      console.log(token_get)
-      console.log(amount_get)
-      console.log(token_give)
-      console.log(amount_give)
-      console.log(nonce)
-
-      var message_to_sign = web3utils.soliditySha3(micro_dex_address,token_get,amount_get,token_give,amount_give,expires,nonce ).toString();
-
-      console.log('message_to_sign',message_to_sign);
-
-      var order_sig = await new Promise(function (fulfilled,error) {
-           web3.eth.sign(activeAccount, message_to_sign, function(err,result){fulfilled(result)}  );
-      });
-
-      console.log('sig',order_sig)
-      var vrs_data = ethUtil.fromRpcSig(order_sig)
-
-      console.log(vrs_data)
-
-      var sig_v = vrs_data.v;
-      var sig_r = vrs_data.r;
-      var sig_s = vrs_data.s;
+      //dont need offchain sigs - all orders will be on chain for now
+      var sig_v = 0;
+      var sig_r = 0;
+      var sig_s = 0;
 
 
-      /*
-       var sigHash = web3utils.soliditySha3(requestRecipient, requestQuantity, requestToken, requestNonce)
-
-          console.log(addressFrom)
-
-          console.log(sigHash)
-
-          var sigHashHex = Buffer.from(sigHash.substr(2, sigHash.length),'hex');
-
-       var sig = ethUtil.ecsign(sigHashHex, Buffer.from(privateKey,'hex'))
-    */
-
-      self.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, activeAccount, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
+      self.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, makerAddress, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
          console.log(response)
       });
 
@@ -427,15 +394,7 @@ export default class MicroDexHelper {
 
       var web3 = this.web3;
 
-      var current_block = await new Promise(function (fulfilled,error) {
-            web3.eth.getBlockNumber(function(err, result)
-          {
-            if(err){error(err);return}
-            console.log('eth block number ', result )
-            fulfilled(result);
-            return;
-          });
-       });
+      var current_block = await this.getCurrentEthBlockNumber()
 
 
        var self = this;
@@ -499,6 +458,19 @@ export default class MicroDexHelper {
   }
 
 
+  async getCurrentEthBlockNumber()
+  {
+   return await new Promise(function (fulfilled,error) {
+          web3.eth.getBlockNumber(function(err, result)
+        {
+          if(err){error(err);return}
+          console.log('eth block number ', result )
+          fulfilled(result);
+          return;
+        });
+     });
+
+  }
 
 
   async updateWalletRender()
@@ -646,8 +618,15 @@ export default class MicroDexHelper {
   {
     console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
 
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      microDexContract.blockchain_address,
+      microDexABI.abi
+    );
 
-      // contract.testTrade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires, nonce, callback);
+
+
+     contract.trade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount, callback);
 
   }
 
