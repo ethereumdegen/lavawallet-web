@@ -131,8 +131,6 @@ export default class MicroDexHelper {
          methods: {
             update: function () {
 
-              this.registerOrderRowClickHandler();
-
             }
           }
        });
@@ -209,15 +207,18 @@ export default class MicroDexHelper {
 
   }
 
+
+
+
   //tough to get this to work !
   registerOrderRowClickHandler()
   {
 
     console.log('register order row click handler')
-
+    console.log($('.order-row').length)
      //need to do this after watch/render  happens
-    $('.order-row-cell').off();
-    $('.order-row-cell').on('click',function(){
+    $('.order-row').off();
+    $('.order-row').on('click',function(){
       console.log('perform trade');
 
       this.performTrade(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
@@ -310,6 +311,8 @@ export default class MicroDexHelper {
    renderOrderEvent(order_event, base_pair_token_address)
   {
 
+    var self = this;
+
     var order_element = this.buildOrderElementFromEvent(order_event, base_pair_token_address);
 
     console.log('render',order_element);
@@ -332,7 +335,9 @@ export default class MicroDexHelper {
      Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
     }
 
-
+    Vue.nextTick(function () {
+      self.registerOrderRowClickHandler()
+    })
   }
 
 
