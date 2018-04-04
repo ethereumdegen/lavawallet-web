@@ -204,6 +204,41 @@ a
   }
 }
 
+
+.order-list-container
+{
+
+
+
+  .order-list
+  {
+    width:300px;
+    padding:10px;
+    margin:10px auto;
+
+    overflow-y: auto;
+    max-height: 400px;
+
+
+    background-color:gray;
+  }
+}
+
+.order-row
+{
+
+  width:280px;
+  margin-top:5px;
+  margin-bottom:5px;
+  background-color:white;
+
+  .order-row-cell
+  {
+   
+  }
+
+}
+
 .transfer-form-fields
 {
   max-width:180px;

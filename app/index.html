@@ -96,12 +96,12 @@
                 <div class="order-form">
 
                   <div class="input-container">
-                    <div class="label">Token Amount</div>
+                    <div class="label">Token Get</div>
                     <input class="input" v-model="bidTokenGet" placeholder="token amount">
                   </div>
 
                   <div class="input-container">
-                    <div class="label">Ether Amount</div>
+                    <div class="label">Ether Give</div>
                     <input class="input" v-model="bidTokenGive" placeholder="ether amount">
                   </div>
 
@@ -111,13 +111,22 @@
                 <div class="order-list-container">
                   <div class="order-list">
 
-                    <ul>
-                      <li class="order-row" v-for="(item, index) in bids.bid_list">
-                        <div class="order-row-cell amount-give">{{item.amount_give}}</div>
-                        <div class="order-row-cell amount-get">{{item.amount_get}}</div>
-                        <div class="order-row-cell cost-ratio">{{item.cost_ratio}}</div>  
-                      </li>
-                    </ul>
+                    <table>
+                      <thead>
+                        <tr >
+                          <td> Token Get </td>
+                          <td> Ether Give </td>
+                          <td> Cost Ratio </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="order-row acts-as-link" v-for="(item, index) in bids.bid_list">
+                        <td class="order-row-cell amount-get">{{item.amount_get}}</td>
+                        <td class="order-row-cell amount-give">{{item.amount_give}}</td>
+                        <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
+                      </tr>
+                    </tbody>
+                    </table>
 
                    </div>
                 </div>
@@ -130,12 +139,12 @@
                 <div class="order-form">
 
                   <div class="input-container">
-                    <div class="label">Token Amount</div>
+                    <div class="label">Token Give</div>
                     <input class="input" v-model="askTokenGet" placeholder="token amount">
                   </div>
 
                   <div class="input-container">
-                    <div class="label">Ether Amount</div>
+                    <div class="label">Ether Get</div>
                     <input class="input" v-model="askTokenGive" placeholder="ether amount">
                   </div>
 

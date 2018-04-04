@@ -131,6 +131,8 @@ export default class MicroDexHelper {
          methods: {
             update: function () {
 
+              this.registerOrderRowClickHandler();
+
             }
           }
        });
@@ -176,6 +178,9 @@ export default class MicroDexHelper {
        })
 
 
+
+
+
        var expires = 10000;
 
 
@@ -197,12 +202,32 @@ export default class MicroDexHelper {
 
 
 
+
      }
 
 
 
   }
 
+  //tough to get this to work !
+  registerOrderRowClickHandler()
+  {
+
+    console.log('register order row click handler')
+
+     //need to do this after watch/render  happens
+    $('.order-row-cell').off();
+    $('.order-row-cell').on('click',function(){
+      console.log('perform trade');
+
+      this.performTrade(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+         console.log(response)
+      });
+
+    })
+
+
+  }
 
   detectInjectedWeb3()
   {
@@ -255,8 +280,9 @@ export default class MicroDexHelper {
     order_element.amount_give = order_event.args.amountGive.toNumber();
     order_element.amount_get = order_event.args.amountGet.toNumber();
 
-    order_element.expires = order_event.expires.toNumber();
-    order_element.nonce = order_event.nonce.toNumber();
+    order_element.expires = order_event.args.expires.toNumber();
+    order_element.nonce = order_event.args.nonce.toNumber();
+    order_element.user = order_event.args.user;
 
     order_element.tx_hash = order_event.transactionHash;
     order_element.tx_index = order_event.transactionIndex;
