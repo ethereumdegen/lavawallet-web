@@ -108,11 +108,18 @@
                   <a class="button is-primary btn-bid-order">Place Bid</a>
                 </div>
 
-                <div class="order-list">
+                <div class="order-list-container">
+                  <div class="order-list">
 
-                  -- need to monitor events to render this list --
+                    <ul>
+                      <li class="order-row" v-for="(item, index) in bids.bid_list">
+                        <div class="order-row-cell amount-give">{{item.amount_give}}</div>
+                        <div class="order-row-cell amount-get">{{item.amount_get}}</div>
+                        <div class="order-row-cell cost-ratio">{{item.cost_ratio}}</div>  
+                      </li>
+                    </ul>
 
-                   --orders--
+                   </div>
                 </div>
               </div>
 
