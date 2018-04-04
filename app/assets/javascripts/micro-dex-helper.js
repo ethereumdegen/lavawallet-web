@@ -2,6 +2,7 @@
 const $ = require('jquery');
 
 var web3utils = require('web3-utils')
+var ethUtil = require('ethereumjs-util')
 
 import Vue from 'vue'
 
@@ -216,6 +217,8 @@ export default class MicroDexHelper {
   async registerOrderRowClickHandler()
   {
 
+    var self = this;
+
     console.log('register order row click handler')
     console.log($('.order-row').length)
      //need to do this after watch/render  happens
@@ -243,18 +246,37 @@ export default class MicroDexHelper {
       //amount get ...pegged at the entire order for now
       var trade_order_amount = order_element.amount_get;
 
+
+
       var micro_dex_address = microDexContract.blockchain_address;
 
       //NEED TO FIX MESSAGE SIGNING
-      var message_to_sign = web3utils.soliditySha3(micro_dex_address,token_get,amount_get,token_give,amount_give,expires,nonce).toString();
+
+      console.log(micro_dex_address)
+      console.log(token_get)
+      console.log(amount_get)
+      console.log(token_give)
+      console.log(amount_give)
+      console.log(nonce)
+
+      var message_to_sign = web3utils.soliditySha3(micro_dex_address,token_get,amount_get,token_give,amount_give,expires,nonce ).toString();
 
       console.log('message_to_sign',message_to_sign);
 
-      var order_sig = await new Promise(resolve => {
-           web3.eth.sign(activeAccount, message_to_sign, resolve  );
+      var order_sig = await new Promise(function (fulfilled,error) {
+           web3.eth.sign(activeAccount, message_to_sign, function(err,result){fulfilled(result)}  );
       });
 
       console.log('sig',order_sig)
+      var vrs_data = ethUtil.fromRpcSig(order_sig)
+
+      console.log(vrs_data)
+
+      var sig_v = vrs_data.v;
+      var sig_r = vrs_data.r.toNumber();
+      var sig_s = vrs_data.s.toNumber();
+
+
       /*
        var sigHash = web3utils.soliditySha3(requestRecipient, requestQuantity, requestToken, requestNonce)
 
@@ -267,7 +289,7 @@ export default class MicroDexHelper {
        var sig = ethUtil.ecsign(sigHashHex, Buffer.from(privateKey,'hex'))
     */
 
-      this.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, activeAccount, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
+      self.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, activeAccount, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
          console.log(response)
       });
 
@@ -328,13 +350,15 @@ export default class MicroDexHelper {
     order_element.amount_get = order_event.args.amountGet.toNumber();
 
     order_element.expires = order_event.args.expires.toNumber();
-    order_element.nonce = order_event.args.nonce.toNumber();
+
+    console.log('order_event.args.nonce',order_event.args.nonce)
+    order_element.nonce = web3utils.toBN(order_event.args.nonce ).toString(16) ;
     order_element.user = order_event.args.user;
 
     order_element.tx_hash = order_event.transactionHash;
     order_element.tx_index = order_event.transactionIndex;
 
-
+    console.log('order_element.nonce',order_element.nonce )
     //bids give eth
     if( order_element.token_give == "0x0000000000000000000000000000000000000000"
         && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
@@ -620,7 +644,8 @@ export default class MicroDexHelper {
   //initiated from clicking an order row
   async performTrade(tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
   {
-
+    console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
+)
   }
 
 /*
