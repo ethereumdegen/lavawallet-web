@@ -2,7 +2,6 @@
 const $ = require('jquery');
 
 var web3utils = require('web3-utils')
-var ethUtil = require('ethereumjs-util')
 
 import Vue from 'vue'
 
@@ -22,6 +21,11 @@ var order_ask_list = [];
 var order_bid_list = [];
 
 var order_hash_table = {};
+
+var order_cancels_list = [];
+var my_orders_list = [];
+var recent_trades_list = [];
+
 
 export default class MicroDexHelper {
 
@@ -364,10 +368,30 @@ export default class MicroDexHelper {
     return order_element;
   }
 
-   renderOrderEvent(order_event, base_pair_token_address)
+
+  collectCancelEvent(cancel_event, base_pair_token_address)
+  {
+    console.log('cancel',cancel_event)
+    var cancel_element = cancel_event;
+
+    order_cancels_list.push(cancel_element)
+  }
+
+  collectTradeEvent(trade_event, base_pair_token_address)
+  {
+      console.log('trade',trade_event)
+    var trade_element = trade_event;
+
+    recent_trades_list.push(trade_element)
+  }
+
+   collectOrderEvent(order_event, base_pair_token_address)
   {
 
     var self = this;
+
+    var activeAccount = web3.eth.accounts[0];
+
 
     var order_element = this.buildOrderElementFromEvent(order_event, base_pair_token_address);
 
@@ -394,9 +418,22 @@ export default class MicroDexHelper {
     Vue.nextTick(function () {
       self.registerOrderRowClickHandler()
     })
+
+
+    if(order_element.user.toLowerCase() == activeAccount.toLowerCase())
+    {
+        this.collectMyOrder(order_element);
+    }
   }
 
 
+  collectMyOrder(order_element)
+  {
+    my_orders_list.push(order_element);
+    my_orders_list.sort(function(a, b) {
+          return a.expires - b.expires;
+   })
+  }
 
   async loadOrderEvents()
   {
@@ -424,13 +461,24 @@ export default class MicroDexHelper {
 
        var base_pair_token_address = _0xBitcoinContract.blockchain_address;
 
-       var myEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+       var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
-          myEvent.watch(function(error, result){
-             //console.log(result)
+       cancelEvent.watch(function(error, result){
+         self.collectCancelEvent(result, base_pair_token_address )
+       });
 
-             self.renderOrderEvent(result, base_pair_token_address )
-          });
+       var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+
+       tradeEvent.watch(function(error, result){
+         self.collectTradeEvent(result, base_pair_token_address )
+       });
+
+
+       var orderEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+
+       orderEvent.watch(function(error, result){
+         self.collectOrderEvent(result, base_pair_token_address )
+       });
 
           // would get all past logs again.
         /*  var myResults = myEvent.get(function(error, logs){
@@ -445,31 +493,6 @@ export default class MicroDexHelper {
 
 
 
-
-    /* get all mint() transactions in the last N blocks */
-    /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
-    /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
-  /*  ethjs.getLogs({
-      fromBlock: current_block - num_eth_blocks_to_search,
-      toBlock: current_block,
-      address: '0xB6eD7644C69416d67B522e20bC294A9a9B405B31',
-      topics: ['0xcf6fbb9dcea7d07263ab4f5c3a92f53af33dffc421d9d121e1c74b307e68189d', null],
-    })
-    .then((result) => {
-      result.forEach(function(transaction){
-        function getMinerAddressFromTopic(address_from_topic) {
-          return '0x' + address_from_topic.substr(26, 41);
-        }
-        var tx_hash = transaction['transactionHash'];
-        var block_number = parseInt(transaction['blockNumber'].toString());
-        var miner_address = getMinerAddressFromTopic(transaction['topics'][1].toString());
-
-
-        console.log('miner_address')
-
-      });
-
-    });*/
 
   }
 

@@ -116,11 +116,12 @@ a
 
 .gray-theme
 {
- background-color: #7a908d;
+ background-color: #ddd;
+ border: 2px solid gray;
 
  .color-primary
  {
-   color: white;
+   color: #ff7209;
  }
 
 }
@@ -223,6 +224,12 @@ a
     background-color:gray;
   }
 
+  table
+  {
+    margin: 0 auto;
+    color: white;
+  }
+
   thead
   {
     td
@@ -245,8 +252,14 @@ a
   .order-row-cell
   {
    padding:5px;
+   color:black;
   }
 
+}
+
+.order-row:hover
+{
+  background-color:#ddd;
 }
 
 .transfer-form-fields
