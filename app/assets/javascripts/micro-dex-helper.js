@@ -105,10 +105,21 @@ export default class MicroDexHelper {
      var jumbotron = new Vue({
         el: '#jumbotron',
         data: {
-          address: microDexContract.blockchain_address,
+              address: microDexContract.blockchain_address,
              }
 
       });
+
+
+      var tradeMonitor = new Vue({
+         el: '#trade-monitor',
+         data: {
+                orders: {order_list:my_orders_list},
+                trades: {trade_list:recent_trades_list}
+              }
+
+       });
+
 
       var footer = new Vue({
          el: '#footer',
@@ -429,6 +440,7 @@ export default class MicroDexHelper {
 
   collectMyOrder(order_element)
   {
+    console.log('my order',order_element)
     my_orders_list.push(order_element);
     my_orders_list.sort(function(a, b) {
           return a.expires - b.expires;

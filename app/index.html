@@ -198,8 +198,24 @@
               <div class="column">
                 <div class="subtitle color-primary">My Orders</div>
 
-                <div class="my-orders">
+                <div class="my-orders"  >
 
+                  <table>
+                    <thead>
+                      <tr >
+                        <td> Token Get </td>
+                        <td> Ether Give </td>
+                        <td> Cost Ratio </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="order-row acts-as-link"   v-for="(item, index) in orders.order_list" v-bind:data-txhash="item.tx_hash" >
+                      <td class="order-row-cell amount-get">{{item.amount_get}}</td>
+                      <td class="order-row-cell amount-give">{{item.amount_give}}</td>
+                      <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
+                    </tr>
+                  </tbody>
+                  </table>
 
                 </div>
 
@@ -212,6 +228,22 @@
 
                 <div class="my-trades">
 
+                  <table>
+                    <thead>
+                      <tr >
+                        <td> Token Get </td>
+                        <td> Ether Give </td>
+                        <td> Cost Ratio </td>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="order-row acts-as-link"   v-for="(item, index) in trades.trade_list" v-bind:data-txhash="item.tx_hash" >
+                      <td class="order-row-cell amount-get">{{item.amount_get}}</td>
+                      <td class="order-row-cell amount-give">{{item.amount_give}}</td>
+                      <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
+                    </tr>
+                  </tbody>
+                  </table>
 
                 </div>
 
