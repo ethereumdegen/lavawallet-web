@@ -294,13 +294,43 @@ export default class MicroDexHelper {
     $('.monitor-order-row').off();
     $('.monitor-order-row').on('click',async function(){
       console.log('should cancel order')
+
+      var order_tx_hash = $(this).data('txhash');
+      console.log('order_tx_hash',order_tx_hash);
+
+      var order_element = JSON.parse( order_hash_table[order_tx_hash] );
+      console.log('perform trade',order_element);
+
+
+      var token_get = order_element.token_get;
+      var token_give = order_element.token_give;
+      var amount_get = order_element.amount_get;
+      var amount_give = order_element.amount_give;
+      var expires = order_element.expires;
+      var nonce = "0x"+order_element.nonce.toString();
+
+
+      var micro_dex_address = microDexContract.blockchain_address;
+
+      //dont need offchain sigs - all orders will be on chain for now
+      var sig_v = 0;
+      var sig_r = 0;
+      var sig_s = 0;
+
+
+
+
+      self.cancelOrder(token_get,amount_get,token_give,amount_give,expires,nonce,  sig_v,sig_r,sig_s,   function(error,response){
+         console.log(response)
+      });
+
     });
 
 
   }
 
 
- 
+
 
   detectInjectedWeb3()
   {
@@ -686,6 +716,20 @@ export default class MicroDexHelper {
 
 
      contract.trade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount, callback);
+
+  }
+
+  async cancelOrder(tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,   callback)
+  {
+    console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,   callback)
+
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      microDexContract.blockchain_address,
+      microDexABI.abi
+    );
+
+     contract.cancelOrder.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,  callback);
 
   }
 
