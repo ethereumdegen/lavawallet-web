@@ -1,9 +1,7 @@
 {
   "name": "0xDex",
-
   "version": "0.1.2",
   "description": "Decentralized Exchange Platform",
-
   "main": "index.js",
   "scripts": {
     "webpack": "webpack",

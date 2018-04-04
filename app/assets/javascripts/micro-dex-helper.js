@@ -1,6 +1,7 @@
 
 const $ = require('jquery');
 
+
 import Vue from 'vue'
 
 var microDexABI = require('../contracts/MicroDex.json')
@@ -52,6 +53,9 @@ export default class MicroDexHelper {
 
 
      await this.updateWalletRender();
+
+
+     await this.loadOrderEvents()
 
 
 
@@ -226,10 +230,93 @@ export default class MicroDexHelper {
     return null;
   }
 
+
+  async loadOrderEvents()
+  {
+      if(this.web3 == null)
+      {
+        console.log("No web3 to load order events.")
+        return;
+      }
+
+      var num_eth_blocks_to_search = 400;
+
+      var web3 = this.web3;
+
+      var current_block = await new Promise(function (fulfilled,error) {
+            web3.eth.getBlockNumber(function(err, result)
+          {
+            if(err){error(err);return}
+            console.log('eth block number ', result )
+            fulfilled(result);
+            return;
+          });
+       });
+
+
+       var contract = this.ethHelper.getWeb3ContractInstance(
+         this.web3,
+         microDexContract.blockchain_address,
+         microDexABI.abi
+       );
+
+       var myEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+
+          myEvent.watch(function(error, result){
+             console.log(result)
+          });
+
+          // would get all past logs again.
+          var myResults = myEvent.get(function(error, logs){
+            console.log(logs)
+          });
+
+
+          // would stop and uninstall the filter
+        //  myEvent.stopWatching();
+
+
+
+
+
+
+    /* get all mint() transactions in the last N blocks */
+    /* more info: https://github.com/ethjs/ethjs/blob/master/docs/user-guide.md#ethgetlogs */
+    /* and https://ethereum.stackexchange.com/questions/12950/what-are-event-topics/12951#12951 */
+  /*  ethjs.getLogs({
+      fromBlock: current_block - num_eth_blocks_to_search,
+      toBlock: current_block,
+      address: '0xB6eD7644C69416d67B522e20bC294A9a9B405B31',
+      topics: ['0xcf6fbb9dcea7d07263ab4f5c3a92f53af33dffc421d9d121e1c74b307e68189d', null],
+    })
+    .then((result) => {
+      result.forEach(function(transaction){
+        function getMinerAddressFromTopic(address_from_topic) {
+          return '0x' + address_from_topic.substr(26, 41);
+        }
+        var tx_hash = transaction['transactionHash'];
+        var block_number = parseInt(transaction['blockNumber'].toString());
+        var miner_address = getMinerAddressFromTopic(transaction['topics'][1].toString());
+
+
+        console.log('miner_address')
+
+      });
+
+    });*/
+
+  }
+
+
+
   async updateWalletRender()
   {
-    if(this.web3 != null)
+    if(this.web3 == null)
     {
+      console.log("No web3 to load wallet data.")
+      return;
+    }
+
       console.log( 'loading wallet data ')
 
 
@@ -260,9 +347,6 @@ export default class MicroDexHelper {
       var tokenBalance = await getTokenBalance ;
 
       balanceText = tokenBalance / Math.pow(10,decimals);
-
-
-    }
 
   }
 
