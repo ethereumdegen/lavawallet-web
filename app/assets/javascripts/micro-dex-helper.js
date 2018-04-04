@@ -242,21 +242,64 @@ export default class MicroDexHelper {
   }
 
 
-   renderOrderEvent(order_event)
+  buildOrderElementFromEvent(order_event, base_pair_token_address)
   {
-    console.log('render',order_event);
-
-    var order_element = order_event;
-
-
-    var original_list = order_ask_list;
+    console.log('build from ',order_event);
+    console.log('base_pair_token_address ',base_pair_token_address);
 
 
-    var updated_list = order_ask_list.push(order_element);
+    var order_element = {};
 
-    Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
+    order_element.token_give = order_event.args.tokenGive;
+    order_element.token_get = order_event.args.tokenGet;
+    order_element.amount_give = order_event.args.amountGive.toNumber();
+    order_element.amount_get = order_event.args.amountGet.toNumber();
 
-    console.log(order_ask_list)
+    //bids give eth
+    if( order_element.token_give == "0x0000000000000000000000000000000000000000"
+        && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
+    {
+      order_element.order_type = "bid";
+      order_element.cost_ratio = order_element.amount_get / order_element.amount_give;
+    }
+
+    //asks get eth
+    if( order_element.token_get == "0x0000000000000000000000000000000000000000"
+        &&  order_element.token_give.toLowerCase() ==  base_pair_token_address.toLowerCase())
+    {
+      order_element.order_type = "ask";
+      order_element.cost_ratio = order_element.amount_get / order_element.amount_give;
+    }
+
+    return order_element;
+  }
+
+   renderOrderEvent(order_event, base_pair_token_address)
+  {
+
+    var order_element = this.buildOrderElementFromEvent(order_event, base_pair_token_address);
+
+    console.log('render',order_element);
+
+    if(order_element.order_type == "ask")
+    {
+      order_ask_list.push(order_element);
+      order_ask_list.sort(function(a, b) {
+            return a.cost_ratio - b.cost_ratio;
+     })
+     Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
+    }
+
+    if(order_element.order_type == "bid")
+    {
+      order_bid_list.push(order_element);
+      order_bid_list.sort(function(a, b) {
+            return a.cost_ratio - b.cost_ratio;
+     })
+     Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
+    }
+
+
   }
 
 
@@ -285,18 +328,22 @@ export default class MicroDexHelper {
 
 
        var self = this;
+
        var contract = this.ethHelper.getWeb3ContractInstance(
          this.web3,
          microDexContract.blockchain_address,
          microDexABI.abi
        );
 
+
+       var base_pair_token_address = _0xBitcoinContract.blockchain_address;
+
        var myEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
           myEvent.watch(function(error, result){
              //console.log(result)
 
-             self.renderOrderEvent(result)
+             self.renderOrderEvent(result, base_pair_token_address )
           });
 
           // would get all past logs again.
@@ -483,7 +530,7 @@ export default class MicroDexHelper {
 
   }
 
-  //initiated from a click
+  //initiated from clicking an order row
   async performTrade(tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
   {
 
