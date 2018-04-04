@@ -255,6 +255,13 @@ export default class MicroDexHelper {
     order_element.amount_give = order_event.args.amountGive.toNumber();
     order_element.amount_get = order_event.args.amountGet.toNumber();
 
+    order_element.expires = order_event.expires.toNumber();
+    order_element.nonce = order_event.nonce.toNumber();
+
+    order_element.tx_hash = order_event.transactionHash;
+    order_element.tx_index = order_event.transactionIndex;
+
+
     //bids give eth
     if( order_element.token_give == "0x0000000000000000000000000000000000000000"
         && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
