@@ -273,8 +273,8 @@ export default class MicroDexHelper {
       console.log(vrs_data)
 
       var sig_v = vrs_data.v;
-      var sig_r = vrs_data.r.toNumber();
-      var sig_s = vrs_data.s.toNumber();
+      var sig_r = vrs_data.r;
+      var sig_s = vrs_data.s;
 
 
       /*
@@ -645,7 +645,10 @@ export default class MicroDexHelper {
   async performTrade(tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
   {
     console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
-)
+
+
+      // contract.testTrade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires, nonce, callback);
+
   }
 
 /*
