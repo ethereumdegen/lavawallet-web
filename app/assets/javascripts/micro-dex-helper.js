@@ -1,6 +1,7 @@
 
 const $ = require('jquery');
 
+var web3utils = require('web3-utils')
 
 import Vue from 'vue'
 
@@ -14,9 +15,10 @@ var _0xBitcoinContract;
 var balanceText;
 var accountAddress;
 
+var orderContainer;
 
-
-
+var order_ask_list = [];
+var order_bid_list = [];
 
 export default class MicroDexHelper {
 
@@ -55,7 +57,6 @@ export default class MicroDexHelper {
      await this.updateWalletRender();
 
 
-     await this.loadOrderEvents()
 
 
 
@@ -113,14 +114,18 @@ export default class MicroDexHelper {
          }
       });
 
-      var order = new Vue({
+       orderContainer = new Vue({
          el: '#order-form',
          data: {
 
            bidTokenGet: 0,
            bidTokenGive: 0,
            askTokenGet: 0,
-           askTokenGive: 0
+           askTokenGive: 0,
+
+           asks: {ask_list:order_ask_list},
+           bids: {bid_list:order_bid_list}
+
               },
 
          methods: {
@@ -129,6 +134,10 @@ export default class MicroDexHelper {
             }
           }
        });
+
+       await this.loadOrderEvents()
+
+
 
 
 
@@ -167,18 +176,20 @@ export default class MicroDexHelper {
        })
 
 
+       var expires = 10000;
 
 
+      //  tokenGet,amountGet,tokenGive,amountGive,expires,nonce
 
 
        $('.btn-bid-order').on('click',function(){
-         self.createOrder(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+         self.createOrder(tokenAddress,order.bidTokenGet,0,order.bidTokenGive, expires, function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-ask-order').on('click',function(){
-         self.createOrder(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+         self.createOrder(0,order.askTokenGet,tokenAddress,order.askTokenGive, expires, function(error,response){
             console.log(response)
          });
        })
@@ -231,6 +242,25 @@ export default class MicroDexHelper {
   }
 
 
+   renderOrderEvent(order_event)
+  {
+    console.log('render',order_event);
+
+    var order_element = order_event;
+
+
+    var original_list = order_ask_list;
+
+
+    var updated_list = order_ask_list.push(order_element);
+
+    Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
+
+    console.log(order_ask_list)
+  }
+
+
+
   async loadOrderEvents()
   {
       if(this.web3 == null)
@@ -254,6 +284,7 @@ export default class MicroDexHelper {
        });
 
 
+       var self = this;
        var contract = this.ethHelper.getWeb3ContractInstance(
          this.web3,
          microDexContract.blockchain_address,
@@ -263,14 +294,16 @@ export default class MicroDexHelper {
        var myEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
           myEvent.watch(function(error, result){
-             console.log(result)
+             //console.log(result)
+
+             self.renderOrderEvent(result)
           });
 
           // would get all past logs again.
-          var myResults = myEvent.get(function(error, logs){
+        /*  var myResults = myEvent.get(function(error, logs){
             console.log(logs)
           });
-
+        */
 
           // would stop and uninstall the filter
         //  myEvent.stopWatching();
@@ -306,6 +339,7 @@ export default class MicroDexHelper {
     });*/
 
   }
+
 
 
 
@@ -431,9 +465,9 @@ export default class MicroDexHelper {
 //nonce should just be a securerandom number !
 
   //initiated from a little form - makes a listrow
-  async createOrder(tokenGet,amountGet,tokenGive,amountGive,expires,nonce,callback)
+  async createOrder(tokenGet,amountGet,tokenGive,amountGive,expires,callback)
   {
-     console.log('withdraw token',tokenAddress,amountRaw);
+     console.log('withdraw token',tokenGet,amountGet,tokenGive,amountGive,expires);
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -443,7 +477,9 @@ export default class MicroDexHelper {
 
      console.log(contract)
 
-     contract.order.sendTransaction( tokenAddress, amountRaw , callback);
+     var nonce = web3utils.randomHex(32);
+
+     contract.order.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires, nonce, callback);
 
   }
 

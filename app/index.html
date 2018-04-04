@@ -94,8 +94,17 @@
                 <div class="subtitle color-primary">Buy 0xBitcoin</div>
 
                 <div class="order-form">
-                  <input class="input" v-model="bidTokenGet" placeholder="token amount">
-                  <input class="input" v-model="bidTokenGive" placeholder="ether amount">
+
+                  <div class="input-container">
+                    <div class="label">Token Amount</div>
+                    <input class="input" v-model="bidTokenGet" placeholder="token amount">
+                  </div>
+
+                  <div class="input-container">
+                    <div class="label">Ether Amount</div>
+                    <input class="input" v-model="bidTokenGive" placeholder="ether amount">
+                  </div>
+
                   <a class="button is-primary btn-bid-order">Place Bid</a>
                 </div>
 
@@ -112,8 +121,17 @@
                 <div class="subtitle color-primary">Sell 0xBitcoin</div>
 
                 <div class="order-form">
-                  <input class="input" v-model="askTokenGet" placeholder="token amount">
-                  <input class="input" v-model="askTokenGive" placeholder="ether amount">
+
+                  <div class="input-container">
+                    <div class="label">Token Amount</div>
+                    <input class="input" v-model="askTokenGet" placeholder="token amount">
+                  </div>
+
+                  <div class="input-container">
+                    <div class="label">Ether Amount</div>
+                    <input class="input" v-model="askTokenGive" placeholder="ether amount">
+                  </div>
+
                   <a class="button is-primary btn-ask-order">Place Ask</a>
                 </div>
 

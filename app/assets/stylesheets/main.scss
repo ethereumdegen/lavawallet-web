@@ -191,31 +191,17 @@ a
 }
 
 
-.mining-pools-section
-{
-  background-color: #FF7007;
 
-}
 
-.mining-pools-section
-{
-position: relative;
 
-}
-.mining-pools-section:after
-{
-   content: url(/app/assets/img/pool_mining_shadow.png);
-   position: absolute;
-   top: 15%;
-   opacity: 0.05;
-   right: 4%;
-}
 
-.pools-feature-container
+.order-form
 {
-  padding-top:20px;
-  max-width:400px;
-  margin: 0 auto;
+  .input-container
+  {
+    max-width:40%;
+    display:inline-block;
+  }
 }
 
 .transfer-form-fields
