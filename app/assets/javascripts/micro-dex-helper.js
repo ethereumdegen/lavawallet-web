@@ -244,18 +244,16 @@ export default class MicroDexHelper {
 
 
 
-
-  //tough to get this to work !
   async registerOrderRowClickHandler()
   {
 
     var self = this;
 
     console.log('register order row click handler')
-    console.log($('.order-row').length)
+    console.log('trading rows', $('.trading-row').length)
      //need to do this after watch/render  happens
-    $('.order-row').off();
-    $('.order-row').on('click',async function(){
+    $('.trading-row').off();
+    $('.trading-row').on('click',async function(){
       var order_tx_hash = $(this).data('txhash');
       console.log('order_tx_hash',order_tx_hash);
 
@@ -293,8 +291,16 @@ export default class MicroDexHelper {
 
     })
 
+    $('.monitor-order-row').off();
+    $('.monitor-order-row').on('click',async function(){
+      console.log('should cancel order')
+    });
+
 
   }
+
+
+ 
 
   detectInjectedWeb3()
   {
@@ -426,15 +432,17 @@ export default class MicroDexHelper {
      Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
     }
 
-    Vue.nextTick(function () {
-      self.registerOrderRowClickHandler()
-    })
+
 
 
     if(order_element.user.toLowerCase() == activeAccount.toLowerCase())
     {
         this.collectMyOrder(order_element);
     }
+
+    Vue.nextTick(function () {
+      self.registerOrderRowClickHandler()
+    })
   }
 
 
