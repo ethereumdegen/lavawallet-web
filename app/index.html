@@ -120,7 +120,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <tr class="order-row acts-as-link" v-for="(item, index) in bids.bid_list">
+                      <tr class="order-row acts-as-link" v-for="(item, index) in bids.bid_list" v-bind:data-txhash="item.tx_hash" >
                         <td class="order-row-cell amount-get">{{item.amount_get}}</td>
                         <td class="order-row-cell amount-give">{{item.amount_give}}</td>
                         <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>

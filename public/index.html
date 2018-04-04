@@ -289,16 +289,41 @@
                 <div class="subtitle color-primary">Buy 0xBitcoin</div>
 
                 <div class="order-form">
-                  <input class="input" v-model="bidTokenGet" placeholder="token amount">
-                  <input class="input" v-model="bidTokenGive" placeholder="ether amount">
+
+                  <div class="input-container">
+                    <div class="label">Token Get</div>
+                    <input class="input" v-model="bidTokenGet" placeholder="token amount">
+                  </div>
+
+                  <div class="input-container">
+                    <div class="label">Ether Give</div>
+                    <input class="input" v-model="bidTokenGive" placeholder="ether amount">
+                  </div>
+
                   <a class="button is-primary btn-bid-order">Place Bid</a>
                 </div>
 
-                <div class="order-list">
+                <div class="order-list-container">
+                  <div class="order-list">
 
-                  -- need to monitor events to render this list --
+                    <table>
+                      <thead>
+                        <tr >
+                          <td> Token Get </td>
+                          <td> Ether Give </td>
+                          <td> Cost Ratio </td>
+                        </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="order-row acts-as-link" v-for="(item, index) in bids.bid_list" v-bind:data-txhash="item.tx_hash" >
+                        <td class="order-row-cell amount-get">{{item.amount_get}}</td>
+                        <td class="order-row-cell amount-give">{{item.amount_give}}</td>
+                        <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
+                      </tr>
+                    </tbody>
+                    </table>
 
-                   --orders--
+                   </div>
                 </div>
               </div>
 
@@ -307,8 +332,17 @@
                 <div class="subtitle color-primary">Sell 0xBitcoin</div>
 
                 <div class="order-form">
-                  <input class="input" v-model="askTokenGet" placeholder="token amount">
-                  <input class="input" v-model="askTokenGive" placeholder="ether amount">
+
+                  <div class="input-container">
+                    <div class="label">Token Give</div>
+                    <input class="input" v-model="askTokenGet" placeholder="token amount">
+                  </div>
+
+                  <div class="input-container">
+                    <div class="label">Ether Get</div>
+                    <input class="input" v-model="askTokenGive" placeholder="ether amount">
+                  </div>
+
                   <a class="button is-primary btn-ask-order">Place Ask</a>
                 </div>
 

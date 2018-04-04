@@ -20,6 +20,8 @@ var orderContainer;
 var order_ask_list = [];
 var order_bid_list = [];
 
+var order_hash_table = {};
+
 export default class MicroDexHelper {
 
 
@@ -211,17 +213,61 @@ export default class MicroDexHelper {
 
 
   //tough to get this to work !
-  registerOrderRowClickHandler()
+  async registerOrderRowClickHandler()
   {
 
     console.log('register order row click handler')
     console.log($('.order-row').length)
      //need to do this after watch/render  happens
     $('.order-row').off();
-    $('.order-row').on('click',function(){
-      console.log('perform trade');
+    $('.order-row').on('click',async function(){
+      var order_tx_hash = $(this).data('txhash');
+      console.log('order_tx_hash',order_tx_hash);
 
-      this.performTrade(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+      var order_element = JSON.parse( order_hash_table[order_tx_hash] );
+      console.log('perform trade',order_element);
+
+
+      //function trade(address tokenGet, uint amountGet, address tokenGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
+
+      var token_get = order_element.token_get;
+      var token_give = order_element.token_give;
+      var amount_get = order_element.amount_get;
+      var amount_give = order_element.amount_give;
+      var expires = order_element.expires;
+      var nonce = order_element.nonce;
+
+      var activeAccount = web3.eth.accounts[0];
+
+
+      //amount get ...pegged at the entire order for now
+      var trade_order_amount = order_element.amount_get;
+
+      var micro_dex_address = microDexContract.blockchain_address;
+
+      //NEED TO FIX MESSAGE SIGNING
+      var message_to_sign = web3utils.soliditySha3(micro_dex_address,token_get,amount_get,token_give,amount_give,expires,nonce).toString();
+
+      console.log('message_to_sign',message_to_sign);
+
+      var order_sig = await new Promise(resolve => {
+           web3.eth.sign(activeAccount, message_to_sign, resolve  );
+      });
+
+      console.log('sig',order_sig)
+      /*
+       var sigHash = web3utils.soliditySha3(requestRecipient, requestQuantity, requestToken, requestNonce)
+
+          console.log(addressFrom)
+
+          console.log(sigHash)
+
+          var sigHashHex = Buffer.from(sigHash.substr(2, sigHash.length),'hex');
+
+       var sig = ethUtil.ecsign(sigHashHex, Buffer.from(privateKey,'hex'))
+    */
+
+      this.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, activeAccount, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
          console.log(response)
       });
 
@@ -304,6 +350,9 @@ export default class MicroDexHelper {
       order_element.order_type = "ask";
       order_element.cost_ratio = order_element.amount_get / order_element.amount_give;
     }
+
+    order_hash_table[order_element.tx_hash] = JSON.stringify( order_element );
+
 
     return order_element;
   }

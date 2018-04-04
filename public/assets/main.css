@@ -13230,23 +13230,23 @@ a {
 .acts-as-link {
   cursor: pointer; }
 
-.mining-pools-section {
-  background-color: #FF7007; }
+.order-form .input-container {
+  max-width: 40%;
+  display: inline-block; }
 
-.mining-pools-section {
-  position: relative; }
+.order-list-container .order-list {
+  width: 300px;
+  padding: 10px;
+  margin: 10px auto;
+  overflow-y: auto;
+  max-height: 400px;
+  background-color: gray; }
 
-.mining-pools-section:after {
-  content: url(/app/assets/img/pool_mining_shadow.png);
-  position: absolute;
-  top: 15%;
-  opacity: 0.05;
-  right: 4%; }
-
-.pools-feature-container {
-  padding-top: 20px;
-  max-width: 400px;
-  margin: 0 auto; }
+.order-row {
+  width: 280px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background-color: white; }
 
 .transfer-form-fields {
   max-width: 180px;
