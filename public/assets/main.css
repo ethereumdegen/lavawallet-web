@@ -13264,6 +13264,9 @@ a {
 .order-row:hover {
   background-color: #ddd; }
 
+.order-row.unable {
+  background-color: #edd; }
+
 .transfer-form-fields {
   max-width: 180px;
   margin: 20px auto; }
