@@ -475,6 +475,11 @@ export default class MicroDexHelper {
       get_decimal_places = 8;
       order_element.order_type = "bid";
 
+      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
+      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
+
+      order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
+
     }
 
     //asks get eth
@@ -485,17 +490,20 @@ export default class MicroDexHelper {
       order_element.order_type = "ask";
 
       console.log("found ask " , JSON.stringify(order_element))
+
+      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
+      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
+
+      order_element.cost_ratio = order_element.amount_get_formatted / order_element.amount_give_formatted;
+
     }
 
-    order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
-    order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
 
-
-    order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
     if(order_element.cost_ratio < 0.0000000001 )
     {
       order_element.cost_ratio = 0;
     }
+
 
     order_hash_table[order_element.order_hash] = JSON.stringify( order_element );
 
@@ -586,7 +594,7 @@ export default class MicroDexHelper {
       {
         order_bid_list.push(order_element);
         order_bid_list.sort(function(a, b) {
-              return a.cost_ratio - b.cost_ratio;
+              return b.cost_ratio - a.cost_ratio;
        })
        Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
       }

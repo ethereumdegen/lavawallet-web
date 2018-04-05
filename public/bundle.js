@@ -55575,7 +55575,7 @@ class MicroDexHelper {
     //need to do this after watch/render  happens
     $('.trading-row').off();
     $('.trading-row').on('click', async function () {
-      var order_hash = $(this).data('order_hash');
+      var order_hash = $(this).data('orderhash');
       console.log('order_hash', order_hash);
 
       var order_element = JSON.parse(order_hash_table[order_hash]);
@@ -55719,6 +55719,8 @@ class MicroDexHelper {
     if (order_element.token_get == "0x0000000000000000000000000000000000000000" && order_element.token_give.toLowerCase() == base_pair_token_address.toLowerCase()) {
       give_decimal_places = 8;
       order_element.order_type = "ask";
+
+      console.log("found ask ", JSON.stringify(order_element));
     }
 
     order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get, get_decimal_places);
@@ -55995,7 +55997,7 @@ class MicroDexHelper {
 
   //initiated from a little form - makes a listrow
   async createOrder(tokenGet, amountGet, tokenGive, amountGive, expires, callback) {
-    console.log('withdraw token', tokenGet, amountGet, tokenGive, amountGive, expires);
+    console.log('create order ', tokenGet, amountGet, tokenGive, amountGive, expires);
 
     var contract = this.ethHelper.getWeb3ContractInstance(this.web3, microDexContract.blockchain_address, microDexABI.abi);
 
