@@ -848,7 +848,7 @@ export default class MicroDexHelper {
   //initiated from a little form - makes a listrow
   async createOrder(tokenGet,amountGet,tokenGive,amountGive,expires,callback)
   {
-     console.log('withdraw token',tokenGet,amountGet,tokenGive,amountGive,expires);
+     console.log('create order ',tokenGet,amountGet,tokenGive,amountGive,expires);
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
