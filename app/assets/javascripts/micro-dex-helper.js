@@ -21,6 +21,9 @@ var order_ask_list = [];
 var order_bid_list = [];
 
 var order_hash_table = {};
+var closed_order_hash_table = {}; //fulfilled or cancelled
+var traded_order_hash_table = {}; //partially fulfilled
+
 
 var order_cancels_list = [];
 var my_orders_list = [];
@@ -370,7 +373,7 @@ export default class MicroDexHelper {
   }
 
 
-  buildOrderElementFromEvent(order_event, base_pair_token_address)
+  async buildOrderElementFromEvent(order_event, base_pair_token_address,micro_dex_address)
   {
     console.log('build from ',order_event);
     console.log('base_pair_token_address ',base_pair_token_address);
@@ -391,6 +394,27 @@ export default class MicroDexHelper {
 
     order_element.tx_hash = order_event.transactionHash;
     order_element.tx_index = order_event.transactionIndex;
+
+    order_element.order_hash = web3utils.soliditySha3(
+      micro_dex_address,
+      order_element.token_get,
+      order_element.amount_get,
+      order_element.token_give,
+      order_element.amount_give,
+      order_element.expires,
+      order_element.nonce
+     )
+
+     //laggy but oh well
+    order_element.amount_filled = await this.getOrderAmountFilled(
+      order_element.token_get,
+      order_element.amount_get,
+      order_element.token_give,
+      order_element.amount_give,
+      order_element.expires,
+      order_element.nonce,
+      order_element.user
+    )
 
     console.log('order_element.nonce',order_element.nonce )
     //bids give eth
@@ -416,23 +440,62 @@ export default class MicroDexHelper {
   }
 
 
+
+
   collectCancelEvent(cancel_event, base_pair_token_address)
   {
     console.log('cancel',cancel_event)
     var cancel_element = cancel_event;
 
+    cancel_element.tx_hash = cancel_event.transactionHash;
+    cancel_element.cancelled = true;
+
     order_cancels_list.push(cancel_element)
+
+    closed_order_hash_table[cancel_element.tx_hash] = cancel_element;
+
   }
 
-  collectTradeEvent(trade_event, base_pair_token_address)
+/*  collectTradeEvent(trade_event, base_pair_token_address)
   {
-      console.log('trade',trade_event)
+    console.log('trade',trade_event)
     var trade_element = trade_event;
 
-    recent_trades_list.push(trade_element)
-  }
 
-   collectOrderEvent(order_event, base_pair_token_address)
+    if(traded_order_hash_table[trade_element.tx_hash]!=null)
+    {
+      trade_element = traded_order_hash_table[trade_element.tx_hash]
+
+      trade_element.amount_get_traded += trade_event.args.amountGive.toNumber();
+      trade_element.amount_give_traded += trade_event.args.amountGet.toNumber()
+
+    }
+
+    trade_element.token_give = trade_event.args.tokenGive;
+    trade_element.token_get = trade_event.args.tokenGet;
+    trade_element.amount_give = trade_event.args.amountGive.toNumber();
+    trade_element.amount_get = trade_event.args.amountGet.toNumber();
+
+
+
+    trade_element.tx_hash = trade_event.transactionHash; //not reliable ?
+    trade_element.traded = true;
+
+    recent_trades_list.push(trade_element)
+
+
+
+    if(fully_traded)
+    {
+      trade_element.cancelled = true;
+      closed_order_hash_table[trade_element.tx_hash] = trade_element;
+    }
+
+    traded_order_hash_table[trade_element.tx_hash] = trade_element;
+
+  }*/
+
+   async collectOrderEvent(order_event, base_pair_token_address, micro_dex_address)
   {
 
     var self = this;
@@ -440,7 +503,7 @@ export default class MicroDexHelper {
     var activeAccount = web3.eth.accounts[0];
 
 
-    var order_element = this.buildOrderElementFromEvent(order_event, base_pair_token_address);
+    var order_element = await this.buildOrderElementFromEvent(order_event, base_pair_token_address, micro_dex_address);
 
     console.log('render',order_element);
 
@@ -485,6 +548,9 @@ export default class MicroDexHelper {
    })
   }
 
+
+
+
   async loadOrderEvents()
   {
       if(this.web3 == null)
@@ -509,6 +575,8 @@ export default class MicroDexHelper {
        );
 
 
+       var micro_dex_address = microDexContract.blockchain_address;
+
        var base_pair_token_address = _0xBitcoinContract.blockchain_address;
 
        var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
@@ -520,14 +588,14 @@ export default class MicroDexHelper {
        var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        tradeEvent.watch(function(error, result){
-         self.collectTradeEvent(result, base_pair_token_address )
+            //self.collectTradeEvent(result, base_pair_token_address )
        });
 
 
        var orderEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        orderEvent.watch(function(error, result){
-         self.collectOrderEvent(result, base_pair_token_address )
+         self.collectOrderEvent(result, base_pair_token_address, micro_dex_address )
        });
 
           // would get all past logs again.
@@ -604,6 +672,22 @@ export default class MicroDexHelper {
   }
 
 
+  async getOrderAmountFilled(token_get,amount_get,token_give,amount_give,expires,nonce,user)
+  {
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      microDexContract.blockchain_address,
+      microDexABI.abi
+    );
+
+
+    return await new Promise(function (fulfilled,error) {
+           contract.amountFilled.call(token_get,amount_get,token_give,amount_give,expires,nonce,user,0,0,0,function(err,result){
+             fulfilled(result);
+           })
+      });
+
+  }
 
 
   async depositEther(amountRaw,callback)
@@ -713,11 +797,11 @@ export default class MicroDexHelper {
       microDexABI.abi
     );
 
-
-
      contract.trade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount, callback);
 
   }
+
+
 
   async cancelOrder(tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,   callback)
   {
