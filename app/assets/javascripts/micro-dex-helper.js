@@ -137,6 +137,8 @@ export default class MicroDexHelper {
         data: {
           etherBalance: etherBalance.toNumber(),
           tokenBalance: tokenBalance.toNumber(),
+          etherBalanceFormatted: this.formatAmountWithDecimals(etherBalance.toNumber(),18),
+          tokenBalanceFormatted: this.formatAmountWithDecimals(tokenBalance.toNumber(),8),
 
           depositEtherAmount: 0,
           withdrawEtherAmount: 0,
@@ -200,14 +202,16 @@ export default class MicroDexHelper {
          });
        })
 
+       var token_decimals = 8;
+
        $('.btn-deposit-0xbtc').on('click',function(){
-         self.ApproveAndCallDepositToken(tokenAddress,transfer.depositTokenAmount,  function(error,response){
+         self.ApproveAndCallDepositToken(tokenAddress,transfer.depositTokenAmount, token_decimals, function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-withdraw-0xbtc').on('click',function(){
-         self.withdrawToken(tokenAddress,transfer.withdrawTokenAmount,  function(error,response){
+         self.withdrawToken(tokenAddress,transfer.withdrawTokenAmount, token_decimals, function(error,response){
             console.log(response)
          });
        })
@@ -223,14 +227,34 @@ export default class MicroDexHelper {
       //  tokenGet,amountGet,tokenGive,amountGive,expires,nonce
 
 
+
+
+
+
        $('.btn-bid-order').on('click',function(){
-         self.createOrder(tokenAddress,orderContainer.bidTokenGet,0,orderContainer.bidTokenGive, expires, function(error,response){
+
+         var token_get_decimals = self.getDecimalsOfToken(tokenAddress);
+         var token_get = self.getRawFromDecimalFormat(orderContainer.bidTokenGet,token_get_decimals)
+
+         var token_give_decimals = self.getDecimalsOfToken(0);
+         var token_give = self.getRawFromDecimalFormat(orderContainer.bidTokenGive,token_give_decimals)
+
+
+         self.createOrder(tokenAddress,token_get,0,token_give, expires, function(error,response){
             console.log(response)
          });
        })
 
        $('.btn-ask-order').on('click',function(){
-         self.createOrder(0,orderContainer.askTokenGet,tokenAddress,orderContainer.askTokenGive, expires, function(error,response){
+
+         var token_get_decimals = self.getDecimalsOfToken(0);
+         var token_get = self.getRawFromDecimalFormat(orderContainer.askTokenGet,token_get_decimals)
+
+         var token_give_decimals = self.getDecimalsOfToken(tokenAddress);
+         var token_give = self.getRawFromDecimalFormat(orderContainer.askTokenGive,token_give_decimals)
+
+
+         self.createOrder(0,token_get,tokenAddress,token_give, expires, function(error,response){
             console.log(response)
          });
        })
@@ -257,10 +281,10 @@ export default class MicroDexHelper {
      //need to do this after watch/render  happens
     $('.trading-row').off();
     $('.trading-row').on('click',async function(){
-      var order_tx_hash = $(this).data('txhash');
-      console.log('order_tx_hash',order_tx_hash);
+      var order_hash = $(this).data('order_hash');
+      console.log('order_hash',order_hash);
 
-      var order_element = JSON.parse( order_hash_table[order_tx_hash] );
+      var order_element = JSON.parse( order_hash_table[order_hash] );
       console.log('perform trade',order_element);
 
 
@@ -298,10 +322,10 @@ export default class MicroDexHelper {
     $('.monitor-order-row').on('click',async function(){
       console.log('should cancel order')
 
-      var order_tx_hash = $(this).data('txhash');
-      console.log('order_tx_hash',order_tx_hash);
+      var order_hash = $(this).data('orderhash');
+      console.log('order_hash',order_hash);
 
-      var order_element = JSON.parse( order_hash_table[order_tx_hash] );
+      var order_element = JSON.parse( order_hash_table[order_hash] );
       console.log('perform trade',order_element);
 
 
@@ -373,10 +397,13 @@ export default class MicroDexHelper {
   }
 
 
-  async buildOrderElementFromEvent(order_event, base_pair_token_address,micro_dex_address)
+  async buildOrderElementFromEvent(order_event, base_pair_token_address,micro_dex_address,currentEthBlock)
   {
     console.log('build from ',order_event);
     console.log('base_pair_token_address ',base_pair_token_address);
+
+
+
 
 
     var order_element = {};
@@ -403,37 +430,73 @@ export default class MicroDexHelper {
       order_element.amount_give,
       order_element.expires,
       order_element.nonce
-     )
+    )
+
+    console.log('order_element.order_hash',order_element.order_hash)
 
      //laggy but oh well
     order_element.amount_filled = await this.getOrderAmountFilled(
-      order_element.token_get,
-      order_element.amount_get,
-      order_element.token_give,
-      order_element.amount_give,
-      order_element.expires,
-      order_element.nonce,
-      order_element.user
-    )
+                                    order_element.token_get,
+                                    order_element.amount_get,
+                                    order_element.token_give,
+                                    order_element.amount_give,
+                                    order_element.expires,
+                                    order_event.args.nonce,
+                                    order_element.user
+                                  )
+
+    if(order_element.expires < currentEthBlock )
+    {
+      order_element.expired = true;
+    }
+
+    if(order_element.amount_filled >= order_element.amount_get
+    ||  order_element.expired  )
+    {
+      order_element.closed = true;
+    }
+
+    //fix me
+    order_element.amount_get_remaining = 0;
+    order_element.amount_give_remaining = 0;
+
+
+
+        var give_decimal_places = 18;
+        var get_decimal_places = 18;
+
+
 
     console.log('order_element.nonce',order_element.nonce )
     //bids give eth
     if( order_element.token_give == "0x0000000000000000000000000000000000000000"
         && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
     {
+      get_decimal_places = 8;
       order_element.order_type = "bid";
-      order_element.cost_ratio = order_element.amount_give / order_element.amount_get;
+
     }
 
     //asks get eth
     if( order_element.token_get == "0x0000000000000000000000000000000000000000"
         &&  order_element.token_give.toLowerCase() ==  base_pair_token_address.toLowerCase())
     {
+      give_decimal_places = 8;
       order_element.order_type = "ask";
-      order_element.cost_ratio = order_element.amount_give / order_element.amount_get;
+
     }
 
-    order_hash_table[order_element.tx_hash] = JSON.stringify( order_element );
+    order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
+    order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
+
+
+    order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
+    if(order_element.cost_ratio < 0.0000000001 )
+    {
+      order_element.cost_ratio = 0;
+    }
+
+    order_hash_table[order_element.order_hash] = JSON.stringify( order_element );
 
 
     return order_element;
@@ -442,7 +505,7 @@ export default class MicroDexHelper {
 
 
 
-  collectCancelEvent(cancel_event, base_pair_token_address)
+  /*collectCancelEvent(cancel_event, base_pair_token_address)
   {
     console.log('cancel',cancel_event)
     var cancel_element = cancel_event;
@@ -454,7 +517,8 @@ export default class MicroDexHelper {
 
     closed_order_hash_table[cancel_element.tx_hash] = cancel_element;
 
-  }
+  }*/
+
 
 /*  collectTradeEvent(trade_event, base_pair_token_address)
   {
@@ -495,7 +559,7 @@ export default class MicroDexHelper {
 
   }*/
 
-   async collectOrderEvent(order_event, base_pair_token_address, micro_dex_address)
+   async collectOrderEvent(order_event, base_pair_token_address, micro_dex_address,currentEthBlock)
   {
 
     var self = this;
@@ -503,28 +567,29 @@ export default class MicroDexHelper {
     var activeAccount = web3.eth.accounts[0];
 
 
-    var order_element = await this.buildOrderElementFromEvent(order_event, base_pair_token_address, micro_dex_address);
+    var order_element = await this.buildOrderElementFromEvent(order_event, base_pair_token_address, micro_dex_address,currentEthBlock);
 
     console.log('render',order_element);
 
-    if(order_element.order_type == "ask")
-    {
-      order_ask_list.push(order_element);
-      order_ask_list.sort(function(a, b) {
-            return a.cost_ratio - b.cost_ratio;
-     })
-     Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
-    }
+    if(order_element.closed != true){
+      if(order_element.order_type == "ask")
+      {
+        order_ask_list.push(order_element);
+        order_ask_list.sort(function(a, b) {
+              return a.cost_ratio - b.cost_ratio;
+       })
+       Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
+      }
 
-    if(order_element.order_type == "bid")
-    {
-      order_bid_list.push(order_element);
-      order_bid_list.sort(function(a, b) {
-            return a.cost_ratio - b.cost_ratio;
-     })
-     Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
+      if(order_element.order_type == "bid")
+      {
+        order_bid_list.push(order_element);
+        order_bid_list.sort(function(a, b) {
+              return a.cost_ratio - b.cost_ratio;
+       })
+       Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
+      }
     }
-
 
 
 
@@ -582,7 +647,7 @@ export default class MicroDexHelper {
        var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        cancelEvent.watch(function(error, result){
-         self.collectCancelEvent(result, base_pair_token_address )
+         //self.collectCancelEvent(result, base_pair_token_address )
        });
 
        var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
@@ -595,7 +660,7 @@ export default class MicroDexHelper {
        var orderEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        orderEvent.watch(function(error, result){
-         self.collectOrderEvent(result, base_pair_token_address, micro_dex_address )
+         self.collectOrderEvent(result, base_pair_token_address, micro_dex_address ,current_block)
        });
 
           // would get all past logs again.
@@ -674,6 +739,8 @@ export default class MicroDexHelper {
 
   async getOrderAmountFilled(token_get,amount_get,token_give,amount_give,expires,nonce,user)
   {
+
+    console.log('amount filledd',token_get,amount_get,token_give,amount_give,expires,nonce,user)
     var contract = this.ethHelper.getWeb3ContractInstance(
       this.web3,
       microDexContract.blockchain_address,
@@ -681,20 +748,25 @@ export default class MicroDexHelper {
     );
 
 
-    return await new Promise(function (fulfilled,error) {
+    var filledResult =  await new Promise(function (fulfilled,error) {
            contract.amountFilled.call(token_get,amount_get,token_give,amount_give,expires,nonce,user,0,0,0,function(err,result){
              fulfilled(result);
            })
       });
 
+      console.log('filledResult',filledResult)
+
+      return filledResult.toNumber();
+
   }
 
 
-  async depositEther(amountRaw,callback)
+  async depositEther(amountFormatted,callback)
   {
      console.log('deposit ether',amountRaw);
 
-     //amountRaw = 100000000000;
+     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,18)
+
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -708,9 +780,9 @@ export default class MicroDexHelper {
 
   }
 
-  async withdrawEther(amountRaw,callback)
+  async withdrawEther(amountFormatted,callback)
   {
-     console.log
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted,18)
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -727,9 +799,12 @@ export default class MicroDexHelper {
 
 
   //should be using approve and call!!!
-  async ApproveAndCallDepositToken(tokenAddress,amountRaw,callback)
+  async ApproveAndCallDepositToken(tokenAddress,amountFormatted,tokenDecimals,callback)
   {
      console.log('deposit token',tokenAddress,amountRaw);
+
+     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
 
      var remoteCallData = '0x01';
 
@@ -747,9 +822,12 @@ export default class MicroDexHelper {
 
   }
 
-  async withdrawToken(tokenAddress,amountRaw,callback)
+  async withdrawToken(tokenAddress,amountFormatted,tokenDecimals,callback)
   {
      console.log('withdraw token',tokenAddress,amountRaw);
+
+     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -815,6 +893,38 @@ export default class MicroDexHelper {
 
      contract.cancelOrder.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,  callback);
 
+  }
+
+  //maybe use web3 ??
+  getDecimalsOfToken(token_address)
+  {
+
+    if(token_address!= 0 && token_address.toLowerCase() == _0xBitcoinContract.blockchain_address.toLowerCase())
+    {
+      return 8;
+    }
+
+    return 18;
+
+  }
+
+
+  getRawFromDecimalFormat(amountFormatted,decimals)
+  {
+    var amountRaw = amountFormatted * Math.pow(10,decimals)
+
+    amountRaw = Math.floor(amountRaw)
+
+    return amountRaw;
+  }
+
+  formatAmountWithDecimals(amountRaw,decimals)
+  {
+    var amountFormatted = amountRaw / (Math.pow(10,decimals) * 1.0)
+
+  //  amountFormatted = Math.round(amountFormatted,decimals)
+
+    return amountFormatted;
   }
 
 /*

@@ -247,6 +247,9 @@ a
   margin-bottom:5px;
   background-color:white;
 
+
+    border: 1px solid gray;
+
   padding:5px;
 
   .order-row-cell
@@ -272,6 +275,14 @@ a
     margin: 10px;
   }
 }
+
+.monitor-book
+{
+  table {
+     margin:0 auto;
+   }
+}
+
 
 
 .color-fun-primary
