@@ -13201,9 +13201,10 @@ a {
     margin-bottom: 20px; }
 
 .gray-theme {
-  background-color: #7a908d; }
+  background-color: #ddd;
+  border: 2px solid gray; }
   .gray-theme .color-primary {
-    color: white; }
+    color: #ff7209; }
 
 .orange-theme {
   background-color: #ff7209; }
@@ -13242,17 +13243,35 @@ a {
   max-height: 400px;
   background-color: gray; }
 
+.order-list-container table {
+  margin: 0 auto;
+  color: white; }
+
+.order-list-container thead td {
+  padding: 5px; }
+
 .order-row {
   width: 280px;
   margin-top: 5px;
   margin-bottom: 5px;
-  background-color: white; }
+  background-color: white;
+  border: 1px solid gray;
+  padding: 5px; }
+  .order-row .order-row-cell {
+    padding: 5px;
+    color: black; }
+
+.order-row:hover {
+  background-color: #ddd; }
 
 .transfer-form-fields {
   max-width: 180px;
   margin: 20px auto; }
   .transfer-form-fields .button {
     margin: 10px; }
+
+.monitor-book table {
+  margin: 0 auto; }
 
 .color-fun-primary {
   color: #e2c08d; }
