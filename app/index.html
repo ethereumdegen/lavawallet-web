@@ -132,8 +132,8 @@
                                 </thead>
                                 <tbody>
                                 <tr class="trading-row order-row acts-as-link" v-for="(item, index) in asks.ask_list" v-bind:data-orderhash="item.order_hash" >
-                                  <td class="order-row-cell amount-get">{{item.amount_get_formatted}}</td>
-                                  <td class="order-row-cell amount-give">{{item.amount_give_formatted}}</td>
+                                  <td class="order-row-cell amount-get">{{item.amount_give_formatted}}</td>
+                                  <td class="order-row-cell amount-give">{{item.amount_get_formatted}}</td>
                                   <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
                                 </tr>
                               </tbody>

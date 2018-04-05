@@ -484,6 +484,7 @@ export default class MicroDexHelper {
       give_decimal_places = 8;
       order_element.order_type = "ask";
 
+      console.log("found ask " , JSON.stringify(order_element))
     }
 
     order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
