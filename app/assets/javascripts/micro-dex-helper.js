@@ -29,6 +29,10 @@ var order_cancels_list = [];
 var my_orders_list = [];
 var recent_trades_list = [];
 
+var primary_asset_address;
+var secondary_asset_address;
+var client_token_balances = {};
+
 
 export default class MicroDexHelper {
 
@@ -92,17 +96,27 @@ export default class MicroDexHelper {
 
      var activeAccount = web3.eth.accounts[0];
 
+     var primary_asset_address = _0xBitcoinContract.blockchain_address;
+     var secondary_asset_address = 0;
+
+
+   var tokenBalance = await new Promise(resolve => {
+     dexContract.balanceOf(primary_asset_address,activeAccount, function(err,result){
+         resolve(result)
+        }) ;
+       });
+
+       client_token_balances[primary_asset_address] = tokenBalance;
 
      var etherBalance = await new Promise(resolve => {
-        dexContract.balanceOf(0,activeAccount,function(err,result){
+        dexContract.balanceOf(secondary_asset_address,activeAccount,function(err,result){
           resolve(result)
         });
       });
-     var tokenBalance = await new Promise(resolve => {
-       dexContract.balanceOf(_0xBitcoinContract.blockchain_address,activeAccount, function(err,result){
-           resolve(result)
-          }) ;
-         });
+
+      client_token_balances[secondary_asset_address] = etherBalance;
+
+
 
 
      var jumbotron = new Vue({
@@ -445,13 +459,30 @@ export default class MicroDexHelper {
                                     order_element.user
                                   )
 
+
+    var client_taker_balance = client_token_balances[order_element.token_get];
+
+    if(client_taker_balance < order_element.amount_get )
+    {
+      order_element.client_unable = true;
+    }
+
+    var maker_give_balance = await this.getEscrowBalance(order_element.token_give,order_element.user)
+
+    if(maker_give_balance < order_element.amount_give )
+    {
+      order_element.impossible = true;
+    }
+
     if(order_element.expires < currentEthBlock )
     {
       order_element.expired = true;
     }
 
     if(order_element.amount_filled >= order_element.amount_get
-    ||  order_element.expired  )
+    ||  order_element.expired
+    ||  order_element.impossible
+    )
     {
       order_element.closed = true;
     }
@@ -475,6 +506,11 @@ export default class MicroDexHelper {
       get_decimal_places = 8;
       order_element.order_type = "bid";
 
+      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
+      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
+
+      order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
+
     }
 
     //asks get eth
@@ -484,17 +520,21 @@ export default class MicroDexHelper {
       give_decimal_places = 8;
       order_element.order_type = "ask";
 
+      console.log("found ask " , JSON.stringify(order_element))
+
+      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
+      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
+
+      order_element.cost_ratio = order_element.amount_get_formatted / order_element.amount_give_formatted;
+
     }
 
-    order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
-    order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
 
-
-    order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
     if(order_element.cost_ratio < 0.0000000001 )
     {
       order_element.cost_ratio = 0;
     }
+
 
     order_hash_table[order_element.order_hash] = JSON.stringify( order_element );
 
@@ -585,7 +625,7 @@ export default class MicroDexHelper {
       {
         order_bid_list.push(order_element);
         order_bid_list.sort(function(a, b) {
-              return a.cost_ratio - b.cost_ratio;
+              return b.cost_ratio - a.cost_ratio;
        })
        Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
       }
@@ -644,17 +684,17 @@ export default class MicroDexHelper {
 
        var base_pair_token_address = _0xBitcoinContract.blockchain_address;
 
-       var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+      /* var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        cancelEvent.watch(function(error, result){
          //self.collectCancelEvent(result, base_pair_token_address )
-       });
+       });*/
 
-       var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
+      /* var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
 
        tradeEvent.watch(function(error, result){
             //self.collectTradeEvent(result, base_pair_token_address )
-       });
+       });*/
 
 
        var orderEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
@@ -736,6 +776,24 @@ export default class MicroDexHelper {
 
   }
 
+  async getEscrowBalance(token_address,user)
+  {
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      microDexContract.blockchain_address,
+      microDexABI.abi
+    );
+
+    var balanceResult =  await new Promise(function (fulfilled,error) {
+           contract.balanceOf.call(token_address,user,function(err,result){
+             fulfilled(result);
+           })
+      });
+
+      console.log('balanceResult',balanceResult.toNumber())
+
+      return balanceResult.toNumber();
+  }
 
   async getOrderAmountFilled(token_get,amount_get,token_give,amount_give,expires,nonce,user)
   {
@@ -848,7 +906,7 @@ export default class MicroDexHelper {
   //initiated from a little form - makes a listrow
   async createOrder(tokenGet,amountGet,tokenGive,amountGive,expires,callback)
   {
-     console.log('withdraw token',tokenGet,amountGet,tokenGive,amountGive,expires);
+     console.log('create order ',tokenGet,amountGet,tokenGive,amountGive,expires);
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,

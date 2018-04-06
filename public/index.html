@@ -326,9 +326,9 @@
                                   </tr>
                                 </thead>
                                 <tbody>
-                                <tr class="trading-row order-row acts-as-link" v-for="(item, index) in asks.ask_list" v-bind:data-orderhash="item.order_hash" >
-                                  <td class="order-row-cell amount-get">{{item.amount_get_formatted}}</td>
-                                  <td class="order-row-cell amount-give">{{item.amount_give_formatted}}</td>
+                                <tr    v-for="(item, index) in asks.ask_list" v-bind:data-orderhash="item.order_hash" v-bind:class="{   'trading-row':true, 'order-row':true, 'acts-as-link':true , 'unable': item.client_unable } " >
+                                  <td class="order-row-cell amount-get">{{item.amount_give_formatted}}</td>
+                                  <td class="order-row-cell amount-give">{{item.amount_get_formatted}}</td>
                                   <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
                                 </tr>
                               </tbody>
@@ -350,12 +350,12 @@
 
                   <div class="input-container">
                     <div class="label">Token Give</div>
-                    <input class="input" v-model="askTokenGet" placeholder="token amount">
+                    <input class="input" v-model="askTokenGive" placeholder="token amount">
                   </div>
 
                   <div class="input-container">
                     <div class="label">Ether Get</div>
-                    <input class="input" v-model="askTokenGive" placeholder="ether amount">
+                    <input class="input" v-model="askTokenGet" placeholder="ether amount">
                   </div>
 
                   <a class="button is-primary btn-ask-order">Place Ask</a>
@@ -381,7 +381,7 @@
                         </tr>
                       </thead>
                       <tbody>
-                      <tr class="trading-row order-row acts-as-link" v-for="(item, index) in bids.bid_list" v-bind:data-orderhash="item.order_hash" >
+                      <tr  v-for="(item, index) in bids.bid_list" v-bind:data-orderhash="item.order_hash" v-bind:class="{   'trading-row':true, 'order-row':true, 'acts-as-link':true , 'unable': item.client_unable } " >
                         <td class="order-row-cell amount-get">{{item.amount_get_formatted}}</td>
                         <td class="order-row-cell amount-give">{{item.amount_give_formatted}}</td>
                         <td class="order-row-cell cost-ratio">{{item.cost_ratio}}</td>
