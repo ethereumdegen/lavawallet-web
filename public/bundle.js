@@ -55575,7 +55575,7 @@ class MicroDexHelper {
     //need to do this after watch/render  happens
     $('.trading-row').off();
     $('.trading-row').on('click', async function () {
-      var order_hash = $(this).data('order_hash');
+      var order_hash = $(this).data('orderhash');
       console.log('order_hash', order_hash);
 
       var order_element = JSON.parse(order_hash_table[order_hash]);
