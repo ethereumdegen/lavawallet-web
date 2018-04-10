@@ -21,7 +21,7 @@
       <div id="jumbotron" class=" ">
 
 
-        <div class="title has-text-centered is-hidden-mobile">Ethereum Token Wallet</div>
+        <div class="title has-text-centered is-hidden-mobile">Hot Wallet for Ethereum Tokens</div>
 
         <div class="whitespace-sm"></div>
 
@@ -33,6 +33,36 @@
 
       <section class="hero   ">
         <div class="hero-body">
+
+
+
+          <div id="asset-list" class="asset-list">
+
+            <table>
+              <thead>
+                <tr >
+                  <td> Icon </td>
+                  <td> Name </td>
+                  <td> Lava Balance </td>
+                  <td> v </td>
+                </tr>
+              </thead>
+              <tbody>
+              <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.token_address" v-bind:class="{   'asset-row':true, 'acts-as-link':true   } " >
+                <td class="row-cell amount-get">{{item.icon_url}}</td>
+                <td class="row-cell amount-give">{{item.name}}</td>
+                <td class="row-cell cost-ratio">{{item.balance_formatted}}</td>
+                <td class="row-cell cost-ratio">collapse</td>
+              </tr>
+            </tbody>
+            </table>
+
+           </div>
+
+
+
+
+
           <div id="transfer-form" class="  has-text-centered">
 
 
