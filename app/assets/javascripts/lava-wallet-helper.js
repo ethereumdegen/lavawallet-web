@@ -88,7 +88,7 @@ export default class LavaWalletHelper {
      });
 
 
-     var dexContract = this.ethHelper.getWeb3ContractInstance(
+     var walletContract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
        lavaWalletABI.abi
@@ -99,9 +99,10 @@ export default class LavaWalletHelper {
      var primary_asset_address = _0xBitcoinContract.blockchain_address;
      var secondary_asset_address = 0;
 
+     console.log(walletContract)
 
    var tokenBalance = await new Promise(resolve => {
-     dexContract.balanceOf(primary_asset_address,activeAccount, function(err,result){
+     walletContract.balanceOf(primary_asset_address,activeAccount, function(err,result){
          resolve(result)
         }) ;
        });
@@ -109,7 +110,7 @@ export default class LavaWalletHelper {
        client_token_balances[primary_asset_address] = tokenBalance;
 
      var etherBalance = await new Promise(resolve => {
-        dexContract.balanceOf(secondary_asset_address,activeAccount,function(err,result){
+        walletContract.balanceOf(secondary_asset_address,activeAccount,function(err,result){
           resolve(result)
         });
       });
