@@ -32,7 +32,7 @@ var webpackPlugins = [
 
 const routesData = {
   routes: [
-    {url: '/', title: 'FreeShift', template: 'app/index.html', filename: 'index.html'}
+    {url: '/', title: 'Lava Wallet', template: 'app/index.html', filename: 'index.html'}
    ]
 }
 

@@ -23,7 +23,7 @@ import Navbar from './navbar'
 
 import EthHelper from './ethhelper'
 
-import MicroDexHelper from './micro-dex-helper'
+import LavaWalletHelper from './lava-wallet-helper'
 
 import HomeDashboard from './home-dashboard'
 
@@ -34,7 +34,7 @@ var alertRenderer = new AlertRenderer();
 var ethHelper = new EthHelper();
 var navbar = new Navbar();
 
-var microDexHelper = new MicroDexHelper();
+var lavaWalletHelper = new LavaWalletHelper();
 
 
 
@@ -68,7 +68,7 @@ $(document).ready(function(){
 
     navbar.init();
 
-   microDexHelper.init(alertRenderer,ethHelper);
+   lavaWalletHelper.init(alertRenderer,ethHelper);
 
 
 });
