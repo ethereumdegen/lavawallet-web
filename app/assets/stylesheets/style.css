@@ -259,7 +259,7 @@ Navigation
     background-color: transparent;
 }
 .navbar-brand{
-      
+
 
 }
 .navbar-default .navbar-nav>.active>a{
@@ -672,14 +672,6 @@ ABOUT OUR APP
 Screenshots
 ----------------------------------------*/
 
-.screenshot_slider:after {
-    content: url(../img/phone.png);
-    left: 49.7%;
-    position: absolute;
-    top: 50.5%;
-    -webkit-transform: translate(-51.4%, -48.9%);
-    transform: translate(-50%, -48.9%);
-}
 .bg-color-blue  {
     background-color: #FF7007;
 }
