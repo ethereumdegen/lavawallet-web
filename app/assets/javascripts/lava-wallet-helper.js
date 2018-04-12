@@ -70,14 +70,14 @@ export default class LavaWalletHelper {
 
      //load default tokens
 
-     console.log(tokenData)
-      console.log(defaultTokens)
 
-
+    var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
+            return t.symbol == symbol;
+            }) );
+     
+      wallet_token_list = defaultTokenData;
 
      await this.updateWalletRender();
-
-
 
 
 
