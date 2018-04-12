@@ -189,7 +189,7 @@ export default class LavaWalletHelper {
           }
        });
 
-       await this.loadOrderEvents()
+      // await this.loadOrderEvents()
 
 
 
@@ -685,37 +685,7 @@ export default class LavaWalletHelper {
 
        var base_pair_token_address = _0xBitcoinContract.blockchain_address;
 
-      /* var cancelEvent = contract.Cancel({ }, {fromBlock: (current_block-10000), toBlock: current_block });
-
-       cancelEvent.watch(function(error, result){
-         //self.collectCancelEvent(result, base_pair_token_address )
-       });*/
-
-      /* var tradeEvent = contract.Trade({ }, {fromBlock: (current_block-10000), toBlock: current_block });
-
-       tradeEvent.watch(function(error, result){
-            //self.collectTradeEvent(result, base_pair_token_address )
-       });*/
-
-
-       var orderEvent = contract.Order({ }, {fromBlock: (current_block-10000), toBlock: current_block });
-
-       orderEvent.watch(function(error, result){
-         self.collectOrderEvent(result, base_pair_token_address, lava_wallet_address ,current_block)
-       });
-
-          // would get all past logs again.
-        /*  var myResults = myEvent.get(function(error, logs){
-            console.log(logs)
-          });
-        */
-
-          // would stop and uninstall the filter
-        //  myEvent.stopWatching();
-
-
-
-
+     //none
 
 
   }
