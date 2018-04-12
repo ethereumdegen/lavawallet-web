@@ -12,7 +12,7 @@
       "contracts": {
         "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},
         "microdex": {"name":"micro-dex", "blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},
-        "lavawallet":{"name":"lava-wallet","blockchain_address":"0xa5c4bbeb9c6dc16f91869273f1dd938a9e2cc9fa"}
+        "lavawallet":{"name":"lava-wallet","blockchain_address":"0x38d5665ec478e0340b46a062071a2694bbc0b451"}
       }
     }
 
