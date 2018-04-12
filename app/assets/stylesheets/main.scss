@@ -194,48 +194,11 @@ a
 
 
 
-
-
-.order-form
+.asset-list
 {
-  .input-container
-  {
-    max-width:40%;
-    display:inline-block;
-  }
-}
-
-
-.order-list-container
-{
-
-
-
-  .order-list
-  {
-    width:300px;
-    padding:10px;
-    margin:10px auto;
-
-    overflow-y: auto;
-    max-height: 400px;
-
-
-    background-color:gray;
-  }
-
   table
   {
-    margin: 0 auto;
-    color: white;
-  }
-
-  thead
-  {
-    td
-    {
-      padding: 5px;
-    }
+    width:100%;
   }
 }
 

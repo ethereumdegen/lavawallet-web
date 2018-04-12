@@ -8,6 +8,11 @@ import Vue from 'vue'
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
 
+var tokenData = require('../config/token-data.json')
+var defaultTokens = require('../config/default-tokens.json')
+
+
+
 var deployedContractInfo = require('../contracts/DeployedContractInfo.json')
 var lavaWalletContract;
 var _0xBitcoinContract;
@@ -17,13 +22,7 @@ var accountAddress;
 
 var orderContainer;
 
-var order_ask_list = [];
-var order_bid_list = [];
-
-var order_hash_table = {};
-var closed_order_hash_table = {}; //fulfilled or cancelled
-var traded_order_hash_table = {}; //partially fulfilled
-
+var wallet_token_list = [];
 
 var order_cancels_list = [];
 var my_orders_list = [];
@@ -66,6 +65,14 @@ export default class LavaWalletHelper {
 
 
      this.web3 = this.detectInjectedWeb3();
+
+
+
+     //load default tokens
+
+     console.log(tokenData)
+      console.log(defaultTokens)
+
 
 
      await this.updateWalletRender();
@@ -129,15 +136,6 @@ export default class LavaWalletHelper {
       });
 
 
-      var tradeMonitor = new Vue({
-         el: '#trade-monitor',
-         data: {
-                orders: {order_list:my_orders_list},
-                trades: {trade_list:recent_trades_list}
-              }
-
-       });
-
 
       var footer = new Vue({
          el: '#footer',
@@ -168,17 +166,11 @@ export default class LavaWalletHelper {
          }
       });
 
-       orderContainer = new Vue({
-         el: '#order-form',
+       var assetList = new Vue({
+         el: '#asset-list',
          data: {
 
-           bidTokenGet: 0,
-           bidTokenGive: 0,
-           askTokenGet: 0,
-           askTokenGive: 0,
-
-           asks: {ask_list:order_ask_list},
-           bids: {bid_list:order_bid_list}
+           tokens: {token_list:wallet_token_list}
 
               },
 
