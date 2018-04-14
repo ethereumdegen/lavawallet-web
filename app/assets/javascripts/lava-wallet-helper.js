@@ -74,7 +74,7 @@ export default class LavaWalletHelper {
     var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
             return t.symbol == symbol;
             }) );
-     
+
       wallet_token_list = defaultTokenData;
 
      await this.updateWalletRender();
@@ -94,6 +94,12 @@ export default class LavaWalletHelper {
         }
      });
 
+
+    if(this.web3 == null)
+    {
+      this.alertMissingWeb3();
+      return;
+    }
 
      var walletContract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
@@ -277,6 +283,11 @@ export default class LavaWalletHelper {
   }
 
 
+  alertMissingWeb3()
+  {
+
+    alert('no web3')
+  }
 
   async registerOrderRowClickHandler()
   {
