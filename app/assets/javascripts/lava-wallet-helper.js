@@ -31,7 +31,8 @@ var recent_trades_list = [];
 
 //var primary_asset_address;
 //var secondary_asset_address;
-var client_token_balances = {};
+//var client_token_balances = {};
+var clientTokenData = {};
 
 
 export default class LavaWalletHelper {
@@ -84,10 +85,10 @@ export default class LavaWalletHelper {
         walletTokenList = defaultTokenData;
 
 
-        //fix this
-       await this.updateWalletRender();
+        var userAddress = web3.eth.accounts[0];
+       //await this.updateWalletRender();
 
-       await this.collectClientTokenBalances(walletTokenList);
+       await this.collectClientTokenBalances(walletTokenList,userAddress);
 
 
 
@@ -113,13 +114,6 @@ export default class LavaWalletHelper {
   }
 
 
-
-
-  async collectClientTokenBalances()
-  {
-
-
-  }
 
   async initVueComponents(){
     var app = new Vue({
@@ -200,6 +194,172 @@ export default class LavaWalletHelper {
 
 
 
+
+
+
+    async collectClientTokenBalances(tokenList,userAddress)
+    {
+      for(var i in tokenList)
+      {
+        var tokenData = tokenList[i];
+
+        console.log(tokenData)
+
+        var tokenDecimals = 16; //fix
+
+        var tokenBalance = await this.getTokenBalance(tokenData.address, userAddress);
+        tokenData.wallet_balance_formatted = tokenBalance;
+
+        var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
+        tokenData.lava_balance_formatted = lavaTokenBalance;
+
+        //get wallet balance and get lava balance
+
+
+        //clientTokenData
+
+      }
+
+
+    }
+
+    async getLavaTokenBalance(tokenAddress,tokenOwner)
+    {
+      var contract = this.ethHelper.getWeb3ContractInstance(
+        this.web3,
+        this.lavaWalletContract.blockchain_address,
+        lavaWalletABI.abi
+      );
+
+      console.log(contract)
+
+
+        console.log(tokenAddress,tokenOwner)
+
+      var lavaBalance = await new Promise(resolve => {
+        contract.balanceOf(tokenAddress,tokenOwner, function(error,response){
+           resolve(response.toNumber());
+           })
+      });
+
+      return lavaBalance;
+    }
+
+    async getTokenBalance(tokenAddress,tokenOwner)
+    {
+      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+
+
+      var balance = await new Promise(resolve => {
+        contract.balanceOf(tokenOwner, function(error,response){
+           resolve(response.toNumber());
+           })
+      });
+
+      return balance;
+    }
+
+
+    async getTokenDecimals(tokenAddress)
+    {
+      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+
+
+      var decimals = await new Promise(resolve => {
+        contract.decimals( function(error,response){
+           resolve(response.toNumber());
+           })
+      });
+
+      return decimals;
+    }
+
+    //not used
+      async updateWalletRender()
+      {
+        if(this.web3 == null)
+        {
+          console.log("No web3 to load wallet data.")
+          return;
+        }
+
+          console.log( 'loading wallet data ')
+
+
+          var activeAccount = web3.eth.accounts[0];
+
+          accountAddress = activeAccount;
+
+          console.log(accountAddress)
+
+
+
+          var contract = this.ethHelper.getWeb3ContractInstance(this.web3  );
+
+
+          let getDecimals = new Promise(resolve => {
+            contract.decimals( function(error,response){
+               resolve(response.toNumber());
+               })
+          });
+
+          let getTokenBalance = new Promise(resolve => {
+            contract.balanceOf(activeAccount, function(error,response){
+               resolve(response.toNumber());
+               })
+          });
+
+          var decimals = await getDecimals ;
+          var tokenBalance = await getTokenBalance ;
+
+          balanceText = tokenBalance / Math.pow(10,decimals);
+
+      }
+
+
+
+    detectInjectedWeb3()
+    {
+
+
+
+      if (typeof web3 !== 'undefined') {
+          web3 = new Web3(web3.currentProvider);
+
+          console.log(web3)
+
+        if(typeof web3.eth !== 'undefined' && typeof web3.eth.accounts[0] !== 'undefined')
+        {
+
+          return web3;
+
+        }else{
+
+            console.log(web3.eth)
+              console.log('acct',web3.eth.accounts[0])
+
+
+          this.alertRenderer.renderError("No Web3 interface found.  Please login to Metamask or an Ethereum enabled browser.")
+        }
+
+      } else {
+
+        console.error("no web3 found.")
+        // set the provider you want from Web3.providers
+        //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        this.alertRenderer.renderError("No Web3 interface found.  Please install Metamask or use an Ethereum enabled browser.")
+
+      }
+
+
+      return null;
+    }
+
+
+
+
+
+/*
   async registerOrderRowClickHandler()
   {
 
@@ -285,48 +445,10 @@ export default class LavaWalletHelper {
 
   }
 
+*/
 
 
-
-  detectInjectedWeb3()
-  {
-
-
-
-    if (typeof web3 !== 'undefined') {
-        web3 = new Web3(web3.currentProvider);
-
-        console.log(web3)
-
-      if(typeof web3.eth !== 'undefined' && typeof web3.eth.accounts[0] !== 'undefined')
-      {
-
-        return web3;
-
-      }else{
-
-          console.log(web3.eth)
-            console.log('acct',web3.eth.accounts[0])
-
-
-        this.alertRenderer.renderError("No Web3 interface found.  Please login to Metamask or an Ethereum enabled browser.")
-      }
-
-    } else {
-
-      console.error("no web3 found.")
-      // set the provider you want from Web3.providers
-      //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
-      this.alertRenderer.renderError("No Web3 interface found.  Please install Metamask or use an Ethereum enabled browser.")
-
-    }
-
-
-    return null;
-  }
-
-
-  async buildOrderElementFromEvent(order_event, base_pair_token_address,lava_wallet_address,currentEthBlock)
+  /*async buildOrderElementFromEvent(order_event, base_pair_token_address,lava_wallet_address,currentEthBlock)
   {
     console.log('build from ',order_event);
     console.log('base_pair_token_address ',base_pair_token_address);
@@ -457,8 +579,7 @@ export default class LavaWalletHelper {
     return order_element;
   }
 
-
-
+*/
 
   /*collectCancelEvent(cancel_event, base_pair_token_address)
   {
@@ -620,46 +741,6 @@ export default class LavaWalletHelper {
   }
 
 
-  async updateWalletRender()
-  {
-    if(this.web3 == null)
-    {
-      console.log("No web3 to load wallet data.")
-      return;
-    }
-
-      console.log( 'loading wallet data ')
-
-
-      var activeAccount = web3.eth.accounts[0];
-
-      accountAddress = activeAccount;
-
-      console.log(accountAddress)
-
-
-
-      var contract = this.ethHelper.getWeb3ContractInstance(this.web3  );
-
-
-      let getDecimals = new Promise(resolve => {
-        contract.decimals( function(error,response){
-           resolve(response.toNumber());
-           })
-      });
-
-      let getTokenBalance = new Promise(resolve => {
-        contract.balanceOf(activeAccount, function(error,response){
-           resolve(response.toNumber());
-           })
-      });
-
-      var decimals = await getDecimals ;
-      var tokenBalance = await getTokenBalance ;
-
-      balanceText = tokenBalance / Math.pow(10,decimals);
-
-  }
 
   async getEscrowBalance(token_address,user)
   {
