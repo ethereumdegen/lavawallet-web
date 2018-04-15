@@ -7,6 +7,7 @@ import Vue from 'vue'
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
+var erc20TokenABI = require('../contracts/ERC20Interface.json')
 
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
@@ -22,14 +23,14 @@ var accountAddress;
 
 var orderContainer;
 
-var wallet_token_list = [];
+var walletTokenList = [];
 
 var order_cancels_list = [];
 var my_orders_list = [];
 var recent_trades_list = [];
 
-var primary_asset_address;
-var secondary_asset_address;
+//var primary_asset_address;
+//var secondary_asset_address;
 var client_token_balances = {};
 
 
@@ -75,12 +76,43 @@ export default class LavaWalletHelper {
             return t.symbol == symbol;
             }) );
 
-      wallet_token_list = defaultTokenData;
+      walletTokenList = defaultTokenData;
 
+
+      //fix this
      await this.updateWalletRender();
 
+     await collectClientTokenBalances(walletTokenList)
 
 
+
+
+    if(this.web3 == null)
+    {
+      this.alertMissingWeb3();
+      return;
+    }
+
+
+
+
+
+      await initVueComponents();
+
+
+
+
+      // await this.loadOrderEvents()
+
+
+
+
+
+
+  }
+
+
+  initVueComponents(){
     var app = new Vue({
        el: '#wallet-titlebar',
        data: {account: accountAddress,
@@ -94,191 +126,59 @@ export default class LavaWalletHelper {
         }
      });
 
-
-    if(this.web3 == null)
-    {
-      this.alertMissingWeb3();
-      return;
-    }
-
-     var walletContract = this.ethHelper.getWeb3ContractInstance(
-       this.web3,
-       lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
-     );
-
-     var activeAccount = web3.eth.accounts[0];
-
-     var primary_asset_address = _0xBitcoinContract.blockchain_address;
-     var secondary_asset_address = 0;
-
-     console.log(walletContract)
-
-   var tokenBalance = await new Promise(resolve => {
-     walletContract.balanceOf(primary_asset_address,activeAccount, function(err,result){
-         resolve(result)
-        }) ;
-       });
-
-       client_token_balances[primary_asset_address] = tokenBalance;
-
-     var etherBalance = await new Promise(resolve => {
-        walletContract.balanceOf(secondary_asset_address,activeAccount,function(err,result){
-          resolve(result)
-        });
-      });
-
-      client_token_balances[secondary_asset_address] = etherBalance;
-
-
-
-
-     var jumbotron = new Vue({
-        el: '#jumbotron',
-        data: {
-              address: lavaWalletContract.blockchain_address,
-             }
-
-      });
-
-
-
-      var footer = new Vue({
-         el: '#footer',
-         data: {
-           address: lavaWalletContract.blockchain_address,
-              }
-
-       });
-
-     var transfer = new Vue({
-        el: '#transfer-form',
-        data: {
-          etherBalance: etherBalance.toNumber(),
-          tokenBalance: tokenBalance.toNumber(),
-          etherBalanceFormatted: this.formatAmountWithDecimals(etherBalance.toNumber(),18),
-          tokenBalanceFormatted: this.formatAmountWithDecimals(tokenBalance.toNumber(),8),
-
-          depositEtherAmount: 0,
-          withdrawEtherAmount: 0,
-          depositTokenAmount: 0,
-          withdrawTokenAmount: 0
-             },
-
-        methods: {
-           update: function () {
-
+   var jumbotron = new Vue({
+      el: '#jumbotron',
+      data: {
+            address: lavaWalletContract.blockchain_address,
            }
-         }
-      });
 
-       var assetList = new Vue({
-         el: '#asset-list',
-         data: {
+    });
 
-           tokens: {token_list:wallet_token_list}
 
-              },
 
-         methods: {
-            update: function () {
-
+    var footer = new Vue({
+       el: '#footer',
+       data: {
+         address: lavaWalletContract.blockchain_address,
             }
+
+     });
+
+   var transfer = new Vue({
+      el: '#transfer-form',
+      data: {
+        etherBalance: etherBalance.toNumber(),
+        tokenBalance: tokenBalance.toNumber(),
+        etherBalanceFormatted: this.formatAmountWithDecimals(etherBalance.toNumber(),18),
+        tokenBalanceFormatted: this.formatAmountWithDecimals(tokenBalance.toNumber(),8),
+
+        depositEtherAmount: 0,
+        withdrawEtherAmount: 0,
+        depositTokenAmount: 0,
+        withdrawTokenAmount: 0
+           },
+
+      methods: {
+         update: function () {
+
+         }
+       }
+    });
+
+     var assetList = new Vue({
+       el: '#asset-list',
+       data: {
+
+         tokens: {token_list:walletTokenList}
+
+            },
+
+       methods: {
+          update: function () {
+
           }
-       });
-
-      // await this.loadOrderEvents()
-
-
-
-
-
-     if(this.web3 != null){
-       console.log('show the app')
-       //show the app
-       $(".transfer-form-fields").show();
-
-
-       var self = this;
-
-       var tokenAddress = _0xBitcoinContract.blockchain_address;
-
-       $('.btn-deposit-ether').on('click',function(){
-         self.depositEther(transfer.depositEtherAmount,  function(error,response){
-            console.log(response)
-         });
-       })
-
-       $('.btn-withdraw-ether').on('click',function(){
-         self.withdrawEther(transfer.withdrawEtherAmount,  function(error,response){
-            console.log(response)
-         });
-       })
-
-       var token_decimals = 8;
-
-       $('.btn-deposit-0xbtc').on('click',function(){
-         self.ApproveAndCallDepositToken(tokenAddress,transfer.depositTokenAmount, token_decimals, function(error,response){
-            console.log(response)
-         });
-       })
-
-       $('.btn-withdraw-0xbtc').on('click',function(){
-         self.withdrawToken(tokenAddress,transfer.withdrawTokenAmount, token_decimals, function(error,response){
-            console.log(response)
-         });
-       })
-
-
-
-
-
-
-       var current_block = await this.getCurrentEthBlockNumber();
-       var expires = current_block + 10000;
-
-      //  tokenGet,amountGet,tokenGive,amountGive,expires,nonce
-
-
-
-
-
-
-       $('.btn-bid-order').on('click',function(){
-
-         var token_get_decimals = self.getDecimalsOfToken(tokenAddress);
-         var token_get = self.getRawFromDecimalFormat(orderContainer.bidTokenGet,token_get_decimals)
-
-         var token_give_decimals = self.getDecimalsOfToken(0);
-         var token_give = self.getRawFromDecimalFormat(orderContainer.bidTokenGive,token_give_decimals)
-
-
-         self.createOrder(tokenAddress,token_get,0,token_give, expires, function(error,response){
-            console.log(response)
-         });
-       })
-
-       $('.btn-ask-order').on('click',function(){
-
-         var token_get_decimals = self.getDecimalsOfToken(0);
-         var token_get = self.getRawFromDecimalFormat(orderContainer.askTokenGet,token_get_decimals)
-
-         var token_give_decimals = self.getDecimalsOfToken(tokenAddress);
-         var token_give = self.getRawFromDecimalFormat(orderContainer.askTokenGive,token_give_decimals)
-
-
-         self.createOrder(0,token_get,tokenAddress,token_give, expires, function(error,response){
-            console.log(response)
-         });
-       })
-
-
-
-
-
-     }
-
-
+        }
+     });
 
   }
 
