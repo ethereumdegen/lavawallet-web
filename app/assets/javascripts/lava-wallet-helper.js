@@ -125,8 +125,9 @@ export default class LavaWalletHelper {
     var app = new Vue({
        el: '#wallet-titlebar',
        data: {account: accountAddress,
-                  balance: balanceText,
-                errorMessage: this.alertRenderer.alertMessage},
+                  balance: balanceText
+              },
+
 
        methods: {
           update: function () {
@@ -136,15 +137,18 @@ export default class LavaWalletHelper {
      });
 
 
+     var jumbotron = new Vue({
+        el: '#jumbotron',
+        data: {
+
+                errorMessage: this.alertRenderer.alertMessage
+             }
+
+      });
+
     if(this.lavaWalletContract)
     {
-         var jumbotron = new Vue({
-            el: '#jumbotron',
-            data: {
-                  address: this.lavaWalletContract.blockchain_address,
-                 }
 
-          });
 
           var footer = new Vue({
              el: '#footer',
@@ -195,11 +199,6 @@ export default class LavaWalletHelper {
   }
 
 
-  alertMissingWeb3()
-  {
-
-    alert('no web3')
-  }
 
   async registerOrderRowClickHandler()
   {
