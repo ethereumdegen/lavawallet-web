@@ -43,61 +43,62 @@ export default class LavaWalletHelper {
       this.ethHelper=ethHelper;
 
 
-  await new Promise(async resolve => {
-    web3.version.getNetwork((err, netId) => {
-      switch (netId) {
-        case "1":
-          console.log('Web3 is using mainnet');
-          lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
-          _0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
-          break
-        case "3":
-          console.log('Web3 is using ropsten test network.');
-          lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
-          _0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
-          break
-        default:
-          console.log('This is an unknown network.')
-      }
-
-      resolve();
-    })
-  })
 
 
-     this.web3 = this.detectInjectedWeb3();
+   this.web3 = this.detectInjectedWeb3();
+
+     var self = this;
+
+   if(this.web3 != null)
+   {
 
 
 
-     //load default tokens
+      await new Promise(async resolve => {
+        web3.version.getNetwork((err, netId) => {
+          switch (netId) {
+            case "1":
+              console.log('Web3 is using mainnet');
+              self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
+              self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
+              break
+            case "3":
+              console.log('Web3 is using ropsten test network.');
+              self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
+              self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
+              break
+            default:
+              console.log('This is an unknown network.')
+          }
+
+          resolve();
+        })
+      })
 
 
-    var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
-            return t.symbol == symbol;
-            }) );
 
-      walletTokenList = defaultTokenData;
+      var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
+              return t.symbol == symbol;
+              }) );
 
-
-      //fix this
-     await this.updateWalletRender();
-
-     await collectClientTokenBalances(walletTokenList)
+        walletTokenList = defaultTokenData;
 
 
+        //fix this
+       await this.updateWalletRender();
 
-
-    if(this.web3 == null)
-    {
-      this.alertMissingWeb3();
-      return;
-    }
+       await this.collectClientTokenBalances(walletTokenList);
 
 
 
 
 
-      await initVueComponents();
+    }//web3 defined
+
+
+
+
+      await this.initVueComponents();
 
 
 
@@ -112,12 +113,20 @@ export default class LavaWalletHelper {
   }
 
 
-  initVueComponents(){
+
+
+  async collectClientTokenBalances()
+  {
+
+
+  }
+
+  async initVueComponents(){
     var app = new Vue({
        el: '#wallet-titlebar',
        data: {account: accountAddress,
                   balance: balanceText,
-                errorMessage: alertRenderer.alertMessage},
+                errorMessage: this.alertRenderer.alertMessage},
 
        methods: {
           update: function () {
@@ -126,25 +135,28 @@ export default class LavaWalletHelper {
         }
      });
 
-   var jumbotron = new Vue({
-      el: '#jumbotron',
-      data: {
-            address: lavaWalletContract.blockchain_address,
-           }
 
-    });
+    if(this.lavaWalletContract)
+    {
+         var jumbotron = new Vue({
+            el: '#jumbotron',
+            data: {
+                  address: this.lavaWalletContract.blockchain_address,
+                 }
 
+          });
 
+          var footer = new Vue({
+             el: '#footer',
+             data: {
+               address: this.lavaWalletContract.blockchain_address,
+                  }
 
-    var footer = new Vue({
-       el: '#footer',
-       data: {
-         address: lavaWalletContract.blockchain_address,
-            }
+           });
 
-     });
+   }
 
-   var transfer = new Vue({
+   /*var transfer = new Vue({
       el: '#transfer-form',
       data: {
         etherBalance: etherBalance.toNumber(),
@@ -163,7 +175,7 @@ export default class LavaWalletHelper {
 
          }
        }
-    });
+    });*/
 
      var assetList = new Vue({
        el: '#asset-list',
@@ -280,12 +292,10 @@ export default class LavaWalletHelper {
   detectInjectedWeb3()
   {
 
-    console.log('detect')
-    console.log(web3)
 
 
     if (typeof web3 !== 'undefined') {
-      web3 = new Web3(web3.currentProvider);
+        web3 = new Web3(web3.currentProvider);
 
         console.log(web3)
 
@@ -304,6 +314,8 @@ export default class LavaWalletHelper {
       }
 
     } else {
+
+      console.error("no web3 found.")
       // set the provider you want from Web3.providers
       //web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
       this.alertRenderer.renderError("No Web3 interface found.  Please install Metamask or use an Ethereum enabled browser.")
