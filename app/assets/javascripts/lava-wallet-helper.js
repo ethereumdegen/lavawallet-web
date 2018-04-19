@@ -82,6 +82,13 @@ export default class LavaWalletHelper {
               return t.symbol == symbol;
               }) );
 
+
+        console.log(defaultTokenData)
+
+         defaultTokenData.map(t => t.icon_url = "test"   )
+
+        console.log(defaultTokenData)
+
         walletTokenList = defaultTokenData;
 
 
