@@ -85,7 +85,7 @@ export default class LavaWalletHelper {
 
         console.log(defaultTokenData)
 
-         defaultTokenData.map(t => t.icon_url = "test"   )
+         defaultTokenData.map(t => t.icon_url = "/assets/img/token_icons/"+t.address+".png"   )
 
         console.log(defaultTokenData)
 

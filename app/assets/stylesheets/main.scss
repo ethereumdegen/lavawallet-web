@@ -180,11 +180,7 @@ a
   font-size: 2em;
 }
 
-.code-terminal
-{
-      white-space: pre;
-        text-align: left;
-}
+
 
 .acts-as-link
 {
@@ -199,6 +195,24 @@ a
   table
   {
     width:100%;
+  }
+
+  thead
+  {
+    font-size:24px;
+    border-bottom: 1px solid black;
+  }
+  tbody
+  {
+    font-size:18px;
+  }
+  tr
+  {
+    border-bottom: 1px solid black;
+  }
+  td
+  {
+    padding: 10px 0px;
   }
 }
 
