@@ -4500,8 +4500,6 @@ a.navbar-link.is-active {
 .navbar-item {
   flex-grow: 0;
   flex-shrink: 0; }
-  .navbar-item img {
-    max-height: 1.75rem; }
   .navbar-item.has-dropdown {
     padding: 0; }
   .navbar-item.is-expanded {
@@ -12667,14 +12665,6 @@ ABOUT OUR APP
 /*----------------------------------------
 Screenshots
 ----------------------------------------*/
-.screenshot_slider:after {
-  content: url(/app/assets/img/phone.png);
-  left: 49.7%;
-  position: absolute;
-  top: 50.5%;
-  -webkit-transform: translate(-51.4%, -48.9%);
-  transform: translate(-50%, -48.9%); }
-
 .bg-color-blue {
   background-color: #FF7007; }
 
@@ -13224,31 +13214,24 @@ a {
   padding: 20px;
   font-size: 2em; }
 
-.code-terminal {
-  white-space: pre;
-  text-align: left; }
-
 .acts-as-link {
   cursor: pointer; }
 
-.order-form .input-container {
-  max-width: 40%;
-  display: inline-block; }
+.asset-list table {
+  width: 100%; }
 
-.order-list-container .order-list {
-  width: 300px;
-  padding: 10px;
-  margin: 10px auto;
-  overflow-y: auto;
-  max-height: 400px;
-  background-color: gray; }
+.asset-list thead {
+  font-size: 24px;
+  border-bottom: 1px solid black; }
 
-.order-list-container table {
-  margin: 0 auto;
-  color: white; }
+.asset-list tbody {
+  font-size: 18px; }
 
-.order-list-container thead td {
-  padding: 5px; }
+.asset-list tr {
+  border-bottom: 1px solid black; }
+
+.asset-list td {
+  padding: 10px 0px; }
 
 .order-row {
   width: 280px;
