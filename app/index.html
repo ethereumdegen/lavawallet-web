@@ -40,26 +40,44 @@
         <div class="hero-body">
 
 
+        <div id="action-container" class="action-container">
+          <div class="token-titlebar">
+
+          </div>
+          <div class="action-navbar">
+
+          </div>
+          <div class="deposit-container">
+
+          </div>
+          <div class="withdraw-container">
+
+          </div>
+          <div class="lava-transfer-container">
+
+          </div>
+
+        </div>
 
           <div id="asset-list" class="asset-list">
 
             <table>
               <thead>
                 <tr >
-                  <td> Icon </td>
-                  <td> Name </td>
-                  <td> Lava Balance </td>
-                  <td> External Balance </td>
-                  <td> v </td>
+                  <td class="has-text-centered"> Icon </td>
+                  <td class="has-text-centered"> Name </td>
+                  <td class="has-text-centered"> Lava Balance </td>
+                  <td class="has-text-centered"> External Balance </td>
+                  <td class="has-text-centered">  </td>
                 </tr>
               </thead>
               <tbody>
               <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.token_address" v-bind:class="{   'asset-row':true, 'acts-as-link':true, 'hover-shadow':true   } " >
-                <td class="row-cell icon-url"><img  v-bind:src="item.icon_url" height="42" width="42" ></img></td>
-                <td class="row-cell token-name">{{item.name}}</td>
-                <td class="row-cell token-balance">{{item.wallet_balance_formatted}}</td>
-                <td class="row-cell token-balance">{{item.lava_balance_formatted}}</td>
-                <td class="row-cell ">collapse</td>
+                <td class="row-cell has-text-centered icon-url"><img  v-bind:src="item.icon_url" height="42" width="42" ></img></td>
+                <td class="row-cell has-text-centered token-name">{{item.name}}</td>
+                <td class="row-cell has-text-centered"><div class=" token-balance">{{item.wallet_balance_formatted}}</div> </td>
+                <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.lava_balance_formatted}}</div>  </td>
+                <td class="row-cell has-text-centered"><div class="button is-primary btn-sm btn-move">Move</div></td>
               </tr>
             </tbody>
             </table>
