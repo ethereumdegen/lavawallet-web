@@ -225,8 +225,42 @@ a
   color: rgba(0,0,0,0.3);
 }
 
+.flex-bar
+{
+  align-items: stretch;
+  display: flex;
+}
+.flex-start
+{
+  justify-content: flex-start;
+  margin-right: auto;
+}
+.flex-end
+{
+  justify-content: flex-end;
+  margin-left: auto;
+}
 
+.action-container
+{
 
+  .token-titlebar
+  {
+    padding: 10px 10px;
+  }
+
+  .token-title
+  {
+    font-size: 2em;
+
+  }
+
+  .token-icon
+   {
+
+   }
+
+}
 
 .one-third
 {
