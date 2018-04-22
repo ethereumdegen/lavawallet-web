@@ -7,6 +7,7 @@
 
 .navbar-container
 {
+  min-width: 900px;
   max-width: 1000px;
   margin: 0 auto;
 
@@ -16,13 +17,13 @@
 
 .navbar-start
 {
-      margin-right: 50px;
+  padding-right: 50px;
 
 }
 
 .navbar-end
 {
-    margin-left:50px;
+    padding-left:50px;
 }
 
 .has-dropdown.is-active
