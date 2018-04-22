@@ -228,23 +228,33 @@ export default class LavaWalletHelper {
 
   async registerAssetRowClickHandler()
   {
+    var self = this;
+
 
     $('.asset-row').off();
     $('.asset-row').on('click',async function(){
       var token_address = $(this).data('tokenaddress');
       console.log('token_address',token_address);
 
+      self.selectActionAsset(token_address)
+
     });
   }
 
-  async selectActionAsset(asset)
+  async selectActionAsset(address)
     {
-      console.log('select action asset',asset);
+      console.log('select action asset',address);
 
 
       await Vue.set(actionContainer, "selectedActionAsset" , {name:"selected"});
 
 
+
+    }
+
+    getAssetDataFromAddress(address)
+    {
+      console.log('get asset data ',address);
 
     }
 
