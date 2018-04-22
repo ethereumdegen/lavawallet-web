@@ -23,7 +23,7 @@
       <div id="jumbotron" class=" ">
 
 
-       
+
         <div class="whitespace-sm"></div>
 
 
@@ -39,27 +39,27 @@
 
         <div id="action-container" class="action-container box">
           <div class="token-titlebar">
-
+              {{ selectedActionAsset.name }}
           </div>
           <div class="action-tabs-bar">
 
             <div class="tabs is-toggle">
               <ul>
-                <li class="is-active">
+                <li   v-bind:class="{   'one-third':true, 'is-active':depositActive  } ">
                   <a>
                     <span class="icon is-small"><i class="fas fa-arrow-alt-circle-down" aria-hidden="true"></i></span>
                     <span>Deposit</span>
                   </a>
                 </li>
-                <li>
+                <li  v-bind:class="{   'one-third':true, 'is-active':withdrawActive  } ">
                   <a>
-                    <span class="icon is-small"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
+                    <span class="icon is-small one-third"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
                     <span>Withdraw</span>
                   </a>
                 </li>
-                <li>
+                <li  v-bind:class="{   'one-third':true, 'is-active':lavaTransferActive  } ">
                   <a>
-                    <span class="icon is-small"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
+                    <span class="icon is-small one-third"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
                     <span>Lava Transfer</span>
                   </a>
                 </li>
@@ -79,6 +79,10 @@
           </div>
 
         </div>
+
+
+        <div class="whitespace-md"></div>
+
 
           <div id="asset-list" class="asset-list">
 

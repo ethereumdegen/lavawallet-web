@@ -147,17 +147,32 @@ export default class LavaWalletHelper {
 
       });
 
+
+
+
     if(this.lavaWalletContract)
     {
 
+      var actionContainer = new Vue({
+         el: '#action-container',
+         data: {
+                 selectedActionAsset: {name: 'nil'},
+                 depositActive: true,
+                 withdrawActive: false,
+                 lavaTransferActive: false,
+              }
 
-          var footer = new Vue({
-             el: '#footer',
-             data: {
-               address: this.lavaWalletContract.blockchain_address,
-                  }
+       });
 
-           });
+
+
+      var footer = new Vue({
+         el: '#footer',
+         data: {
+           address: this.lavaWalletContract.blockchain_address,
+              }
+
+       });
 
    }
 
