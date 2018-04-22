@@ -22,6 +22,7 @@ var balanceText;
 var accountAddress;
 
 var orderContainer;
+var actionContainer;
 
 var walletTokenList = [];
 
@@ -123,6 +124,9 @@ export default class LavaWalletHelper {
 
 
   async initVueComponents(){
+
+    var self = this;
+
     var app = new Vue({
        el: '#wallet-titlebar',
        data: {account: accountAddress,
@@ -153,7 +157,7 @@ export default class LavaWalletHelper {
     if(this.lavaWalletContract)
     {
 
-      var actionContainer = new Vue({
+        actionContainer = new Vue({
          el: '#action-container',
          data: {
                  selectedActionAsset: {name: 'nil'},
@@ -212,11 +216,37 @@ export default class LavaWalletHelper {
         }
      });
 
+
+
+     Vue.nextTick(function () {
+       self.registerAssetRowClickHandler()
+     })
+
   }
 
 
 
+  async registerAssetRowClickHandler()
+  {
 
+    $('.asset-row').off();
+    $('.asset-row').on('click',async function(){
+      var token_address = $(this).data('tokenaddress');
+      console.log('token_address',token_address);
+
+    });
+  }
+
+  async selectActionAsset(asset)
+    {
+      console.log('select action asset',asset);
+
+
+      await Vue.set(actionContainer, "selectedActionAsset" , {name:"selected"});
+
+
+
+    }
 
 
     async collectClientTokenBalances(tokenList,userAddress)
