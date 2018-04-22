@@ -174,11 +174,7 @@ a
   }
 }
 
-.balance-container
-{
-  padding:20px;
-  font-size: 2em;
-}
+
 
 .is-centered
 {
@@ -205,12 +201,12 @@ a
 
   thead
   {
-    font-size:24px;
+      font-size: 2em;
     border-bottom: 1px solid black;
   }
   tbody
   {
-    font-size:18px;
+    font-size: 1.5em;
   }
   tr
   {
@@ -218,9 +214,24 @@ a
   }
   td
   {
-    padding: 10px 0px;
+    padding: 15px 0px;
   }
 }
+
+
+.hand-icon
+{
+  font-size: 2em;
+  color: rgba(0,0,0,0.3);
+}
+
+
+
+
+
+
+
+
 
 .order-row
 {
