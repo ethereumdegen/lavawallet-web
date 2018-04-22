@@ -245,8 +245,10 @@ export default class LavaWalletHelper {
     {
 
       var assetData = this.getAssetDataFromAddress(address)
-        console.log('select action asset',assetData);
-      await Vue.set(actionContainer, "selectedActionAsset" , {name:"selected"});
+
+      console.log('select action asset',assetData);
+
+      await Vue.set(actionContainer, "selectedActionAsset" , assetData);
 
 
 
