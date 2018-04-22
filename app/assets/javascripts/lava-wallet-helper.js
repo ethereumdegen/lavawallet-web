@@ -12,7 +12,7 @@ var erc20TokenABI = require('../contracts/ERC20Interface.json')
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
 
-
+var defaultTokenData;
 
 var deployedContractInfo = require('../contracts/DeployedContractInfo.json')
 var lavaWalletContract;
@@ -78,8 +78,8 @@ export default class LavaWalletHelper {
       })
 
 
-
-      var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
+      // init defaultTokenData
+         defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function(t) {
               return t.symbol == symbol;
               }) );
 
@@ -243,9 +243,9 @@ export default class LavaWalletHelper {
 
   async selectActionAsset(address)
     {
-      console.log('select action asset',address);
 
-
+      var assetData = this.getAssetDataFromAddress(address)
+        console.log('select action asset',assetData);
       await Vue.set(actionContainer, "selectedActionAsset" , {name:"selected"});
 
 
@@ -255,6 +255,13 @@ export default class LavaWalletHelper {
     getAssetDataFromAddress(address)
     {
       console.log('get asset data ',address);
+
+      console.log(defaultTokenData);
+
+
+      var matchingToken  = defaultTokenData.find(t => t.address == address );
+
+      return matchingToken  ;
 
     }
 
