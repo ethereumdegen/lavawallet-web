@@ -161,14 +161,13 @@ export default class LavaWalletHelper {
          el: '#action-container',
          data: {
                  selectedActionAsset: {name: 'nil'},
+                 shouldRender: false,
                  depositActive: true,
                  withdrawActive: false,
                  lavaTransferActive: false,
               }
 
        });
-
-
 
       var footer = new Vue({
          el: '#footer',
@@ -250,6 +249,7 @@ export default class LavaWalletHelper {
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
 
+      await Vue.set(actionContainer, "shouldRender" , true);
 
 
     }

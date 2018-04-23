@@ -37,7 +37,7 @@
         <div class="hero-body">
 
 
-        <div id="action-container" class="action-container box"  v-bind:data-tokenaddress="selectedActionAsset.address"  >
+        <div id="action-container" class="action-container box"  v-if="shouldRender" v-bind:data-tokenaddress="selectedActionAsset.address"  >
           <div class="token-titlebar flex-bar">
                 <div class="token-title flex-start"> {{ selectedActionAsset.name }} </div>
 
@@ -70,14 +70,14 @@
             </div>
 
           </div>
-          <div class="deposit-container">
-
+          <div class="deposit-container" v-if="depositActive">
+              deposit
           </div>
-          <div class="withdraw-container">
-
+          <div class="withdraw-container" v-if="withdrawActive">
+            withdraw
           </div>
-          <div class="lava-transfer-container">
-
+          <div class="lava-transfer-container" v-if="lavaTransferActive">
+              lava-transfer
           </div>
 
         </div>
