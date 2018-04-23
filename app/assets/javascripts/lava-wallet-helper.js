@@ -248,6 +248,7 @@ export default class LavaWalletHelper {
       console.log('select action asset',assetData);
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
+ 
 
       await Vue.set(actionContainer, "shouldRender" , true);
 

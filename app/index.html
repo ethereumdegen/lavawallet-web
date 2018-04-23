@@ -45,7 +45,7 @@
           </div>
           <div class="action-tabs-bar">
 
-            <div class="tabs is-toggle">
+            <div class="tabs is-toggle" style="overflow-x: none;">
               <ul>
                 <li   v-bind:class="{   'one-third':true, 'is-active':depositActive  } ">
                   <a>
@@ -71,13 +71,30 @@
 
           </div>
           <div class="deposit-container" v-if="depositActive">
-              deposit
+
+              <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
+
+              <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+              <div class="button is-primary btn-action-deposit"> Deposit </div>
+
           </div>
           <div class="withdraw-container" v-if="withdrawActive">
-            withdraw
+
+            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+            <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
+
+            <div class="button is-primary btn-action-withdraw"> Withdraw </div>
+
+
           </div>
           <div class="lava-transfer-container" v-if="lavaTransferActive">
-              lava-transfer
+
+            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+            <div class="button is-primary btn-action-deposit"> Transfer </div>
+
           </div>
 
         </div>
@@ -95,7 +112,7 @@
                   <td class="has-text-centered"> Name </td>
                   <td class="has-text-centered"> Lava Balance </td>
                   <td class="has-text-centered"> External Balance </td>
-                  <td class="has-text-centered">  </td>
+
                 </tr>
               </thead>
               <tbody>
@@ -104,7 +121,7 @@
                 <td class="row-cell has-text-centered token-name">{{item.name}}</td>
                 <td class="row-cell has-text-centered"><div class=" token-balance">{{item.wallet_balance_formatted}}</div> </td>
                 <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.lava_balance_formatted}}</div>  </td>
-                <td class="row-cell has-text-centered hand-icon"> <i class="far fa-hand-paper"></i> </td>
+
               </tr>
             </tbody>
             </table>
