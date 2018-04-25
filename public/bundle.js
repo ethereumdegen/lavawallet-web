@@ -36837,16 +36837,15 @@ module.exports = "/app/assets/img/logo.png";
 /* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global) {var scope = typeof global !== "undefined" && global || typeof self !== "undefined" && self || window;
-var apply = Function.prototype.apply;
+/* WEBPACK VAR INJECTION */(function(global) {var apply = Function.prototype.apply;
 
 // DOM APIs, for completeness
 
 exports.setTimeout = function () {
-  return new Timeout(apply.call(setTimeout, scope, arguments), clearTimeout);
+  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
 };
 exports.setInterval = function () {
-  return new Timeout(apply.call(setInterval, scope, arguments), clearInterval);
+  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
 };
 exports.clearTimeout = exports.clearInterval = function (timeout) {
   if (timeout) {
@@ -36860,7 +36859,7 @@ function Timeout(id, clearFn) {
 }
 Timeout.prototype.unref = Timeout.prototype.ref = function () {};
 Timeout.prototype.close = function () {
-  this._clearFn.call(scope, this._id);
+  this._clearFn.call(window, this._id);
 };
 
 // Does not start the time, just sets up the members needed.
@@ -36887,7 +36886,7 @@ exports._unrefActive = exports.active = function (item) {
 
 // setimmediate attaches itself to the global object
 __webpack_require__(48);
-// On some exotic environments, it's not clear which object `setimmediate` was
+// On some exotic environments, it's not clear which object `setimmeidate` was
 // able to install onto.  Search each possibility in the same order as the
 // `setimmediate` library.
 exports.setImmediate = typeof self !== "undefined" && self.setImmediate || typeof global !== "undefined" && global.setImmediate || this && this.setImmediate;
@@ -50818,64 +50817,51 @@ for (var i = 0, len = code.length; i < len; ++i) {
 revLookup['-'.charCodeAt(0)] = 62;
 revLookup['_'.charCodeAt(0)] = 63;
 
-function getLens(b64) {
+function placeHoldersCount(b64) {
   var len = b64.length;
-
   if (len % 4 > 0) {
     throw new Error('Invalid string. Length must be a multiple of 4');
   }
 
-  // Trim off extra bytes after placeholder bytes are found
-  // See: https://github.com/beatgammit/base64-js/issues/42
-  var validLen = b64.indexOf('=');
-  if (validLen === -1) validLen = len;
-
-  var placeHoldersLen = validLen === len ? 0 : 4 - validLen % 4;
-
-  return [validLen, placeHoldersLen];
+  // the number of equal signs (place holders)
+  // if there are two placeholders, than the two characters before it
+  // represent one byte
+  // if there is only one, then the three characters before it represent 2 bytes
+  // this is just a cheap hack to not do indexOf twice
+  return b64[len - 2] === '=' ? 2 : b64[len - 1] === '=' ? 1 : 0;
 }
 
-// base64 is 4/3 + up to two characters of the original data
 function byteLength(b64) {
-  var lens = getLens(b64);
-  var validLen = lens[0];
-  var placeHoldersLen = lens[1];
-  return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
-}
-
-function _byteLength(b64, validLen, placeHoldersLen) {
-  return (validLen + placeHoldersLen) * 3 / 4 - placeHoldersLen;
+  // base64 is 4/3 + up to two characters of the original data
+  return b64.length * 3 / 4 - placeHoldersCount(b64);
 }
 
 function toByteArray(b64) {
-  var tmp;
-  var lens = getLens(b64);
-  var validLen = lens[0];
-  var placeHoldersLen = lens[1];
+  var i, l, tmp, placeHolders, arr;
+  var len = b64.length;
+  placeHolders = placeHoldersCount(b64);
 
-  var arr = new Arr(_byteLength(b64, validLen, placeHoldersLen));
-
-  var curByte = 0;
+  arr = new Arr(len * 3 / 4 - placeHolders);
 
   // if there are placeholders, only get up to the last complete 4 chars
-  var len = placeHoldersLen > 0 ? validLen - 4 : validLen;
+  l = placeHolders > 0 ? len - 4 : len;
 
-  for (var i = 0; i < len; i += 4) {
+  var L = 0;
+
+  for (i = 0; i < l; i += 4) {
     tmp = revLookup[b64.charCodeAt(i)] << 18 | revLookup[b64.charCodeAt(i + 1)] << 12 | revLookup[b64.charCodeAt(i + 2)] << 6 | revLookup[b64.charCodeAt(i + 3)];
-    arr[curByte++] = tmp >> 16 & 0xFF;
-    arr[curByte++] = tmp >> 8 & 0xFF;
-    arr[curByte++] = tmp & 0xFF;
+    arr[L++] = tmp >> 16 & 0xFF;
+    arr[L++] = tmp >> 8 & 0xFF;
+    arr[L++] = tmp & 0xFF;
   }
 
-  if (placeHoldersLen === 2) {
+  if (placeHolders === 2) {
     tmp = revLookup[b64.charCodeAt(i)] << 2 | revLookup[b64.charCodeAt(i + 1)] >> 4;
-    arr[curByte++] = tmp & 0xFF;
-  }
-
-  if (placeHoldersLen === 1) {
+    arr[L++] = tmp & 0xFF;
+  } else if (placeHolders === 1) {
     tmp = revLookup[b64.charCodeAt(i)] << 10 | revLookup[b64.charCodeAt(i + 1)] << 4 | revLookup[b64.charCodeAt(i + 2)] >> 2;
-    arr[curByte++] = tmp >> 8 & 0xFF;
-    arr[curByte++] = tmp & 0xFF;
+    arr[L++] = tmp >> 8 & 0xFF;
+    arr[L++] = tmp & 0xFF;
   }
 
   return arr;
@@ -50899,6 +50885,7 @@ function fromByteArray(uint8) {
   var tmp;
   var len = uint8.length;
   var extraBytes = len % 3; // if we have 1 byte left, pad 2 bytes
+  var output = '';
   var parts = [];
   var maxChunkLength = 16383; // must be multiple of 3
 
@@ -50910,11 +50897,18 @@ function fromByteArray(uint8) {
   // pad the end with zeros, but make sure to not forget the extra bytes
   if (extraBytes === 1) {
     tmp = uint8[len - 1];
-    parts.push(lookup[tmp >> 2] + lookup[tmp << 4 & 0x3F] + '==');
+    output += lookup[tmp >> 2];
+    output += lookup[tmp << 4 & 0x3F];
+    output += '==';
   } else if (extraBytes === 2) {
     tmp = (uint8[len - 2] << 8) + uint8[len - 1];
-    parts.push(lookup[tmp >> 10] + lookup[tmp >> 4 & 0x3F] + lookup[tmp << 2 & 0x3F] + '=');
+    output += lookup[tmp >> 10];
+    output += lookup[tmp >> 4 & 0x3F];
+    output += lookup[tmp << 2 & 0x3F];
+    output += '=';
   }
+
+  parts.push(output);
 
   return parts.join('');
 }
@@ -55195,8 +55189,8 @@ var _processSoliditySha3Args = function (arg) {
 
     // if type is given
     if (_.isObject(arg) && (arg.hasOwnProperty('v') || arg.hasOwnProperty('t') || arg.hasOwnProperty('value') || arg.hasOwnProperty('type'))) {
-        type = arg.hasOwnProperty('t') ? arg.t : arg.type;
-        value = arg.hasOwnProperty('v') ? arg.v : arg.value;
+        type = arg.t || arg.type;
+        value = arg.v || arg.value;
 
         // otherwise try to guess the type
     } else {
@@ -55355,6 +55349,8 @@ var erc20TokenABI = __webpack_require__(129);
 var tokenData = __webpack_require__(130);
 var defaultTokens = __webpack_require__(131);
 
+var defaultTokenData;
+
 var deployedContractInfo = __webpack_require__(28);
 var lavaWalletContract;
 var _0xBitcoinContract;
@@ -55363,6 +55359,7 @@ var balanceText;
 var accountAddress;
 
 var orderContainer;
+var actionContainer;
 
 var walletTokenList = [];
 
@@ -55408,13 +55405,14 @@ class LavaWalletHelper {
         });
       });
 
-      var defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function (t) {
+      // init defaultTokenData
+      defaultTokenData = defaultTokens.tokens.map(symbol => tokenData.tokens.find(function (t) {
         return t.symbol == symbol;
       }));
 
       console.log(defaultTokenData);
 
-      defaultTokenData.map(t => t.icon_url = "/assets/img/token_icons/" + t.address + ".png");
+      defaultTokenData.map(t => t.icon_url = "/app/assets/img/token_icons/" + t.address + ".png");
 
       console.log(defaultTokenData);
 
@@ -55434,6 +55432,9 @@ class LavaWalletHelper {
   }
 
   async initVueComponents() {
+
+    var self = this;
+
     var app = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
       el: '#wallet-titlebar',
       data: { account: accountAddress,
@@ -55455,6 +55456,18 @@ class LavaWalletHelper {
     });
 
     if (this.lavaWalletContract) {
+
+      actionContainer = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
+        el: '#action-container',
+        data: {
+          selectedActionAsset: { name: 'nil' },
+          shouldRender: false,
+          depositActive: true,
+          withdrawActive: false,
+          lavaTransferActive: false
+        }
+
+      });
 
       var footer = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
         el: '#footer',
@@ -55495,6 +55508,43 @@ class LavaWalletHelper {
         update: function () {}
       }
     });
+
+    __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].nextTick(function () {
+      self.registerAssetRowClickHandler();
+    });
+  }
+
+  async registerAssetRowClickHandler() {
+    var self = this;
+
+    $('.asset-row').off();
+    $('.asset-row').on('click', async function () {
+      var token_address = $(this).data('tokenaddress');
+      console.log('token_address', token_address);
+
+      self.selectActionAsset(token_address);
+    });
+  }
+
+  async selectActionAsset(address) {
+
+    var assetData = this.getAssetDataFromAddress(address);
+
+    console.log('select action asset', assetData);
+
+    await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "selectedActionAsset", assetData);
+
+    await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "shouldRender", true);
+  }
+
+  getAssetDataFromAddress(address) {
+    console.log('get asset data ', address);
+
+    console.log(defaultTokenData);
+
+    var matchingToken = defaultTokenData.find(t => t.address == address);
+
+    return matchingToken;
   }
 
   async collectClientTokenBalances(tokenList, userAddress) {

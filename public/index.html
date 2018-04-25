@@ -8,6 +8,8 @@
 
       <link rel="icon" type="image/png" href="/app/assets/img/favicon.png" />
 
+      <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
+
   <link href="/assets/main.css" rel="stylesheet"></head>
 
 
@@ -19,7 +21,7 @@
     <a class="navbar-item" href="/">
 
       <img :src="titleLogo" height=40px width=40px  ></img>
-     
+
 
     </a>
 
@@ -41,6 +43,11 @@
 
   <div  class="navbar-menu">
     <div class="navbar-start">
+
+      <div class="navbar-item">
+        0.10 Beta
+      </div>
+
       <div class="navbar-item has-dropdown is-active">
         <div class="navbar-link  is-active acts-as-link dropdown-button"  >
           Docs
@@ -99,7 +106,7 @@
 
     </div>
 
-    <div class="navbar-menu">
+
       <div class="navbar-end" style="padding:5px;">
 
         <div class="navbar-item">
@@ -115,7 +122,7 @@
         </div>
 
       </div>
-    </div>
+
 
 
 
@@ -218,11 +225,6 @@
       <div id="jumbotron" class=" ">
 
 
-        <div class="title has-text-centered is-hidden-mobile">Hot Wallet for Ethereum Tokens</div>
-
-        <div class="whitespace-sm"></div>
-
-        <div class="subtitle has-text-centered">BETA RELEASE</div>
 
         <div class="whitespace-sm"></div>
 
@@ -237,26 +239,91 @@
         <div class="hero-body">
 
 
+        <div id="action-container" class="action-container box"  v-if="shouldRender" v-bind:data-tokenaddress="selectedActionAsset.address"  >
+          <div class="token-titlebar flex-bar">
+                <div class="token-title flex-start"> {{ selectedActionAsset.name }} </div>
+
+                <div class="token-icon flex-end"> <img  v-bind:src="selectedActionAsset.icon_url" height="42" width="42" ></img> </div>
+          </div>
+          <div class="action-tabs-bar">
+
+            <div class="tabs is-toggle" style="overflow-x: none;">
+              <ul>
+                <li   v-bind:class="{   'one-third':true, 'is-active':depositActive  } ">
+                  <a>
+                    <span class="icon is-small"><i class="fas fa-arrow-alt-circle-down" aria-hidden="true"></i></span>
+                    <span>Deposit</span>
+                  </a>
+                </li>
+                <li  v-bind:class="{   'one-third':true, 'is-active':withdrawActive  } ">
+                  <a>
+                    <span class="icon is-small one-third"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
+                    <span>Withdraw</span>
+                  </a>
+                </li>
+                <li  v-bind:class="{   'one-third':true, 'is-active':lavaTransferActive  } ">
+                  <a>
+                    <span class="icon is-small one-third"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
+                    <span>Lava Transfer</span>
+                  </a>
+                </li>
+
+              </ul>
+            </div>
+
+          </div>
+          <div class="deposit-container" v-if="depositActive">
+
+              <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
+
+              <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+              <div class="button is-primary btn-action-deposit"> Deposit </div>
+
+          </div>
+          <div class="withdraw-container" v-if="withdrawActive">
+
+            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+            <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
+
+            <div class="button is-primary btn-action-withdraw"> Withdraw </div>
+
+
+          </div>
+          <div class="lava-transfer-container" v-if="lavaTransferActive">
+
+            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+
+            <div class="button is-primary btn-action-deposit"> Transfer </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="whitespace-md"></div>
+
 
           <div id="asset-list" class="asset-list">
 
             <table>
               <thead>
                 <tr >
-                  <td> Icon </td>
-                  <td> Name </td>
-                  <td> Lava Balance </td>
-                  <td> External Balance </td>
-                  <td> v </td>
+                  <td class="has-text-centered"> Icon </td>
+                  <td class="has-text-centered"> Name </td>
+                  <td class="has-text-centered"> Lava Balance </td>
+                  <td class="has-text-centered"> External Balance </td>
+
                 </tr>
               </thead>
               <tbody>
-              <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.token_address" v-bind:class="{   'asset-row':true, 'acts-as-link':true   } " >
-                <td class="row-cell icon-url"><img  v-bind:src="item.icon_url"></img></td>
-                <td class="row-cell token-name">{{item.name}}</td>
-                <td class="row-cell token-balance">{{item.wallet_balance_formatted}}</td>
-                <td class="row-cell token-balance">{{item.lava_balance_formatted}}</td>
-                <td class="row-cell ">collapse</td>
+              <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.address" v-bind:class="{   'asset-row':true, 'acts-as-link':true, 'hover-shadow':true   } " >
+                <td class="row-cell has-text-centered icon-url"><img  v-bind:src="item.icon_url" height="42" width="42" ></img></td>
+                <td class="row-cell has-text-centered token-name">{{item.name}}</td>
+                <td class="row-cell has-text-centered"><div class=" token-balance">{{item.wallet_balance_formatted}}</div> </td>
+                <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.lava_balance_formatted}}</div>  </td>
+
               </tr>
             </tbody>
             </table>

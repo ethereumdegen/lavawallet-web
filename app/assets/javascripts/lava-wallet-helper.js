@@ -219,7 +219,9 @@ export default class LavaWalletHelper {
 
      Vue.nextTick(function () {
        self.registerAssetRowClickHandler()
+
      })
+
 
   }
 
@@ -240,18 +242,43 @@ export default class LavaWalletHelper {
     });
   }
 
+
+
+  async registerActionContainerClickHandler()
+  {
+    var self = this;
+
+
+
+
+    $('.btn-action-deposit').off();
+    $('.btn-action-deposit').on('click',  function(){
+
+
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      console.log('deposit ', selectedActionAsset)
+
+    });
+  }
+
   async selectActionAsset(address)
     {
+      var self = this;
 
       var assetData = this.getAssetDataFromAddress(address)
 
       console.log('select action asset',assetData);
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
- 
 
       await Vue.set(actionContainer, "shouldRender" , true);
 
+      Vue.nextTick(function () {
+
+         self.registerActionContainerClickHandler();
+      })
 
     }
 

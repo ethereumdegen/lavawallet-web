@@ -13109,12 +13109,15 @@ footer p.sucess-message {
   margin: 0 auto;
   align-items: stretch;
   display: flex; }
+  @media screen and (min-width: 1024px) {
+    .navbar-container {
+      min-width: 900px; } }
 
 .navbar-start {
-  margin-right: 50px; }
+  padding-right: 50px; }
 
 .navbar-end {
-  margin-left: 50px; }
+  padding-left: 50px; }
 
 .has-dropdown.is-active .navbar-dropdown {
   display: none; }
@@ -13210,28 +13213,55 @@ a {
   .orange-theme .color-primary {
     color: white; }
 
-.balance-container {
-  padding: 20px;
-  font-size: 2em; }
+.is-centered {
+  margin: 0 auto; }
 
 .acts-as-link {
   cursor: pointer; }
+
+.hover-shadow:hover {
+  background-color: #eee; }
 
 .asset-list table {
   width: 100%; }
 
 .asset-list thead {
-  font-size: 24px;
+  font-size: 1em;
   border-bottom: 1px solid black; }
 
 .asset-list tbody {
-  font-size: 18px; }
+  font-size: 1.5em; }
 
 .asset-list tr {
   border-bottom: 1px solid black; }
 
 .asset-list td {
-  padding: 10px 0px; }
+  padding: 15px 0px; }
+
+.hand-icon {
+  font-size: 2em;
+  color: rgba(0, 0, 0, 0.3); }
+
+.flex-bar {
+  align-items: stretch;
+  display: flex; }
+
+.flex-start {
+  justify-content: flex-start;
+  margin-right: auto; }
+
+.flex-end {
+  justify-content: flex-end;
+  margin-left: auto; }
+
+.action-container .token-titlebar {
+  padding: 10px 10px; }
+
+.action-container .token-title {
+  font-size: 2em; }
+
+.one-third {
+  width: 33%; }
 
 .order-row {
   width: 280px;
