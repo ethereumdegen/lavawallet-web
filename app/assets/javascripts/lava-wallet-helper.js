@@ -258,7 +258,16 @@ export default class LavaWalletHelper {
 
       var selectedActionAsset = actionContainer.selectedActionAsset ;
 
-      console.log('deposit ', selectedActionAsset)
+        console.log('deposit ', selectedActionAsset)
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = 100;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+      self.depositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+
 
     });
   }
@@ -933,17 +942,58 @@ export default class LavaWalletHelper {
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
-       _0xBitcoinContract.blockchain_address,
+       tokenAddress,
        _0xBitcoinABI.abi
      );
 
      console.log(contract)
 
-     var approvedContractAddress = lavaWalletContract.blockchain_address;
+     var approvedContractAddress = this.lavaWalletContract.blockchain_address;
 
      contract.approveAndCall.sendTransaction( approvedContractAddress, amountRaw, remoteCallData , callback);
 
   }
+
+  async approveToken(tokenAddress,amountFormatted,tokenDecimals,callback)
+  {
+     console.log('approve token',tokenAddress,amountRaw);
+
+     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       tokenAddress ,
+       erc20TokenABI.abi
+     );
+
+     var spender = lavaWalletContract.blockchain_address;
+
+     contract.approve.sendTransaction( spender, amountRaw , callback);
+
+  }
+
+  async depositToken(tokenAddress,amountFormatted,tokenDecimals,callback)
+  {
+     console.log('deposit token',tokenAddress,amountRaw);
+
+     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
+
+     var contract = this.ethHelper.getWeb3ContractInstance(
+       this.web3,
+       this.lavaWalletContract.blockchain_address,
+       lavaWalletABI.abi
+     );
+
+     console.log(contract)
+
+     var from = web3.eth.accounts[0];
+
+     contract.depositTokens.sendTransaction( from, tokenAddress, amountRaw , '0x0', callback);
+
+  }
+
 
   async withdrawToken(tokenAddress,amountFormatted,tokenDecimals,callback)
   {
