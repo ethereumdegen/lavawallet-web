@@ -79,7 +79,17 @@
               <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
 
+              <div class="input-container">
+                <div class="label">Approve Tokens</div>
+                <input class="input" v-model="approveTokenQuantity" placeholder="token amount">
+              </div>
+
              <div class="button is-primary btn-action-approve"> Approve </div>
+
+             <div class="input-container">
+               <div class="label">Deposit Tokens</div>
+               <input class="input" v-model="depositTokenQuantity" placeholder="token amount">
+             </div>
 
 
               <div class="button is-primary btn-action-deposit"> Deposit </div>

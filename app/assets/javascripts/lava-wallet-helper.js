@@ -165,6 +165,8 @@ export default class LavaWalletHelper {
                  depositActive: true,
                  withdrawActive: false,
                  lavaTransferActive: false,
+                 approveTokenQuantity: 0,
+                 depositTokenQuantity: 0
               }
 
        });
