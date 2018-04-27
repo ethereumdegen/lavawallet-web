@@ -318,6 +318,10 @@ export default class LavaWalletHelper {
         var tokenBalance = await this.getTokenBalance(tokenData.address, userAddress);
         tokenData.wallet_balance_formatted = tokenBalance;
 
+        var tokenAllowance = await this.getTokenAllowance(tokenData.address, userAddress);
+        tokenData.approved_balance_formatted = tokenAllowance;
+
+
         var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
         tokenData.lava_balance_formatted = lavaTokenBalance;
 
@@ -360,6 +364,21 @@ export default class LavaWalletHelper {
 
       var balance = await new Promise(resolve => {
         contract.balanceOf(tokenOwner, function(error,response){
+           resolve(response.toNumber());
+           })
+      });
+
+      return balance;
+    }
+
+    async getTokenAllowance(tokenAddress,tokenOwner)
+    {
+      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+
+      var wallet_address = this.lavaWalletContract.blockchain_address;
+
+      var balance = await new Promise(resolve => {
+        contract.allowance(tokenOwner, wallet_address, function(error,response){
            resolve(response.toNumber());
            })
       });

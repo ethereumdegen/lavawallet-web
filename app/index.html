@@ -27,7 +27,7 @@
         <div class="whitespace-sm"></div>
 
 
-        <div class="subtitle color-primary has-text-centered">
+        <div class="subtitle color-primary has-text-centered" v-cloak>
           {{ errorMessage }}
         </div>
 
@@ -37,7 +37,7 @@
         <div class="hero-body">
 
 
-        <div id="action-container" class="action-container box"  v-if="shouldRender"    >
+        <div id="action-container" class="action-container box" v-cloak v-if="shouldRender"    >
           <div class="token-titlebar flex-bar">
                 <div class="token-title flex-start"> {{ selectedActionAsset.name }} </div>
 
@@ -73,6 +73,8 @@
           <div class="deposit-container" v-if="depositActive">
 
               <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
+
+              <div> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
 
               <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
