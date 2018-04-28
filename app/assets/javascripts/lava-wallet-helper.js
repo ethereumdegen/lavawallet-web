@@ -1104,7 +1104,7 @@ export default class LavaWalletHelper {
 
      console.log(contract)
 
-     var from = web3.eth.accounts[0];
+     var from = this.web3.eth.accounts[0];
 
      contract.depositTokens.sendTransaction( from, tokenAddress, amountRaw , '0x0', callback);
 
@@ -1135,11 +1135,31 @@ export default class LavaWalletHelper {
   {
     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
 
+    var msg = this.web3.toHex('hello');
+
+     var from = this.web3.eth.accounts[0];
+    var signedData = await this.personalSign(msg,from);
+
 
     console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
 
   }
 
+  async personalSign(msg,from)
+  {
+    var result = await new Promise(async resolve => {
+        this.web3.personal.sign(msg, from, function (err, result) {
+             if (err) return console.error(err)
+             console.log('PERSONAL SIGNED:' + result)
+
+             resolve(result);
+
+           });
+
+      });
+
+      return result;
+  }
 
 //nonce should just be a securerandom number !
 
