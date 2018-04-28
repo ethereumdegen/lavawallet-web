@@ -110,8 +110,12 @@ export default class LavaWalletHelper {
         var userAddress = web3.eth.accounts[0];
        //await this.updateWalletRender();
 
-       await this.collectClientTokenBalances(walletTokenList,userAddress);
-
+       try{
+         await this.collectClientTokenBalances(walletTokenList,userAddress);
+       }catch(e)
+       {
+         console.error(e)
+       }
 
 
     }//web3 defined
