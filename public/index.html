@@ -350,7 +350,7 @@
             <div class="input-container padding-md">
             <div class="label">Transfer Tokens</div>
 
-              <p> How it works...  </p>
+              <p> Generate a signed Lava Transfer Message.  This message can be submitted to the Ethereum network by anyone, at which point the tokens will be transferred to the recipient's Lava Balance.  </p>
 
                 <div class="columns">
                     <div class="column">
@@ -362,7 +362,10 @@
                           <div class="label">Recipient</div>
                           <input class="input input-short is-primary" v-model="transferTokenRecipient" placeholder="token recipient">
                       </div>
-
+                      <div class="form-group padding-md">
+                          <div class="label">Relay Reward (tokens)</div>
+                          <input class="input input-short is-primary" v-model="transferTokenRelayReward" placeholder="token relay reward">
+                      </div>
 
                         <div class="button is-primary btn-action-lava-transfer"> Sign </div>
 

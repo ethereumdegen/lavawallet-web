@@ -1201,12 +1201,15 @@ export default class LavaWalletHelper {
 
 //    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
 
+    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
+
+
     var params = [msgParams, from]
 
-    var signedData = await this.signTypedData(params,from);
+    var result = await this.signTypedData(params,from);
 
 
-    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
+    console.log('lava result',result)
 
   }
 
