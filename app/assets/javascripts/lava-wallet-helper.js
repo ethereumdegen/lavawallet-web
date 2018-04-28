@@ -345,7 +345,7 @@ export default class LavaWalletHelper {
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
-            self.generateLavaTransaction(tokenAddress, withdrawAmount, transferRecipient, tokenDecimals, function(error,response){
+            self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, tokenDecimals, function(error,response){
            console.log(response)
       });
 
@@ -1130,6 +1130,15 @@ export default class LavaWalletHelper {
 
   }
 
+
+  async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, tokenDecimals)
+  {
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
+
+    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
+
+  }
 
 
 //nonce should just be a securerandom number !
