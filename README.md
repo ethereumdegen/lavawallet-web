@@ -3,7 +3,7 @@
 
 
  ####
-
+Contract is at https://github.com/0xbitcoin/lava-wallet
 
 
 Will use EIP 712
