@@ -15,6 +15,12 @@ a
   color: #ff7209;
 }
 
+.navbar-item img
+{
+  //fix navbar icon
+    max-height:100%;
+}
+
 .page-container
 {
   max-width: 940px;

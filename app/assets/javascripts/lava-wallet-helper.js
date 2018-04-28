@@ -51,6 +51,8 @@ export default class LavaWalletHelper {
 
      var self = this;
 
+    this.networkVersion = 'mainnet';
+
    if(this.web3 != null)
    {
 
@@ -60,11 +62,13 @@ export default class LavaWalletHelper {
         web3.version.getNetwork((err, netId) => {
           switch (netId) {
             case "1":
+              this.networkVersion = 'mainnet';
               console.log('Web3 is using mainnet');
               self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
               self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
               break
             case "3":
+              this.networkVersion = 'testnet';
               console.log('Web3 is using ropsten test network.');
               self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
               self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
@@ -87,6 +91,12 @@ export default class LavaWalletHelper {
         console.log(defaultTokenData)
 
          defaultTokenData.map(t => t.icon_url = "/app/assets/img/token_icons/"+t.address+".png"   )
+
+        if(this.networkVersion != 'mainnet')
+        {
+        //  defaultTokenData.map(t => t.address = t.test_address   )
+        }
+
 
         console.log(defaultTokenData)
 
@@ -410,7 +420,10 @@ export default class LavaWalletHelper {
 
       var balance = await new Promise(resolve => {
         contract.balanceOf(tokenOwner, function(error,response){
-           resolve(response.toNumber());
+            if(error) resolve(0); return;
+
+            resolve(response.toNumber());
+
            })
       });
 
@@ -1032,7 +1045,7 @@ export default class LavaWalletHelper {
        erc20TokenABI.abi
      );
 
-     var spender = lavaWalletContract.blockchain_address;
+     var spender = this.lavaWalletContract.blockchain_address;
 
      contract.approve.sendTransaction( spender, amountRaw , callback);
 
