@@ -55382,17 +55382,21 @@ class LavaWalletHelper {
 
     var self = this;
 
+    self.networkVersion = 'mainnet';
+
     if (this.web3 != null) {
 
       await new Promise(async resolve => {
         web3.version.getNetwork((err, netId) => {
           switch (netId) {
             case "1":
+              self.networkVersion = 'mainnet';
               console.log('Web3 is using mainnet');
               self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
               self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
               break;
             case "3":
+              self.networkVersion = 'testnet';
               console.log('Web3 is using ropsten test network.');
               self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
               self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
@@ -55414,6 +55418,10 @@ class LavaWalletHelper {
 
       defaultTokenData.map(t => t.icon_url = "/app/assets/img/token_icons/" + t.address + ".png");
 
+      if (self.networkVersion != 'mainnet') {
+        defaultTokenData.map(t => t.address = t.test_address);
+      }
+
       console.log(defaultTokenData);
 
       walletTokenList = defaultTokenData;
@@ -55421,10 +55429,13 @@ class LavaWalletHelper {
       var userAddress = web3.eth.accounts[0];
       //await this.updateWalletRender();
 
+      console.log('init vue1');
       await this.collectClientTokenBalances(walletTokenList, userAddress);
+      console.log('init vue2');
     } //web3 defined
 
 
+    console.log('init vue');
     await this.initVueComponents();
 
     // await this.loadOrderEvents()
@@ -55462,9 +55473,10 @@ class LavaWalletHelper {
         data: {
           selectedActionAsset: { name: 'nil' },
           shouldRender: false,
-          depositActive: true,
-          withdrawActive: false,
-          lavaTransferActive: false
+          selectedActionType: 'deposit',
+          approveTokenQuantity: 0,
+          depositTokenQuantity: 0,
+          withdrawTokenQuantity: 0
         }
 
       });
@@ -55526,7 +55538,50 @@ class LavaWalletHelper {
     });
   }
 
+  async registerActionContainerClickHandler() {
+    var self = this;
+
+    $('.tab-action').off();
+    $('.tab-action').on('click', function () {
+
+      var actionType = $(this).data('action-type');
+
+      self.selectActiveAction(actionType);
+    });
+
+    $('.btn-action-deposit').off();
+    $('.btn-action-deposit').on('click', function () {
+
+      var selectedActionAsset = actionContainer.selectedActionAsset;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.approveTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+      console.log('deposit ', tokenAddress, depositAmount);
+      self.depositToken(tokenAddress, depositAmount, tokenDecimals, function (error, response) {
+        console.log(response);
+      });
+    });
+
+    $('.btn-action-approve').off();
+    $('.btn-action-approve').on('click', function () {
+
+      var selectedActionAsset = actionContainer.selectedActionAsset;
+
+      var tokenAddress = selectedActionAsset.address;
+      var approveAmount = actionContainer.approveTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+      console.log('approve ', tokenAddress, approveAmount);
+      self.approveToken(tokenAddress, approveAmount, tokenDecimals, function (error, response) {
+        console.log(response);
+      });
+    });
+  }
+
   async selectActionAsset(address) {
+    var self = this;
 
     var assetData = this.getAssetDataFromAddress(address);
 
@@ -55535,6 +55590,32 @@ class LavaWalletHelper {
     await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "selectedActionAsset", assetData);
 
     await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "shouldRender", true);
+
+    __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].nextTick(function () {
+
+      self.registerActionContainerClickHandler();
+    });
+  }
+
+  async selectActiveAction(actionName) {
+    var self = this;
+
+    console.log('select active action', actionName);
+
+    await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "selectedActionType", actionName);
+
+    /*  switch(actionName)
+      {
+        case 'deposit':
+                        await Vue.set(actionContainer, "depositActive" , true);
+                        break;
+        case 'withdraw':
+                        await Vue.set(actionContainer, "selectedActionType" , assetData);
+                        break;
+        case 'lavawallet':
+                        await Vue.set(actionContainer, "selectedActionAsset" , assetData);
+                        break;
+      }*/
   }
 
   getAssetDataFromAddress(address) {
@@ -55553,13 +55634,19 @@ class LavaWalletHelper {
 
       console.log(tokenData);
 
-      var tokenDecimals = 16; //fix
+      var tokenDecimals = tokenData.decimals; //fix
 
+      console.log('meep1');
       var tokenBalance = await this.getTokenBalance(tokenData.address, userAddress);
-      tokenData.wallet_balance_formatted = tokenBalance;
+      tokenData.wallet_balance_formatted = this.formatAmountWithDecimals(tokenBalance, tokenDecimals);
 
+      console.log('meep2');
+      var tokenAllowance = await this.getTokenAllowance(tokenData.address, userAddress);
+      tokenData.approved_balance_formatted = this.formatAmountWithDecimals(tokenAllowance, tokenDecimals);
+
+      console.log('meep3');
       var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
-      tokenData.lava_balance_formatted = lavaTokenBalance;
+      tokenData.lava_balance_formatted = this.formatAmountWithDecimals(lavaTokenBalance, tokenDecimals);
 
       //get wallet balance and get lava balance
 
@@ -55589,6 +55676,22 @@ class LavaWalletHelper {
 
     var balance = await new Promise(resolve => {
       contract.balanceOf(tokenOwner, function (error, response) {
+        console.log(error, response);
+
+        resolve(response.toNumber());
+      });
+    });
+
+    return balance;
+  }
+
+  async getTokenAllowance(tokenAddress, tokenOwner) {
+    var contract = this.ethHelper.getWeb3ContractInstance(this.web3, tokenAddress, erc20TokenABI.abi);
+
+    var wallet_address = this.lavaWalletContract.blockchain_address;
+
+    var balance = await new Promise(resolve => {
+      contract.allowance(tokenOwner, wallet_address, function (error, response) {
         resolve(response.toNumber());
       });
     });
@@ -56045,13 +56148,39 @@ class LavaWalletHelper {
 
     var remoteCallData = '0x01';
 
-    var contract = this.ethHelper.getWeb3ContractInstance(this.web3, _0xBitcoinContract.blockchain_address, _0xBitcoinABI.abi);
+    var contract = this.ethHelper.getWeb3ContractInstance(this.web3, tokenAddress, _0xBitcoinABI.abi);
 
     console.log(contract);
 
-    var approvedContractAddress = lavaWalletContract.blockchain_address;
+    var approvedContractAddress = this.lavaWalletContract.blockchain_address;
 
     contract.approveAndCall.sendTransaction(approvedContractAddress, amountRaw, remoteCallData, callback);
+  }
+
+  async approveToken(tokenAddress, amountFormatted, tokenDecimals, callback) {
+    console.log('approve token', tokenAddress, amountRaw);
+
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted, tokenDecimals);
+
+    var contract = this.ethHelper.getWeb3ContractInstance(this.web3, tokenAddress, erc20TokenABI.abi);
+
+    var spender = this.lavaWalletContract.blockchain_address;
+
+    contract.approve.sendTransaction(spender, amountRaw, callback);
+  }
+
+  async depositToken(tokenAddress, amountFormatted, tokenDecimals, callback) {
+    console.log('deposit token', tokenAddress, amountRaw);
+
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted, tokenDecimals);
+
+    var contract = this.ethHelper.getWeb3ContractInstance(this.web3, this.lavaWalletContract.blockchain_address, lavaWalletABI.abi);
+
+    console.log(contract);
+
+    var from = web3.eth.accounts[0];
+
+    contract.depositTokens.sendTransaction(from, tokenAddress, amountRaw, '0x0', callback);
   }
 
   async withdrawToken(tokenAddress, amountFormatted, tokenDecimals, callback) {
@@ -56174,7 +56303,7 @@ module.exports = {"contractName":"ERC20Interface","abi":[{"constant":false,"inpu
 /* 130 */
 /***/ (function(module, exports) {
 
-module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},{"name":"DAI Stablecoin","symbol":"DAI","address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359","test_address":""}]}
+module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","decimals":16,"usesAutoWrapping":true,"address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","decimals":8,"supportsDelegateCallDeposit":true,"address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x9d2cc383e677292ed87f63586086cff62a009010"},{"name":"DAI Stablecoin","symbol":"DAI","decimals":16,"address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359","test_address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"}]}
 
 /***/ }),
 /* 131 */

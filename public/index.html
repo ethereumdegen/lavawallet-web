@@ -229,7 +229,7 @@
         <div class="whitespace-sm"></div>
 
 
-        <div class="subtitle color-primary has-text-centered">
+        <div class="subtitle color-primary has-text-centered" v-cloak>
           {{ errorMessage }}
         </div>
 
@@ -239,7 +239,7 @@
         <div class="hero-body">
 
 
-        <div id="action-container" class="action-container box"  v-if="shouldRender" v-bind:data-tokenaddress="selectedActionAsset.address"  >
+        <div id="action-container" class="action-container box" v-cloak v-if="shouldRender"    >
           <div class="token-titlebar flex-bar">
                 <div class="token-title flex-start"> {{ selectedActionAsset.name }} </div>
 
@@ -247,21 +247,24 @@
           </div>
           <div class="action-tabs-bar">
 
-            <div class="tabs is-toggle" style="overflow-x: none;">
-              <ul>
-                <li   v-bind:class="{   'one-third':true, 'is-active':depositActive  } ">
+            <div class="tabs is-toggle hide-overflow"  >
+
+
+
+              <ul class="columns">
+                <li data-action-type="deposit"  v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true, 'is-active':(selectedActionType=='deposit')  } ">
                   <a>
                     <span class="icon is-small"><i class="fas fa-arrow-alt-circle-down" aria-hidden="true"></i></span>
                     <span>Deposit</span>
                   </a>
                 </li>
-                <li  v-bind:class="{   'one-third':true, 'is-active':withdrawActive  } ">
+                <li data-action-type="withdraw" v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true,  'is-active':(selectedActionType=='withdraw')  } ">
                   <a>
                     <span class="icon is-small one-third"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
                     <span>Withdraw</span>
                   </a>
                 </li>
-                <li  v-bind:class="{   'one-third':true, 'is-active':lavaTransferActive  } ">
+                <li data-action-type="lavatransfer" v-bind:class="{  'tab-action':true, 'column':true, 'column-button':true,  'is-active':(selectedActionType=='lavatransfer')  } ">
                   <a>
                     <span class="icon is-small one-third"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
                     <span>Lava Transfer</span>
@@ -272,26 +275,75 @@
             </div>
 
           </div>
-          <div class="deposit-container" v-if="depositActive">
+          <div class="deposit-container" v-if="(selectedActionType=='deposit')" v-cloak>
 
-              <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
-              <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+              <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
-              <div class="button is-primary btn-action-deposit"> Deposit </div>
+
+
+
+              <div class="input-container padding-md">
+                <div class="label">Approve Tokens</div>
+
+                <div class="columns">
+                  <div class="column">
+                    <div class="form-group">
+                        <input type="text" class="input input-short is-primary " v-model="approveTokenQuantity" placeholder="token amount">
+                        <div class="button is-primary btn-action-approve"> Approve </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                      <div class="is-size-6"> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
+                  </div>
+                </div>
+              </div>
+
+
+
+             <div class="input-container padding-md">
+               <div class="label">Deposit Tokens</div>
+
+                 <div class="columns">
+                     <div class="column">
+                       <div class="form-group">
+                         <input class="input input-short is-primary" v-model="depositTokenQuantity" placeholder="token amount">
+                          <div class="button is-primary btn-action-deposit"> Deposit </div>
+                       </div>
+                      </div>
+                    <div class="column">
+                        <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+                    </div>
+               </div>
+             </div>
+
+
+
 
           </div>
-          <div class="withdraw-container" v-if="withdrawActive">
+          <div class="withdraw-container" v-if="(selectedActionType=='withdraw')" v-cloak>
 
-            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+            <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
-            <div> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
-            <div class="button is-primary btn-action-withdraw"> Withdraw </div>
+            <div class="label">Withdraw Tokens</div>
+
+              <div class="columns">
+                  <div class="column">
+                    <div class="form-group">
+                      <input class="input input-short is-primary" v-model="withdrawTokenQuantity" placeholder="token amount">
+                       <div class="button is-primary btn-action-deposit"> Withdraw </div>
+                    </div>
+                   </div>
+                 <div class="column">
+                     <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+                 </div>
+            </div>
+
 
 
           </div>
-          <div class="lava-transfer-container" v-if="lavaTransferActive">
+          <div class="lava-transfer-container" v-if="(selectedActionType=='lavatransfer')" v-cloak>
 
             <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
@@ -321,8 +373,8 @@
               <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.address" v-bind:class="{   'asset-row':true, 'acts-as-link':true, 'hover-shadow':true   } " >
                 <td class="row-cell has-text-centered icon-url"><img  v-bind:src="item.icon_url" height="42" width="42" ></img></td>
                 <td class="row-cell has-text-centered token-name">{{item.name}}</td>
-                <td class="row-cell has-text-centered"><div class=" token-balance">{{item.wallet_balance_formatted}}</div> </td>
-                <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.lava_balance_formatted}}</div>  </td>
+                <td class="row-cell has-text-centered"><div class=" token-balance">{{item.lava_balance_formatted}}</div> </td>
+                <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.wallet_balance_formatted}}</div>  </td>
 
               </tr>
             </tbody>

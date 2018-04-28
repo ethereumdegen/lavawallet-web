@@ -110,9 +110,8 @@ export default class LavaWalletHelper {
         var userAddress = web3.eth.accounts[0];
        //await this.updateWalletRender();
 
-        console.log('init vue1')
        await this.collectClientTokenBalances(walletTokenList,userAddress);
-        console.log('init vue2')
+
 
 
     }//web3 defined
@@ -271,22 +270,7 @@ export default class LavaWalletHelper {
 
     });
 
-    $('.btn-action-deposit').off();
-    $('.btn-action-deposit').on('click',  function(){
 
-      var selectedActionAsset = actionContainer.selectedActionAsset ;
-
-      var tokenAddress = selectedActionAsset.address;
-      var depositAmount = actionContainer.approveTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-
-          console.log('deposit ', tokenAddress,  depositAmount)
-      self.depositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
-         console.log(response)
-      });
-
-    });
 
 
     $('.btn-action-approve').off();
@@ -305,6 +289,43 @@ export default class LavaWalletHelper {
       });
 
     });
+
+
+    $('.btn-action-deposit').off();
+    $('.btn-action-deposit').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.depositTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('deposit ', tokenAddress,  depositAmount)
+          self.depositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
+
+
+    $('.btn-action-withdraw').off();
+    $('.btn-action-withdraw').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var withdrawAmount = actionContainer.withdrawTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('withdraw ', tokenAddress,  withdrawAmount)
+          self.withdrawToken(tokenAddress, withdrawAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
+
   }
 
   async selectActionAsset(address)
@@ -320,7 +341,6 @@ export default class LavaWalletHelper {
       await Vue.set(actionContainer, "shouldRender" , true);
 
       Vue.nextTick(function () {
-
          self.registerActionContainerClickHandler();
       })
 
@@ -334,18 +354,9 @@ export default class LavaWalletHelper {
 
         await  Vue.set(actionContainer, "selectedActionType" , actionName);
 
-      /*  switch(actionName)
-        {
-          case 'deposit':
-                          await Vue.set(actionContainer, "depositActive" , true);
-                          break;
-          case 'withdraw':
-                          await Vue.set(actionContainer, "selectedActionType" , assetData);
-                          break;
-          case 'lavawallet':
-                          await Vue.set(actionContainer, "selectedActionAsset" , assetData);
-                          break;
-        }*/
+        Vue.nextTick(function () {
+           self.registerActionContainerClickHandler();
+        })
 
       }
 
@@ -373,17 +384,14 @@ export default class LavaWalletHelper {
 
         var tokenDecimals = tokenData.decimals; //fix
 
-        console.log('meep1')
+
         var tokenBalance = await this.getTokenBalance(tokenData.address, userAddress);
         tokenData.wallet_balance_formatted = this.formatAmountWithDecimals(tokenBalance,tokenDecimals);
 
-
-        console.log('meep2')
         var tokenAllowance = await this.getTokenAllowance(tokenData.address, userAddress);
         tokenData.approved_balance_formatted = this.formatAmountWithDecimals(tokenAllowance,tokenDecimals);
 
 
-        console.log('meep3')
         var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
         tokenData.lava_balance_formatted = this.formatAmountWithDecimals(lavaTokenBalance,tokenDecimals);
 
@@ -1087,13 +1095,13 @@ export default class LavaWalletHelper {
 
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
-       lavaWalletContract.blockchain_address,
+       this.lavaWalletContract.blockchain_address,
        lavaWalletABI.abi
      );
 
      console.log(contract)
 
-     contract.withdrawToken.sendTransaction( tokenAddress, amountRaw , callback);
+     contract.withdrawTokens.sendTransaction( tokenAddress, amountRaw , callback);
 
   }
 
