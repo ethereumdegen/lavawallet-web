@@ -2,6 +2,7 @@
 const $ = require('jquery');
 
 var web3utils = require('web3-utils')
+var sigUtil = require('eth-sig-util')
 
 import Vue from 'vue'
 
@@ -1155,16 +1156,47 @@ export default class LavaWalletHelper {
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
    const msgParams = [
+
   {
-    type: 'string',
-    name: 'Message',
-    value: 'Hi, Alice!'
+    type: 'address',
+    name: 'from',
+    value: from
   },
   {
-    type: 'uint32',
-    name: 'A number',
-    value: '1337'
-  }
+    type: 'address',
+    name: 'to',
+    value: to
+  },
+  {
+    type: 'address',
+    name: 'walletAddress',
+    value: walletAddress
+  },
+  {
+    type: 'address',
+    name: 'tokenAddress',
+    value: tokenAddress
+  },
+  {
+    type: 'uint256',
+    name: 'tokenAmount',
+    value: tokenAmount
+  },
+  {
+    type: 'uint256',
+    name: 'relayerReward',
+    value: relayerReward
+  },
+  {
+    type: 'uint256',
+    name: 'expires',
+    value: expires
+  },
+  {
+    type: 'string',
+    name: 'nonce',
+    value: nonce
+  },
 ]
 
 //    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
@@ -1199,7 +1231,7 @@ export default class LavaWalletHelper {
 
 
 
-                const recovered = sigUtil.recoverTypedSignature({ data: msgParams, sig: result.result })
+                const recovered = sigUtil.recoverTypedSignature({ data: params[0], sig: result.result })
 
                 if (recovered === from ) {
                   alert('Successfully ecRecovered signer as ' + from)
