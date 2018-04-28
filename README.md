@@ -2,9 +2,16 @@
  ## Lava Wallet
 
 
- #### Shift between Ether and 0xBitcoin for free!
+ ####
 
 
+
+Will use EIP 712
+https://medium.com/metamask/scaling-web3-with-signtypeddata-91d6efc8b290
+
+https://github.com/ukstv/sign-typed-data-test/blob/master/contracts/SignTypedData.sol#L11
+
+https://github.com/danfinlay/js-eth-personal-sign-examples
 
 ## todo
 1. Add reference to the contract

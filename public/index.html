@@ -325,29 +325,54 @@
 
             <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
+              <div class="input-container padding-md">
+                <div class="label">Withdraw Tokens</div>
 
-            <div class="label">Withdraw Tokens</div>
-
-              <div class="columns">
-                  <div class="column">
-                    <div class="form-group">
-                      <input class="input input-short is-primary" v-model="withdrawTokenQuantity" placeholder="token amount">
-                       <div class="button is-primary btn-action-withdraw"> Withdraw </div>
-                    </div>
-                   </div>
-                 <div class="column">
-                     <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-                 </div>
+                  <div class="columns">
+                      <div class="column">
+                        <div class="form-group">
+                          <input class="input input-short is-primary" v-model="withdrawTokenQuantity" placeholder="token amount">
+                           <div class="button is-primary btn-action-withdraw"> Withdraw </div>
+                        </div>
+                       </div>
+                     <div class="column">
+                         <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+                     </div>
+                </div>
             </div>
-
 
 
           </div>
           <div class="lava-transfer-container" v-if="(selectedActionType=='lavatransfer')" v-cloak>
 
-            <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+            <div class="subtitle-banner has-background-orange has-text-light"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
-            <div class="button is-primary btn-action-lava-transfer"> Transfer </div>
+            <div class="input-container padding-md">
+            <div class="label">Transfer Tokens</div>
+
+              <p> How it works...  </p>
+
+                <div class="columns">
+                    <div class="column">
+                      <div class="form-group padding-md">
+                          <div class="label">Amount</div>
+                          <input class="input input-short is-primary" v-model="transferTokenQuantity" placeholder="token amount">
+                      </div>
+                      <div class="form-group padding-md">
+                          <div class="label">Recipient</div>
+                          <input class="input input-short is-primary" v-model="transferTokenRecipient" placeholder="token recipient">
+                      </div>
+
+
+                        <div class="button is-primary btn-action-lava-transfer"> Sign </div>
+
+                     </div>
+                   <div class="column">
+                       <div class="is-size-6">   </div>
+                   </div>
+              </div>
+           </div>
+
 
           </div>
 

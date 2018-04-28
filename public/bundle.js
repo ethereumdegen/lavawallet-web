@@ -55429,7 +55429,11 @@ class LavaWalletHelper {
       var userAddress = web3.eth.accounts[0];
       //await this.updateWalletRender();
 
-      await this.collectClientTokenBalances(walletTokenList, userAddress);
+      try {
+        await this.collectClientTokenBalances(walletTokenList, userAddress);
+      } catch (e) {
+        console.error(e);
+      }
     } //web3 defined
 
 
@@ -55474,7 +55478,9 @@ class LavaWalletHelper {
           selectedActionType: 'deposit',
           approveTokenQuantity: 0,
           depositTokenQuantity: 0,
-          withdrawTokenQuantity: 0
+          withdrawTokenQuantity: 0,
+          transferTokenQuantity: 0,
+          transferTokenRecipient: 0
         }
 
       });
@@ -55588,6 +55594,22 @@ class LavaWalletHelper {
 
       console.log('withdraw ', tokenAddress, withdrawAmount);
       self.withdrawToken(tokenAddress, withdrawAmount, tokenDecimals, function (error, response) {
+        console.log(response);
+      });
+    });
+
+    $('.btn-action-lava-transfer').off();
+    $('.btn-action-lava-transfer').on('click', function () {
+
+      var selectedActionAsset = actionContainer.selectedActionAsset;
+
+      var tokenAddress = selectedActionAsset.address;
+      var transferAmount = actionContainer.transferTokenQuantity;
+      var transferRecipient = actionContainer.transferTokenRecipient;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+      console.log('lava transfer gen ', tokenAddress, transferAmount, transferRecipient);
+      self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, tokenDecimals, function (error, response) {
         console.log(response);
       });
     });
@@ -56179,7 +56201,7 @@ class LavaWalletHelper {
 
     console.log(contract);
 
-    var from = web3.eth.accounts[0];
+    var from = this.web3.eth.accounts[0];
 
     contract.depositTokens.sendTransaction(from, tokenAddress, amountRaw, '0x0', callback);
   }
@@ -56194,6 +56216,30 @@ class LavaWalletHelper {
     console.log(contract);
 
     contract.withdrawTokens.sendTransaction(tokenAddress, amountRaw, callback);
+  }
+
+  async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, tokenDecimals) {
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted, tokenDecimals);
+
+    var msg = this.web3.toHex('hello');
+
+    var from = this.web3.eth.accounts[0];
+    var signedData = await this.personalSign(msg, from);
+
+    console.log('generateLavaTransaction', tokenAddress, amountRaw, transferRecipient);
+  }
+
+  async personalSign(msg, from) {
+    var result = await new Promise(async resolve => {
+      this.web3.personal.sign(msg, from, function (err, result) {
+        if (err) return console.error(err);
+        console.log('PERSONAL SIGNED:' + result);
+
+        resolve(result);
+      });
+    });
+
+    return result;
   }
 
   //nonce should just be a securerandom number !

@@ -182,7 +182,8 @@ export default class LavaWalletHelper {
                  depositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
                  transferTokenQuantity: 0,
-                 transferTokenRecipient : 0
+                 transferTokenRecipient : 0,
+                 transferTokenRelayReward: 0
               }
 
        });
@@ -341,11 +342,12 @@ export default class LavaWalletHelper {
       var tokenAddress = selectedActionAsset.address;
       var transferAmount = actionContainer.transferTokenQuantity;
       var transferRecipient = actionContainer.transferTokenRecipient;
+      var transferRelayReward = actionContainer.transferTokenRelayReward;
       var tokenDecimals = selectedActionAsset.decimals;
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
-            self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, tokenDecimals, function(error,response){
+            self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, relayerReward, tokenDecimals, function(error,response){
            console.log(response)
       });
 
@@ -359,7 +361,6 @@ export default class LavaWalletHelper {
 
       var assetData = this.getAssetDataFromAddress(address)
 
-      console.log('select action asset',assetData);
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
 
@@ -1131,14 +1132,32 @@ export default class LavaWalletHelper {
   }
 
 
-  async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, tokenDecimals)
+  async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals)
   {
-    var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+      var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+      var relayerRewardRaw = this.getRawFromDecimalFormat(relayerRewardFormatted,tokenDecimals)
 
-    var msg = this.web3.toHex('hello');
 
-     var from = this.web3.eth.accounts[0];
-    var signedData = await this.personalSign(msg,from);
+    //bytes32 sigHash = sha3("\x19Ethereum Signed Message:\n32",this, from, to, token, tokens, relayerReward, expires, nonce);
+   //  address recoveredSignatureSigner = ECRecovery.recover(sigHash,signature);
+   var ethBlock = await this.getCurrentEthBlockNumber();
+
+
+   var walletAddress = this.lavaWalletContract.blockchain_address;
+   var from = this.web3.eth.accounts[0];
+   var to = transferRecipient;
+   var tokenAddress = tokenAddress;
+   var tokenAmount = amountRaw;
+   var relayerReward = relayerRewardRaw;
+   var expires = ethBlock + 10000;
+   var nonce = web3utils.randomHex(16);
+
+   //need to append everything together !! to be ..like in solidity.. :  len(message) + message
+    var msg =  ;
+
+    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
+
+    var signedData = await this.personalSign(solidity_msg,from);
 
 
     console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
@@ -1148,6 +1167,10 @@ export default class LavaWalletHelper {
   async personalSign(msg,from)
   {
     var result = await new Promise(async resolve => {
+
+      //sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)));
+      //personal_ecRecover
+
         this.web3.personal.sign(msg, from, function (err, result) {
              if (err) return console.error(err)
              console.log('PERSONAL SIGNED:' + result)

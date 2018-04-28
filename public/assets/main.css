@@ -13032,8 +13032,14 @@ html {
 a {
   color: #ff7209; }
 
+[v-cloak] {
+  display: none; }
+
 .navbar-item img {
   max-height: 100%; }
+
+.has-background-orange {
+  background: #ff7209 !important; }
 
 .page-container {
   max-width: 940px;
