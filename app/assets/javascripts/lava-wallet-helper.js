@@ -180,7 +180,9 @@ export default class LavaWalletHelper {
                  selectedActionType: 'deposit',
                  approveTokenQuantity: 0,
                  depositTokenQuantity: 0,
-                 withdrawTokenQuantity: 0
+                 withdrawTokenQuantity: 0,
+                 transferTokenQuantity: 0,
+                 transferTokenRecipient : 0
               }
 
        });
@@ -326,6 +328,25 @@ export default class LavaWalletHelper {
           console.log('withdraw ', tokenAddress,  withdrawAmount)
           self.withdrawToken(tokenAddress, withdrawAmount, tokenDecimals, function(error,response){
          console.log(response)
+      });
+
+    });
+
+
+    $('.btn-action-lava-transfer').off();
+    $('.btn-action-lava-transfer').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var transferAmount = actionContainer.transferTokenQuantity;
+      var transferRecipient = actionContainer.transferTokenRecipient;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+            console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
+            self.generateLavaTransaction(tokenAddress, withdrawAmount, transferRecipient, tokenDecimals, function(error,response){
+           console.log(response)
       });
 
     });
