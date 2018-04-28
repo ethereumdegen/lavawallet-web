@@ -162,11 +162,10 @@ export default class LavaWalletHelper {
          data: {
                  selectedActionAsset: {name: 'nil'},
                  shouldRender: false,
-                 depositActive: true,
-                 withdrawActive: false,
-                 lavaTransferActive: false,
+                 selectedActionType: 'deposit',
                  approveTokenQuantity: 0,
-                 depositTokenQuantity: 0
+                 depositTokenQuantity: 0,
+                 withdrawTokenQuantity: 0
               }
 
        });
@@ -251,25 +250,47 @@ export default class LavaWalletHelper {
     var self = this;
 
 
+    $('.tab-action').off();
+    $('.tab-action').on('click',  function(){
 
+      var actionType = $(this).data('action-type');
+
+      self.selectActiveAction(actionType);
+
+    });
 
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
 
-
-
       var selectedActionAsset = actionContainer.selectedActionAsset ;
 
-        console.log('deposit ', selectedActionAsset)
       var tokenAddress = selectedActionAsset.address;
-      var depositAmount = 100;
+      var depositAmount = actionContainer.approveTokenQuantity;
       var tokenDecimals = selectedActionAsset.decimals;
 
+
+          console.log('deposit ', tokenAddress,  depositAmount)
       self.depositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
          console.log(response)
       });
 
+    });
 
+
+    $('.btn-action-approve').off();
+    $('.btn-action-approve').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var approveAmount = actionContainer.approveTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('approve ', tokenAddress,  approveAmount)
+      self.approveToken(tokenAddress, approveAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
 
     });
   }
@@ -292,6 +313,29 @@ export default class LavaWalletHelper {
       })
 
     }
+
+    async selectActiveAction(actionName)
+      {
+        var self = this;
+
+        console.log('select active action',actionName);
+
+        await  Vue.set(actionContainer, "selectedActionType" , actionName);
+
+      /*  switch(actionName)
+        {
+          case 'deposit':
+                          await Vue.set(actionContainer, "depositActive" , true);
+                          break;
+          case 'withdraw':
+                          await Vue.set(actionContainer, "selectedActionType" , assetData);
+                          break;
+          case 'lavawallet':
+                          await Vue.set(actionContainer, "selectedActionAsset" , assetData);
+                          break;
+        }*/
+
+      }
 
     getAssetDataFromAddress(address)
     {
