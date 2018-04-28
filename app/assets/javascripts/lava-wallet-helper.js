@@ -347,7 +347,7 @@ export default class LavaWalletHelper {
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
-            self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, relayerReward, tokenDecimals, function(error,response){
+            self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function(error,response){
            console.log(response)
       });
 
@@ -1153,16 +1153,70 @@ export default class LavaWalletHelper {
    var nonce = web3utils.randomHex(16);
 
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
-    var msg =  ;
 
-    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
+   const msgParams = [
+  {
+    type: 'string',
+    name: 'Message',
+    value: 'Hi, Alice!'
+  },
+  {
+    type: 'uint32',
+    name: 'A number',
+    value: '1337'
+  }
+]
 
-    var signedData = await this.personalSign(solidity_msg,from);
+//    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
+
+    var params = [msgParams, from]
+
+    var signedData = await this.signTypedData(params,from);
 
 
     console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
 
   }
+
+
+  async signTypedData(params,from)
+  {
+    var result = await new Promise(async resolve => {
+
+      var method = 'eth_signTypedData'
+
+              web3.currentProvider.sendAsync({
+                method,
+                params,
+                from,
+              }, function (err, result) {
+                if (err) return console.dir(err)
+                if (result.error) {
+                  alert(result.error.message)
+                }
+                if (result.error) return console.error(result)
+                console.log('PERSONAL SIGNED:' + JSON.stringify(result.result))
+
+
+
+                const recovered = sigUtil.recoverTypedSignature({ data: msgParams, sig: result.result })
+
+                if (recovered === from ) {
+                  alert('Successfully ecRecovered signer as ' + from)
+                } else {
+                  alert('Failed to verify signer when comparing ' + result + ' to ' + from)
+                }
+
+                  resolve(result.result)
+
+              })
+
+
+      });
+
+      return result;
+  }
+
 
   async personalSign(msg,from)
   {
