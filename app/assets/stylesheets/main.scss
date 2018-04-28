@@ -227,11 +227,37 @@ a
   }
 }
 
+.hide-overflow
+{
+      overflow: hidden;
+}
+
+.zero-padding
+{
+  padding: 0;
+}
 
 .hand-icon
 {
   font-size: 2em;
   color: rgba(0,0,0,0.3);
+}
+
+.column-button
+{
+      padding:0;
+      padding-top: 0.75em;
+      padding-bottom: 0.75em;
+}
+
+.input-short
+{
+  max-width:200px;
+}
+
+.padding-md
+{
+  padding: 1em;
 }
 
 .flex-bar

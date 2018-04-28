@@ -45,21 +45,24 @@
           </div>
           <div class="action-tabs-bar">
 
-            <div class="tabs is-toggle" style="overflow-x: none;">
-              <ul>
-                <li   v-bind:class="{   'one-third':true, 'is-active':depositActive  } ">
+            <div class="tabs is-toggle hide-overflow"  >
+
+
+
+              <ul class="columns">
+                <li   v-bind:class="{   'column':true, 'column-button':true, 'is-active':depositActive  } ">
                   <a>
                     <span class="icon is-small"><i class="fas fa-arrow-alt-circle-down" aria-hidden="true"></i></span>
                     <span>Deposit</span>
                   </a>
                 </li>
-                <li  v-bind:class="{   'one-third':true, 'is-active':withdrawActive  } ">
+                <li  v-bind:class="{   'column':true, 'column-button':true,  'is-active':withdrawActive  } ">
                   <a>
                     <span class="icon is-small one-third"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
                     <span>Withdraw</span>
                   </a>
                 </li>
-                <li  v-bind:class="{   'one-third':true, 'is-active':lavaTransferActive  } ">
+                <li  v-bind:class="{   'column':true, 'column-button':true,  'is-active':lavaTransferActive  } ">
                   <a>
                     <span class="icon is-small one-third"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
                     <span>Lava Transfer</span>
@@ -70,35 +73,55 @@
             </div>
 
           </div>
-          <div class="deposit-container" v-if="depositActive">
+          <div class="deposit-container" v-if="depositActive" v-cloak>
 
 
               <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
 
 
-              <div> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
-
-              <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
 
-              <div class="input-container">
+
+              <div class="input-container padding-md">
                 <div class="label">Approve Tokens</div>
-                <input class="input" v-model="approveTokenQuantity" placeholder="token amount">
+
+                <div class="columns">
+                  <div class="column">
+                    <div class="form-group">
+                        <input type="text" class="input input-short is-primary " v-model="approveTokenQuantity" placeholder="token amount">
+                        <div class="button is-primary btn-action-approve"> Approve </div>
+                    </div>
+                  </div>
+                  <div class="column">
+                      <div class="is-size-6"> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
+                  </div>
+                </div>
               </div>
 
-             <div class="button is-primary btn-action-approve"> Approve </div>
 
-             <div class="input-container">
+
+             <div class="input-container padding-md">
                <div class="label">Deposit Tokens</div>
-               <input class="input" v-model="depositTokenQuantity" placeholder="token amount">
+
+                 <div class="columns">
+                     <div class="column">
+                       <div class="form-group">
+                         <input class="input input-short is-primary" v-model="depositTokenQuantity" placeholder="token amount">
+                          <div class="button is-primary btn-action-deposit"> Deposit </div>
+                       </div>
+                      </div>
+                    <div class="column">
+                        <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
+                    </div>
+               </div>
              </div>
 
 
-              <div class="button is-primary btn-action-deposit"> Deposit </div>
+
 
           </div>
-          <div class="withdraw-container" v-if="withdrawActive">
+          <div class="withdraw-container" v-if="withdrawActive" v-cloak>
 
             <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
@@ -108,7 +131,7 @@
 
 
           </div>
-          <div class="lava-transfer-container" v-if="lavaTransferActive">
+          <div class="lava-transfer-container" v-if="lavaTransferActive" v-cloak>
 
             <div> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
 
