@@ -1209,7 +1209,7 @@ export default class LavaWalletHelper {
     var result = await this.signTypedData(params,from);
 
 
-    console.log('lava result',result)
+    console.log('lava signature',msgParams,result)  
 
   }
 
@@ -1233,7 +1233,7 @@ export default class LavaWalletHelper {
                 console.log('PERSONAL SIGNED:' + JSON.stringify(result.result))
 
 
-
+                  //this method needs to be in solidity!
                 const recovered = sigUtil.recoverTypedSignature({ data: params[0], sig: result.result })
 
                 if (recovered === from ) {

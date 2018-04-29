@@ -13,6 +13,10 @@ https://github.com/ukstv/sign-typed-data-test/blob/master/contracts/SignTypedDat
 
 https://github.com/danfinlay/js-eth-personal-sign-examples
 
+
+https://programtheblockchain.com/posts/2018/02/17/signing-and-verifying-messages-in-ethereum/
+
+
 ## todo
 1. Add reference to the contract
 2. Deposit / Withdraw buttons -- for any token + ether  
