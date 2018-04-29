@@ -1206,10 +1206,10 @@ export default class LavaWalletHelper {
 
     var params = [msgParams, from]
 
-    var result = await this.signTypedData(params,from);
+    var signature = await this.signTypedData(params,from);
 
 
-    console.log('lava signature',msgParams,result)  
+    console.log('lava signature',msgParams,signature)  
 
   }
 
