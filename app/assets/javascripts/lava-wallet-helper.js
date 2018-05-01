@@ -1204,6 +1204,13 @@ export default class LavaWalletHelper {
     console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
 
 
+    //testing
+    var sigHash = sigUtil.typedSignatureHash(msgParams);
+
+    console.log('lava sigHash',msgParams,sigHash)
+
+
+
     var params = [msgParams, from]
 
     var signature = await this.signTypedData(params,from);
