@@ -1193,7 +1193,7 @@ export default class LavaWalletHelper {
     value: expires
   },
   {
-    type: 'string',
+    type: 'uint256',
     name: 'nonce',
     value: nonce
   },
@@ -1209,7 +1209,7 @@ export default class LavaWalletHelper {
     var signature = await this.signTypedData(params,from);
 
 
-    console.log('lava signature',msgParams,signature)  
+    console.log('lava signature',msgParams,signature)
 
   }
 
