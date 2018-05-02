@@ -42,6 +42,10 @@ import WalletDashboard from './wallet-dashboard'
 var wallet = new WalletDashboard();
 
 
+var pjson = require('../../../package.json');
+
+
+
 
 var navbarComponent = new Vue({
   el: '#navbar',
@@ -49,7 +53,8 @@ var navbarComponent = new Vue({
     titleLogo: titleLogo,
     githubLogo: githubLogo,
     redditLogo: redditLogo,
-    contractQR: contractQR
+    contractQR: contractQR,
+    projectVersion: pjson.version
   }
 })
 
