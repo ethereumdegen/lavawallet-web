@@ -33689,7 +33689,7 @@ curve.edwards = __webpack_require__(206);
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0xd53f047ceb0dc6cbaf6d09e877a7c3043caf9e7e"}}}}}
+module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x3147b2a27d911498985d098ad00a29f1c1c3be3e"}}}}}
 
 /***/ }),
 /* 39 */
@@ -64336,7 +64336,7 @@ class LavaWalletHelper {
 
     var contract = this.ethHelper.getWeb3ContractInstance(this.web3, this.lavaWalletContract.blockchain_address, lavaWalletABI.abi);
 
-    contract.approveTokensWithSignature.sendTransaction(lavaPacket.from, lavaPacket.to, lavaPacket.tokenAddress, lavaPacket.tokenAmount, lavaPacket.relayerReward, lavaPacket.expires, lavaPacket.nonce, lavaPacket.signature, function () {
+    contract.transferTokensFromWithSignature.sendTransaction(lavaPacket.from, lavaPacket.to, lavaPacket.tokenAddress, lavaPacket.tokenAmount, lavaPacket.relayerReward, lavaPacket.expires, lavaPacket.nonce, lavaPacket.signature, function () {
       console.log('done!');
     });
   }

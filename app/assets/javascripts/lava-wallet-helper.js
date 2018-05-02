@@ -301,7 +301,7 @@ export default class LavaWalletHelper {
      lavaWalletABI.abi
    );
 
-   contract.approveTokensWithSignature.sendTransaction(
+   contract.transferTokensFromWithSignature.sendTransaction(
       lavaPacket.from,
       lavaPacket.to,
       lavaPacket.tokenAddress,
