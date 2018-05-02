@@ -33689,7 +33689,7 @@ curve.edwards = __webpack_require__(206);
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0xbe6076332be098e8552c78aeee467445c1e0d90d"}}}}}
+module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"}}}}}
 
 /***/ }),
 /* 39 */
