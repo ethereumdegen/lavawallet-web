@@ -6,6 +6,9 @@ var sigUtil = require('eth-sig-util')
 
 import Vue from 'vue'
 
+import LavaPacketHelper from './lava-packet-helper'
+//const lavaPacketHelper = new LavaPacketHelper();
+
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
 var erc20TokenABI = require('../contracts/ERC20Interface.json')
@@ -103,6 +106,13 @@ export default class LavaWalletHelper {
         }
 
 
+
+
+
+            this.registerDropEvents()
+
+
+
         console.log(defaultTokenData)
 
         walletTokenList = defaultTokenData;
@@ -169,7 +179,6 @@ export default class LavaWalletHelper {
 
 
 
-
     if(this.lavaWalletContract)
     {
 
@@ -184,7 +193,8 @@ export default class LavaWalletHelper {
                  withdrawTokenQuantity: 0,
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
-                 transferTokenRelayReward: 0
+                 transferTokenRelayReward: 0,
+                 lavaPacketData: null
               }
 
        });
@@ -199,26 +209,12 @@ export default class LavaWalletHelper {
 
    }
 
-   /*var transfer = new Vue({
-      el: '#transfer-form',
-      data: {
-        etherBalance: etherBalance.toNumber(),
-        tokenBalance: tokenBalance.toNumber(),
-        etherBalanceFormatted: this.formatAmountWithDecimals(etherBalance.toNumber(),18),
-        tokenBalanceFormatted: this.formatAmountWithDecimals(tokenBalance.toNumber(),8),
 
-        depositEtherAmount: 0,
-        withdrawEtherAmount: 0,
-        depositTokenAmount: 0,
-        withdrawTokenAmount: 0
-           },
 
-      methods: {
-         update: function () {
 
-         }
-       }
-    });*/
+
+
+
 
      var assetList = new Vue({
        el: '#asset-list',
@@ -243,9 +239,59 @@ export default class LavaWalletHelper {
      })
 
 
+
+
   }
 
+  registerDropEvents()
+  {
+    var self = this ;
 
+
+    $('.dropzone').on('dragover', function(e) {
+         e.stopPropagation();
+         e.preventDefault();
+       //  e.dataTransfer.dropEffect = 'copy';
+     });
+
+    console.log('added listenr ')
+     $('.dropzone').on('drop', function(e) {
+       e.stopPropagation();
+       e.preventDefault();
+
+       console.log('handle packet drop' ) 
+
+       var files = e.originalEvent.dataTransfer.files; // Array of all files
+       console.log(files)
+           for (var i=0, file; file=files[i]; i++) {
+
+               if (file.name.endsWith('.lava')) {
+
+                   var reader = new FileReader();
+                     // Closure to capture the file information.
+                     reader.onload = (function(theFile) {
+                       return function(e) {
+                        var parsedFileJson = JSON.parse(e.target.result);
+
+                        self.initiateLavaPackTransaction(parsedFileJson)
+
+                       };
+                     })(file);
+
+                   reader.readAsText(file); // start reading the file data.
+               }
+           }
+
+
+      } )
+
+
+  }
+
+  async initiateLavaPackTransaction(lavaPacket)
+  {
+    console.log('initiate', lavaPacket)
+  }
 
   async registerAssetRowClickHandler()
   {
@@ -1135,6 +1181,10 @@ export default class LavaWalletHelper {
 
   async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals)
   {
+
+    var self = this;
+
+
       var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
       var relayerRewardRaw = this.getRawFromDecimalFormat(relayerRewardFormatted,tokenDecimals)
 
@@ -1218,7 +1268,33 @@ export default class LavaWalletHelper {
 
     console.log('lava signature',msgParams,signature)
 
+    var packetJson = LavaPacketHelper.getLavaPacket(
+      from,to,walletAddress,tokenAddress,tokenAmount,
+      relayerReward,expires,nonce,signature)
+
+      var lavaPacketString = JSON.stringify(packetJson);
+
+      console.log('lava packet json ',  lavaPacketString );
+
+      await Vue.set(actionContainer, "lavaPacketData" , lavaPacketString);
+
+      Vue.nextTick(function () {
+        self.registerLavaPacketDownloadButton(lavaPacketString)
+
+      })
   }
+
+  async registerLavaPacketDownloadButton(lavaPacketString)
+  {
+
+      var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(lavaPacketString));
+      $('#btn-download-lava-packet').empty();
+      $('<a href="data:' + data + '" download="packet.lava" class="button is-primary btn-download-lava-packet">Download Lava Packet</a>').appendTo('#btn-download-lava-packet');
+
+
+  }
+
+
 
 
   async signTypedData(params,from)

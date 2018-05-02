@@ -170,6 +170,17 @@
                      </div>
                    <div class="column">
                        <div class="is-size-6">   </div>
+
+                       <div class="form-group padding-md">
+                           <div class="label">Lava Packet Data</div>
+                           <textarea class="textarea" placeholder="Lava packet data" rows="10"  v-model="lavaPacketData" ></textarea>
+
+                       </div>
+
+                       <div id="btn-download-lava-packet">
+                       </div>
+
+
                    </div>
               </div>
            </div>
@@ -211,6 +222,19 @@
 
                  <div class="whitespace-md"></div>
 
+
+             <div id="lava-packet-dropzone" class="lava-packet-dropzone">
+
+               <div class="subtitle is-size-3">Drop Lava Packets Here</div>
+
+               <div class="dropzone"  >
+                  <div class="hand-icon-holder">
+                    <i class="far fa-hand-paper"></i>
+                  </div>
+               </div>
+
+
+             </div>
 
         </div>
       </section>

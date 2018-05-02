@@ -317,6 +317,33 @@ a
 
 
 
+.lava-packet-dropzone
+{
+
+  background: repeating-linear-gradient(45deg, #e4d1b3, #e4d1b3,10px, #d3d5da 10px, #d3d5da 20px);
+  padding: 25px;
+  border-radius: 10px;
+
+  .subtitle
+  {
+    text-align: center;
+    color:black;
+
+  }
+  .dropzone
+  {
+    min-height:250px;
+
+    .hand-icon-holder
+    {
+      font-size:2em;
+      margin:0 auto;
+    }
+  }
+
+}
+
+
 
 
 .order-row
