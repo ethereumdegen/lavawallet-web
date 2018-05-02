@@ -13191,6 +13191,11 @@ a {
 .one-third {
   width: 33%; }
 
+.light-box {
+  border: 1px solid black;
+  padding: 10px;
+  display: inline-block; }
+
 .lava-packet-dropzone {
   background: repeating-linear-gradient(45deg, #e4d1b3, #e4d1b3, 10px, #d3d5da 10px, #d3d5da 20px);
   padding: 25px;
@@ -13202,6 +13207,10 @@ a {
     min-height: 250px; }
     .lava-packet-dropzone .dropzone .hand-icon-holder {
       font-size: 2em;
+      margin: 0 auto; }
+    .lava-packet-dropzone .dropzone .dropzone-file-input-container {
+      text-align: center;
+      padding: 20px;
       margin: 0 auto; }
 
 .order-row {

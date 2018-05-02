@@ -255,6 +255,20 @@ export default class LavaWalletHelper {
      });
 
     console.log('added listenr ')
+
+    $('.dropzone-file-input').on('change', function(e) {
+      e.stopPropagation();
+      e.preventDefault();
+
+      console.log('handle packet drop' )
+
+      var files =   $(this).prop('files'); // Array of all files
+      console.log(files)
+
+      self.readDroppedFiles(files);
+    });
+
+
      $('.lava-packet-dropzone').on('drop', function(e) {
        e.stopPropagation();
        e.preventDefault();
@@ -263,29 +277,37 @@ export default class LavaWalletHelper {
 
        var files = e.originalEvent.dataTransfer.files; // Array of all files
        console.log(files)
-           for (var i=0, file; file=files[i]; i++) {
-
-               if (file.name.endsWith('.lava')) {
-
-                   var reader = new FileReader();
-                     // Closure to capture the file information.
-                     reader.onload = (function(theFile) {
-                       return function(e) {
-                        var parsedFileJson = JSON.parse(e.target.result);
-
-                        self.initiateLavaPackTransaction( JSON.parse( parsedFileJson) )
-
-                       };
-                     })(file);
-
-                   reader.readAsText(file); // start reading the file data.
-               }
-           }
+        self.readDroppedFiles(files);
 
 
       } )
 
 
+  }
+
+
+  async readDroppedFiles(files)
+  {
+    var self = this ;
+    
+    for (var i=0, file; file=files[i]; i++) {
+
+        if (file.name.endsWith('.lava')) {
+
+            var reader = new FileReader();
+              // Closure to capture the file information.
+              reader.onload = (function(theFile) {
+                return function(e) {
+                 var parsedFileJson = JSON.parse(e.target.result);
+
+                 self.initiateLavaPackTransaction( JSON.parse( parsedFileJson) )
+
+                };
+              })(file);
+
+            reader.readAsText(file); // start reading the file data.
+        }
+    }
   }
 
   async initiateLavaPackTransaction(lavaPacket)

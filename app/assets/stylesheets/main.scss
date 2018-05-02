@@ -315,6 +315,12 @@ a
   width:33%;
 }
 
+.light-box
+{
+  border: 1px solid black;
+  padding:10px;
+  display: inline-block;
+}
 
 
 .lava-packet-dropzone
@@ -337,6 +343,13 @@ a
     .hand-icon-holder
     {
       font-size:2em;
+      margin:0 auto;
+    }
+
+    .dropzone-file-input-container
+    {
+      text-align: center;
+      padding:20px;
       margin:0 auto;
     }
   }
