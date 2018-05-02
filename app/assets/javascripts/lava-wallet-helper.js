@@ -259,7 +259,7 @@ export default class LavaWalletHelper {
        e.stopPropagation();
        e.preventDefault();
 
-       console.log('handle packet drop' ) 
+       console.log('handle packet drop' )
 
        var files = e.originalEvent.dataTransfer.files; // Array of all files
        console.log(files)
@@ -273,7 +273,7 @@ export default class LavaWalletHelper {
                        return function(e) {
                         var parsedFileJson = JSON.parse(e.target.result);
 
-                        self.initiateLavaPackTransaction(parsedFileJson)
+                        self.initiateLavaPackTransaction( JSON.parse( parsedFileJson) )
 
                        };
                      })(file);
@@ -290,7 +290,35 @@ export default class LavaWalletHelper {
 
   async initiateLavaPackTransaction(lavaPacket)
   {
-    console.log('initiate', lavaPacket)
+    console.log('initiate', lavaPacket);
+    console.log('to', lavaPacket.to);
+
+
+
+   var contract = this.ethHelper.getWeb3ContractInstance(
+     this.web3,
+     this.lavaWalletContract.blockchain_address,
+     lavaWalletABI.abi
+   );
+
+   contract.approveTokensWithSignature.sendTransaction(
+      lavaPacket.from,
+      lavaPacket.to,
+      lavaPacket.tokenAddress,
+      lavaPacket.tokenAmount,
+      lavaPacket.relayerReward,
+      lavaPacket.expires,
+      lavaPacket.nonce,
+      lavaPacket.signature,
+
+      function(){
+        console.log('done!')
+      }
+
+    );
+
+
+
   }
 
   async registerAssetRowClickHandler()
@@ -1319,11 +1347,7 @@ export default class LavaWalletHelper {
                   //this method needs to be in solidity!
                 const recovered = sigUtil.recoverTypedSignature({ data: params[0], sig: result.result })
 
-                if (recovered === from ) {
-                  alert('Successfully ecRecovered signer as ' + from)
-                } else {
-                  alert('Failed to verify signer when comparing ' + result + ' to ' + from)
-                }
+
 
                   resolve(result.result)
 

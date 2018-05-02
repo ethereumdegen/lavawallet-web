@@ -8,7 +8,6 @@
 
       <link rel="icon" type="image/png" href="/app/assets/img/favicon.png" />
 
-      <script defer src="https://use.fontawesome.com/releases/v5.0.10/js/all.js" integrity="sha384-slN8GvtUJGnv6ca26v8EzVaR9DC58QEwsIk9q1QXdCU8Yu8ck/tL/5szYlBbqmS+" crossorigin="anonymous"></script>
 
   <link href="/assets/main.css" rel="stylesheet"></head>
 
@@ -372,6 +371,17 @@
                      </div>
                    <div class="column">
                        <div class="is-size-6">   </div>
+
+                       <div class="form-group padding-md">
+                           <div class="label">Lava Packet Data</div>
+                           <textarea class="textarea" placeholder="Lava packet data" rows="10"  v-model="lavaPacketData" ></textarea>
+
+                       </div>
+
+                       <div id="btn-download-lava-packet">
+                       </div>
+
+
                    </div>
               </div>
            </div>
@@ -413,6 +423,19 @@
 
                  <div class="whitespace-md"></div>
 
+
+             <div id="lava-packet-dropzone" class="lava-packet-dropzone">
+
+               <div class="subtitle is-size-3">Drop Lava Packets Here</div>
+
+               <div class="dropzone"  >
+                  <div class="hand-icon-holder">
+                   
+                  </div>
+               </div>
+
+
+             </div>
 
         </div>
       </section>

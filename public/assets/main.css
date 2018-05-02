@@ -13191,6 +13191,19 @@ a {
 .one-third {
   width: 33%; }
 
+.lava-packet-dropzone {
+  background: repeating-linear-gradient(45deg, #e4d1b3, #e4d1b3, 10px, #d3d5da 10px, #d3d5da 20px);
+  padding: 25px;
+  border-radius: 10px; }
+  .lava-packet-dropzone .subtitle {
+    text-align: center;
+    color: black; }
+  .lava-packet-dropzone .dropzone {
+    min-height: 250px; }
+    .lava-packet-dropzone .dropzone .hand-icon-holder {
+      font-size: 2em;
+      margin: 0 auto; }
+
 .order-row {
   width: 280px;
   margin-top: 5px;
