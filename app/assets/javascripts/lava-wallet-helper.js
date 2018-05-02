@@ -1182,7 +1182,7 @@ export default class LavaWalletHelper {
 
      var from = this.web3.eth.accounts[0];
 
-     contract.depositTokens.sendTransaction( from, tokenAddress, amountRaw , '0x0', callback);
+     contract.depositTokens.sendTransaction( from, tokenAddress, amountRaw ,   callback);
 
   }
 
