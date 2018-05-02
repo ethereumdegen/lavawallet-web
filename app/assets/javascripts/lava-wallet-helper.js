@@ -248,14 +248,14 @@ export default class LavaWalletHelper {
     var self = this ;
 
 
-    $('.dropzone').on('dragover', function(e) {
+    $('.lava-packet-dropzone').on('dragover', function(e) {
          e.stopPropagation();
          e.preventDefault();
        //  e.dataTransfer.dropEffect = 'copy';
      });
 
     console.log('added listenr ')
-     $('.dropzone').on('drop', function(e) {
+     $('.lava-packet-dropzone').on('drop', function(e) {
        e.stopPropagation();
        e.preventDefault();
 
