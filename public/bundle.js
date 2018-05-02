@@ -45770,7 +45770,7 @@ module.exports = {"contractName":"ERC20Interface","abi":[{"constant":false,"inpu
 /* 82 */
 /***/ (function(module, exports) {
 
-module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","decimals":16,"usesAutoWrapping":true,"address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","decimals":8,"supportsDelegateCallDeposit":true,"address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x9d2cc383e677292ed87f63586086cff62a009010"},{"name":"DAI Stablecoin","symbol":"DAI","decimals":16,"address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359","test_address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"}]}
+module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","decimals":18,"usesAutoWrapping":true,"address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","decimals":8,"supportsDelegateCallDeposit":true,"address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x9d2cc383e677292ed87f63586086cff62a009010"},{"name":"DAI Stablecoin","symbol":"DAI","decimals":18,"address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359","test_address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"}]}
 
 /***/ }),
 /* 83 */
