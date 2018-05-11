@@ -45783,7 +45783,7 @@ module.exports = {"tokens":["0xBTC","wEth","DAI"]}
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(85);
-module.exports = __webpack_require__(231);
+module.exports = __webpack_require__(232);
 
 
 /***/ }),
@@ -45845,13 +45845,16 @@ var lavaWalletHelper = new __WEBPACK_IMPORTED_MODULE_10__lava_wallet_helper__["a
 
 var wallet = new __WEBPACK_IMPORTED_MODULE_12__wallet_dashboard__["a" /* default */]();
 
+var pjson = __webpack_require__(231);
+
 var navbarComponent = new __WEBPACK_IMPORTED_MODULE_5_vue__["a" /* default */]({
   el: '#navbar',
   data: {
     titleLogo: __WEBPACK_IMPORTED_MODULE_0__img_lavalogo3_png___default.a,
     githubLogo: __WEBPACK_IMPORTED_MODULE_1__img_GitHub_Mark_64px_png___default.a,
     redditLogo: __WEBPACK_IMPORTED_MODULE_2__img_reddit_mark_64px_png___default.a,
-    contractQR: __WEBPACK_IMPORTED_MODULE_3__img_0xbitcoinContractQR_png___default.a
+    contractQR: __WEBPACK_IMPORTED_MODULE_3__img_0xbitcoinContractQR_png___default.a,
+    projectVersion: pjson.version
   }
 });
 
@@ -74118,6 +74121,12 @@ class WalletDashboard {
 
 /***/ }),
 /* 231 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"0xDex","version":"0.1.3","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
+
+/***/ }),
+/* 232 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

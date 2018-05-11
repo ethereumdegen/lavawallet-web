@@ -194,7 +194,8 @@ export default class LavaWalletHelper {
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
-                 lavaPacketData: null
+                 lavaPacketData: null,
+                 lavaPacketExists: false
               }
 
        });
@@ -289,7 +290,7 @@ export default class LavaWalletHelper {
   async readDroppedFiles(files)
   {
     var self = this ;
-    
+
     for (var i=0, file; file=files[i]; i++) {
 
         if (file.name.endsWith('.lava')) {
@@ -475,12 +476,19 @@ export default class LavaWalletHelper {
 
         console.log('select active action',actionName);
 
+        self.resetLavaPacket();
+
         await  Vue.set(actionContainer, "selectedActionType" , actionName);
 
         Vue.nextTick(function () {
            self.registerActionContainerClickHandler();
         })
 
+      }
+
+      async resetLavaPacket()
+      {
+        await  Vue.set(actionContainer, "lavaPacketExists" , false);
       }
 
     getAssetDataFromAddress(address)
@@ -1326,11 +1334,12 @@ export default class LavaWalletHelper {
 
       console.log('lava packet json ',  lavaPacketString );
 
+      await  Vue.set(actionContainer, "lavaPacketExists" , true);
       await Vue.set(actionContainer, "lavaPacketData" , lavaPacketString);
 
       Vue.nextTick(function () {
         self.registerLavaPacketDownloadButton(lavaPacketString)
-
+        self.registerLavaPacketBroadcastButton(lavaPacketString)
       })
   }
 
@@ -1344,6 +1353,15 @@ export default class LavaWalletHelper {
 
   }
 
+  async registerLavaPacketBroadcastButton(lavaPacketString)
+  {
+    $('.btn-broadcast-lava-packet').on('click',function(){
+        alert(lavaPacketString)
+    })
+
+    $('.btn-broadcast-lava-packet').show();
+
+  }
 
 
 
