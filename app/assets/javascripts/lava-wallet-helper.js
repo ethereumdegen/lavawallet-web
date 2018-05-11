@@ -15,6 +15,7 @@ var erc20TokenABI = require('../contracts/ERC20Interface.json')
 
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
+var lavaSeedNodes = require('../config/lava-seed-nodes.json')
 
 var defaultTokenData;
 
@@ -1355,14 +1356,35 @@ export default class LavaWalletHelper {
 
   async registerLavaPacketBroadcastButton(lavaPacketString)
   {
+    var self = this;
+
     $('.btn-broadcast-lava-packet').on('click',function(){
-        alert(lavaPacketString)
+        self.broadcastLavaPacket(lavaPacketString)
     })
 
-    $('.btn-broadcast-lava-packet').show();
 
   }
 
+  async broadcastLavaPacket(lavaPacketString)
+  {
+    console.log('broadcast ',lavaPacketString)
+    console.log(lavaSeedNodes.seedNodes)
+
+    for(var i in lavaSeedNodes.seedNodes)
+    {
+      var seed = lavaSeedNodes.seedNodes[i];
+
+
+      $.ajax({
+          url: seed.address,
+          type: 'POST',
+          data: {lavaPacketString:lavaPacketString}
+        });
+
+    }
+
+
+  }
 
 
   async signTypedData(params,from)
