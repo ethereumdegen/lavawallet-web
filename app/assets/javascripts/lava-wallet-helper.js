@@ -7,6 +7,7 @@ var sigUtil = require('eth-sig-util')
 import Vue from 'vue'
 
 import LavaPacketHelper from './lava-packet-helper'
+import LavaPacketUtil from './lava-packet-util'
 //const lavaPacketHelper = new LavaPacketHelper();
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
@@ -16,6 +17,7 @@ var erc20TokenABI = require('../contracts/ERC20Interface.json')
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
 var lavaSeedNodes = require('../config/lava-seed-nodes.json')
+
 
 var defaultTokenData;
 
@@ -183,6 +185,8 @@ export default class LavaWalletHelper {
     if(this.lavaWalletContract)
     {
 
+      let DEFAULT_RELAY_NODE_URL = lavaSeedNodes.seedNodes[0].address;
+
         actionContainer = new Vue({
          el: '#action-container',
          data: {
@@ -195,6 +199,7 @@ export default class LavaWalletHelper {
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
+                 relayNodeURL: DEFAULT_RELAY_NODE_URL,
                  lavaPacketData: null,
                  lavaPacketExists: false
               }
@@ -1367,10 +1372,14 @@ export default class LavaWalletHelper {
 
   async broadcastLavaPacket(lavaPacketString)
   {
-    console.log('broadcast ',lavaPacketString)
-    console.log(lavaSeedNodes.seedNodes)
+    console.log('broadcast ',lavaPacketString, actionContainer.relayNodeURL)
 
-    for(var i in lavaSeedNodes.seedNodes)
+
+
+    LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketString)
+
+
+    /*for(var i in lavaSeedNodes.seedNodes)
     {
       var seed = lavaSeedNodes.seedNodes[i];
 
@@ -1381,7 +1390,7 @@ export default class LavaWalletHelper {
           data: {lavaPacketString:lavaPacketString}
         });
 
-    }
+    }*/
 
 
   }
