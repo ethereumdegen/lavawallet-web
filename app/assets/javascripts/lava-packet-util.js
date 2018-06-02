@@ -40,9 +40,8 @@ export default class LavaPacketHelper {
   }
 
 
-  static sendLavaPacket(lavaNodeURL, lavaPacketData)
+  static async sendLavaPacket(lavaNodeURL, lavaPacketData)
   {
-    try{
 
 
       if(!lavaNodeURL.startsWith("http://"))
@@ -55,25 +54,32 @@ export default class LavaPacketHelper {
         lavaNodeURL = lavaNodeURL+"/lavapacket";
       }
 
-      var xhr = new XMLHttpRequest();
+      return new Promise(async resolve => {
 
-      xhr.open('POST', lavaNodeURL);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onload = function() {
-          if (xhr.status === 200  ) {
-              console.log('Request succeeded.');
-          }
-          else if (xhr.status !== 200) {
-              console.log('Request failed.  Returned status of ' + xhr.status);
-          }
-      };
-      xhr.send(LavaPacketHelper.serializePacketData( lavaPacketData ));
+        var xhr = new XMLHttpRequest();
 
-      return {success:true, packet: lavaPacketData}
-    }catch(e)
-    {
-      return {success:false, message:e};
-    }
+        xhr.open('POST', lavaNodeURL);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+     
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            //var response = JSON.parse(xhr.responseText);
+              if (xhr.status === 200  ) {
+                 console.log('successful');
+                 resolve({success:true, packet: lavaPacketData})
+              } else {
+                 console.log('failed');
+                 resolve({success:false, message: 'Request failed.  Returned status of ' + xhr.status});
+
+              }
+          }
+        }
+
+        xhr.send(LavaPacketHelper.serializePacketData( lavaPacketData ));
+
+      })
+
 
   }
 

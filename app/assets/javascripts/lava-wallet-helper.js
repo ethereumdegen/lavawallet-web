@@ -1379,7 +1379,7 @@ export default class LavaWalletHelper {
 
     console.log(lavaPacketData)
 
-    var response = LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
+    var response = await LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
 
     if(response.success)
     {

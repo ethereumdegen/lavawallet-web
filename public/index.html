@@ -351,6 +351,10 @@
 
               <p> Generate a signed Lava Transfer Message.  This message can be submitted to the Ethereum network by anyone, at which point the tokens will be transferred to the recipient's Lava Balance.  </p>
 
+
+              <div class="whitespace-sm"></div>
+
+
                 <div class="columns">
                     <div class="column">
                       <div class="form-group padding-md">
@@ -372,16 +376,43 @@
                    <div class="column">
                        <div class="is-size-6">   </div>
 
-                       <div class="form-group padding-md">
+                       <p v-if="lavaPacketExists"> Specify the URL for a Lava Network Node and broadcast this packet to the Lava Network Relayers.  They will submit the packet to the Ethereum Network if the reward is high enough.  </p>
+
+                       <div class="form-group padding-md" v-if="lavaPacketExists">
+                           <div class="label">Relay Node URL</div>
+                           <input class="input input-short is-primary" v-model="relayNodeURL" placeholder="xxx.xxx.xxx.xxx:yyyy">
+
+                             <div class="whitespace-sm"></div>
+
+                           <div id="btn-broadcast-lava-packet" v-if="lavaPacketExists">
+                             <div class="button is-primary btn-broadcast-lava-packet">Broadcast Lava Packet</div>
+                           </div>
+
+                           <div class="whitespace-sm"></div>
+
+                           <div class="subtitle color-primary has-text-centered" v-cloak v-if="lavaPacketExists" >
+                             {{ broadcastMessage }}
+                           </div>
+                       </div>
+
+
+
+
+                      <div class="whitespace-sm"></div>
+
+                       <div class="form-group padding-md" v-if="lavaPacketExists">
                            <div class="label">Lava Packet Data</div>
                            <textarea class="textarea" placeholder="Lava packet data" rows="10"  v-model="lavaPacketData" ></textarea>
 
                        </div>
 
-                       <div id="btn-download-lava-packet">
-                       </div>
 
 
+
+                               <div class="whitespace-sm"></div>
+
+                               <div id="btn-download-lava-packet" v-if="lavaPacketExists">
+                               </div>
                    </div>
               </div>
            </div>
