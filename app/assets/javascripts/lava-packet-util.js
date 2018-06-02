@@ -42,26 +42,38 @@ export default class LavaPacketHelper {
 
   static sendLavaPacket(lavaNodeURL, lavaPacketData)
   {
+    try{
 
-  if(!lavaNodeURL.startsWith("http://"))
-  {
-    lavaNodeURL = "http://"+lavaNodeURL;
-  }
 
-  var xhr = new XMLHttpRequest();
-
-  xhr.open('POST', lavaNodeURL);
-  xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  xhr.onload = function() {
-      if (xhr.status === 200  ) {
-          console.log('Request succeeded.');
+      if(!lavaNodeURL.startsWith("http://"))
+      {
+        lavaNodeURL = "http://"+lavaNodeURL;
       }
-      else if (xhr.status !== 200) {
-          console.log('Request failed.  Returned status of ' + xhr.status);
-      }
-  };
-  xhr.send(LavaPacketHelper.serializePacketData( lavaPacketData ));
 
+      if(!lavaNodeURL.endsWith("/lavapacket"))
+      {
+        lavaNodeURL = lavaNodeURL+"/lavapacket";
+      }
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', lavaNodeURL);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onload = function() {
+          if (xhr.status === 200  ) {
+              console.log('Request succeeded.');
+          }
+          else if (xhr.status !== 200) {
+              console.log('Request failed.  Returned status of ' + xhr.status);
+          }
+      };
+      xhr.send(LavaPacketHelper.serializePacketData( lavaPacketData ));
+
+      return {success:true, packet: lavaPacketData}
+    }catch(e)
+    {
+      return {success:false, message:e};
+    }
 
   }
 

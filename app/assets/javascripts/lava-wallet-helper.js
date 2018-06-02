@@ -199,6 +199,7 @@ export default class LavaWalletHelper {
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
+                 broadcastMessage: null,
                  relayNodeURL: DEFAULT_RELAY_NODE_URL,
                  lavaPacketData: null,
                  lavaPacketExists: false
@@ -1374,10 +1375,18 @@ export default class LavaWalletHelper {
   {
     console.log('broadcast ',lavaPacketString, actionContainer.relayNodeURL)
 
+    var lavaPacketData = JSON.parse(lavaPacketString)
 
+    console.log(lavaPacketData)
 
-    LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketString)
+    var response = LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
 
+    if(response.success)
+    {
+      await  Vue.set(actionContainer, "broadcastMessage" , "Success!");
+    }else{
+      await  Vue.set(actionContainer, "broadcastMessage" , response.message);
+    }
 
     /*for(var i in lavaSeedNodes.seedNodes)
     {

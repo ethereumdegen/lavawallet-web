@@ -186,6 +186,11 @@
                              <div class="button is-primary btn-broadcast-lava-packet">Broadcast Lava Packet</div>
                            </div>
 
+                           <div class="whitespace-sm"></div>
+
+                           <div class="subtitle color-primary has-text-centered" v-cloak v-if="lavaPacketExists" >
+                             {{ broadcastMessage }}
+                           </div>
                        </div>
 
 
