@@ -65172,7 +65172,7 @@ class LavaWalletHelper {
 
     console.log(lavaPacketData);
 
-    var response = __WEBPACK_IMPORTED_MODULE_2__lava_packet_util__["a" /* default */].sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData);
+    var response = await __WEBPACK_IMPORTED_MODULE_2__lava_packet_util__["a" /* default */].sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData);
 
     if (response.success) {
       await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "broadcastMessage", "Success!");
@@ -74034,34 +74034,38 @@ class LavaPacketHelper {
     return str.join("&");
   }
 
-  static sendLavaPacket(lavaNodeURL, lavaPacketData) {
-    try {
+  static async sendLavaPacket(lavaNodeURL, lavaPacketData) {
 
-      if (!lavaNodeURL.startsWith("http://")) {
-        lavaNodeURL = "http://" + lavaNodeURL;
-      }
+    if (!lavaNodeURL.startsWith("http://")) {
+      lavaNodeURL = "http://" + lavaNodeURL;
+    }
 
-      if (!lavaNodeURL.endsWith("/lavapacket")) {
-        lavaNodeURL = lavaNodeURL + "/lavapacket";
-      }
+    if (!lavaNodeURL.endsWith("/lavapacket")) {
+      lavaNodeURL = lavaNodeURL + "/lavapacket";
+    }
+
+    return new Promise(async resolve => {
 
       var xhr = new XMLHttpRequest();
 
       xhr.open('POST', lavaNodeURL);
       xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onload = function () {
-        if (xhr.status === 200) {
-          console.log('Request succeeded.');
-        } else if (xhr.status !== 200) {
-          console.log('Request failed.  Returned status of ' + xhr.status);
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          //var response = JSON.parse(xhr.responseText);
+          if (xhr.status === 200) {
+            console.log('successful');
+            resolve({ success: true, packet: lavaPacketData });
+          } else {
+            console.log('failed');
+            resolve({ success: false, message: 'Request failed.  Returned status of ' + xhr.status });
+          }
         }
       };
-      xhr.send(LavaPacketHelper.serializePacketData(lavaPacketData));
 
-      return { success: true, packet: lavaPacketData };
-    } catch (e) {
-      return { success: false, message: e };
-    }
+      xhr.send(LavaPacketHelper.serializePacketData(lavaPacketData));
+    });
   }
 
 }

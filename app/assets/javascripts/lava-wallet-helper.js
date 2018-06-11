@@ -1409,6 +1409,7 @@ export default class LavaWalletHelper {
   {
     var result = await new Promise(async resolve => {
 
+      //personal sign using Metamask
       var method = 'eth_signTypedData'
 
               web3.currentProvider.sendAsync({
@@ -1439,7 +1440,7 @@ export default class LavaWalletHelper {
       return result;
   }
 
-
+/*
   async personalSign(msg,from)
   {
     var result = await new Promise(async resolve => {
@@ -1459,7 +1460,7 @@ export default class LavaWalletHelper {
 
       return result;
   }
-
+*/
 //nonce should just be a securerandom number !
 
   //initiated from a little form - makes a listrow
