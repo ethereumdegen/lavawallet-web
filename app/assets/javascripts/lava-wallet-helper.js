@@ -192,9 +192,11 @@ export default class LavaWalletHelper {
          data: {
                  selectedActionAsset: {name: 'nil'},
                  shouldRender: false,
+                 supportsDelegateCallDeposit: false,
                  selectedActionType: 'deposit',
                  approveTokenQuantity: 0,
                  depositTokenQuantity: 0,
+                 approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
@@ -403,6 +405,23 @@ export default class LavaWalletHelper {
     });
 
 
+    $('.btn-action-approve-and-deposit').off();
+    $('.btn-action-approve-and-deposit').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('approve and deposit ', tokenAddress,  depositAmount)
+          self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
+
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
 
@@ -469,6 +488,10 @@ export default class LavaWalletHelper {
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
 
+      var supportsDelegateCallDeposit = (assetData.supportsDelegateCallDeposit == true)
+
+      await Vue.set(actionContainer, "supportsDelegateCallDeposit" , supportsDelegateCallDeposit);
+
       await Vue.set(actionContainer, "shouldRender" , true);
 
       Vue.nextTick(function () {
@@ -502,10 +525,12 @@ export default class LavaWalletHelper {
     {
       console.log('get asset data ',address);
 
-      console.log(defaultTokenData);
+
 
 
       var matchingToken  = defaultTokenData.find(t => t.address == address );
+
+        console.log(matchingToken);
 
       return matchingToken  ;
 
@@ -1182,6 +1207,28 @@ export default class LavaWalletHelper {
      contract.approveAndCall.sendTransaction( approvedContractAddress, amountRaw, remoteCallData , callback);
 
   }
+
+
+  async approveAndDepositToken(tokenAddress,amountFormatted,tokenDecimals,callback)
+  {
+
+    console.log('approve and deposit token',tokenAddress,amountRaw);
+
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
+
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      tokenAddress ,
+      _0xBitcoinABI.abi
+    );
+
+    var spender = this.lavaWalletContract.blockchain_address;
+
+    contract.approveAndCall.sendTransaction( spender, amountRaw , 0x0 , callback);
+
+  }
+
 
   async approveToken(tokenAddress,amountFormatted,tokenDecimals,callback)
   {
