@@ -33689,7 +33689,7 @@ curve.edwards = __webpack_require__(206);
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"}}}}}
+module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x2f9cc1042d889353caf2e346b63ccfec985ae515"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"}}}}}
 
 /***/ }),
 /* 39 */
@@ -65194,6 +65194,7 @@ class LavaWalletHelper {
   async signTypedData(params, from) {
     var result = await new Promise(async resolve => {
 
+      //personal sign using Metamask
       var method = 'eth_signTypedData';
 
       web3.currentProvider.sendAsync({
@@ -65218,23 +65219,27 @@ class LavaWalletHelper {
     return result;
   }
 
-  async personalSign(msg, from) {
-    var result = await new Promise(async resolve => {
-
-      //sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)));
-      //personal_ecRecover
-
-      this.web3.personal.sign(msg, from, function (err, result) {
-        if (err) return console.error(err);
-        console.log('PERSONAL SIGNED:' + result);
-
-        resolve(result);
-      });
-    });
-
-    return result;
-  }
-
+  /*
+    async personalSign(msg,from)
+    {
+      var result = await new Promise(async resolve => {
+  
+        //sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)));
+        //personal_ecRecover
+  
+          this.web3.personal.sign(msg, from, function (err, result) {
+               if (err) return console.error(err)
+               console.log('PERSONAL SIGNED:' + result)
+  
+               resolve(result);
+  
+             });
+  
+        });
+  
+        return result;
+    }
+  */
   //nonce should just be a securerandom number !
 
   //initiated from a little form - makes a listrow
@@ -74257,7 +74262,7 @@ class WalletDashboard {
 /* 233 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"LavaWalletWebsite","version":"0.1.4","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
+module.exports = {"name":"LavaWalletWebsite","version":"0.1.5","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
 
 /***/ }),
 /* 234 */
