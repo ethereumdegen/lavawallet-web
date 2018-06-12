@@ -33689,7 +33689,7 @@ curve.edwards = __webpack_require__(206);
 /* 38 */
 /***/ (function(module, exports) {
 
-module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"}}}}}
+module.exports = {"networks":{"mainnet":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},"microdex":{"name":"micro-dex","blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0xcba65975b1c66586bfe7910f32377e0ee55f783e"}}},"ropsten":{"contracts":{"_0xbitcointoken":{"name":"0xBitcoinToken","blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},"microdex":{"name":"micro-dex","blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},"lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"}}}}}
 
 /***/ }),
 /* 39 */
@@ -45783,7 +45783,7 @@ module.exports = {"tokens":["0xBTC","wEth","DAI"]}
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(85);
-module.exports = __webpack_require__(231);
+module.exports = __webpack_require__(234);
 
 
 /***/ }),
@@ -45792,8 +45792,8 @@ module.exports = __webpack_require__(231);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__img_lavalogo3_png__ = __webpack_require__(86);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__img_lavalogo3_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__img_lavalogo3_png__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__img_lavalogo4_png__ = __webpack_require__(86);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__img_lavalogo4_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__img_lavalogo4_png__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__img_GitHub_Mark_64px_png__ = __webpack_require__(87);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__img_GitHub_Mark_64px_png___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__img_GitHub_Mark_64px_png__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__img_reddit_mark_64px_png__ = __webpack_require__(88);
@@ -45808,8 +45808,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__navbar__ = __webpack_require__(97);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__ethhelper__ = __webpack_require__(98);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__lava_wallet_helper__ = __webpack_require__(166);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__home_dashboard__ = __webpack_require__(229);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__wallet_dashboard__ = __webpack_require__(230);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_11__home_dashboard__ = __webpack_require__(231);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_12__wallet_dashboard__ = __webpack_require__(232);
 
 const $ = __webpack_require__(12);
 
@@ -45845,13 +45845,16 @@ var lavaWalletHelper = new __WEBPACK_IMPORTED_MODULE_10__lava_wallet_helper__["a
 
 var wallet = new __WEBPACK_IMPORTED_MODULE_12__wallet_dashboard__["a" /* default */]();
 
+var pjson = __webpack_require__(233);
+
 var navbarComponent = new __WEBPACK_IMPORTED_MODULE_5_vue__["a" /* default */]({
   el: '#navbar',
   data: {
-    titleLogo: __WEBPACK_IMPORTED_MODULE_0__img_lavalogo3_png___default.a,
+    titleLogo: __WEBPACK_IMPORTED_MODULE_0__img_lavalogo4_png___default.a,
     githubLogo: __WEBPACK_IMPORTED_MODULE_1__img_GitHub_Mark_64px_png___default.a,
     redditLogo: __WEBPACK_IMPORTED_MODULE_2__img_reddit_mark_64px_png___default.a,
-    contractQR: __WEBPACK_IMPORTED_MODULE_3__img_0xbitcoinContractQR_png___default.a
+    contractQR: __WEBPACK_IMPORTED_MODULE_3__img_0xbitcoinContractQR_png___default.a,
+    projectVersion: pjson.version
   }
 });
 
@@ -45875,7 +45878,7 @@ $(document).ready(function () {
 /* 86 */
 /***/ (function(module, exports) {
 
-module.exports = "/app/assets/img/lavalogo3.png";
+module.exports = "/app/assets/img/lavalogo4.png";
 
 /***/ }),
 /* 87 */
@@ -64107,11 +64110,13 @@ module.exports = window.crypto;
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__lava_packet_helper__ = __webpack_require__(228);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lava_packet_util__ = __webpack_require__(229);
 
 const $ = __webpack_require__(12);
 
 var web3utils = __webpack_require__(58);
 var sigUtil = __webpack_require__(167);
+
 
 
 
@@ -64124,6 +64129,7 @@ var erc20TokenABI = __webpack_require__(81);
 
 var tokenData = __webpack_require__(82);
 var defaultTokens = __webpack_require__(83);
+var lavaSeedNodes = __webpack_require__(230);
 
 var defaultTokenData;
 
@@ -64248,6 +64254,8 @@ class LavaWalletHelper {
 
     if (this.lavaWalletContract) {
 
+      let DEFAULT_RELAY_NODE_URL = lavaSeedNodes.seedNodes[0].address;
+
       actionContainer = new __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */]({
         el: '#action-container',
         data: {
@@ -64260,7 +64268,10 @@ class LavaWalletHelper {
           transferTokenQuantity: 0,
           transferTokenRecipient: 0,
           transferTokenRelayReward: 0,
-          lavaPacketData: null
+          broadcastMessage: null,
+          relayNodeURL: DEFAULT_RELAY_NODE_URL,
+          lavaPacketData: null,
+          lavaPacketExists: false
         }
 
       });
@@ -64465,11 +64476,17 @@ class LavaWalletHelper {
 
     console.log('select active action', actionName);
 
+    self.resetLavaPacket();
+
     await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "selectedActionType", actionName);
 
     __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].nextTick(function () {
       self.registerActionContainerClickHandler();
     });
+  }
+
+  async resetLavaPacket() {
+    await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "lavaPacketExists", false);
   }
 
   getAssetDataFromAddress(address) {
@@ -65124,10 +65141,12 @@ class LavaWalletHelper {
 
     console.log('lava packet json ', lavaPacketString);
 
+    await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "lavaPacketExists", true);
     await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "lavaPacketData", lavaPacketString);
 
     __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].nextTick(function () {
       self.registerLavaPacketDownloadButton(lavaPacketString);
+      self.registerLavaPacketBroadcastButton(lavaPacketString);
     });
   }
 
@@ -65138,9 +65157,44 @@ class LavaWalletHelper {
     $('<a href="data:' + data + '" download="packet.lava" class="button is-primary btn-download-lava-packet">Download Lava Packet</a>').appendTo('#btn-download-lava-packet');
   }
 
+  async registerLavaPacketBroadcastButton(lavaPacketString) {
+    var self = this;
+
+    $('.btn-broadcast-lava-packet').on('click', function () {
+      self.broadcastLavaPacket(lavaPacketString);
+    });
+  }
+
+  async broadcastLavaPacket(lavaPacketString) {
+    console.log('broadcast ', lavaPacketString, actionContainer.relayNodeURL);
+
+    var lavaPacketData = JSON.parse(lavaPacketString);
+
+    console.log(lavaPacketData);
+
+    var response = await __WEBPACK_IMPORTED_MODULE_2__lava_packet_util__["a" /* default */].sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData);
+
+    if (response.success) {
+      await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "broadcastMessage", "Success!");
+    } else {
+      await __WEBPACK_IMPORTED_MODULE_0_vue__["a" /* default */].set(actionContainer, "broadcastMessage", response.message);
+    }
+
+    /*for(var i in lavaSeedNodes.seedNodes)
+    {
+      var seed = lavaSeedNodes.seedNodes[i];
+        $.ajax({
+          url: seed.address,
+          type: 'POST',
+          data: {lavaPacketString:lavaPacketString}
+        });
+     }*/
+  }
+
   async signTypedData(params, from) {
     var result = await new Promise(async resolve => {
 
+      //personal sign using Metamask
       var method = 'eth_signTypedData';
 
       web3.currentProvider.sendAsync({
@@ -65165,23 +65219,27 @@ class LavaWalletHelper {
     return result;
   }
 
-  async personalSign(msg, from) {
-    var result = await new Promise(async resolve => {
-
-      //sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)));
-      //personal_ecRecover
-
-      this.web3.personal.sign(msg, from, function (err, result) {
-        if (err) return console.error(err);
-        console.log('PERSONAL SIGNED:' + result);
-
-        resolve(result);
-      });
-    });
-
-    return result;
-  }
-
+  /*
+    async personalSign(msg,from)
+    {
+      var result = await new Promise(async resolve => {
+  
+        //sign(keccack256("\x19Ethereum Signed Message:\n" + len(message) + message)));
+        //personal_ecRecover
+  
+          this.web3.personal.sign(msg, from, function (err, result) {
+               if (err) return console.error(err)
+               console.log('PERSONAL SIGNED:' + result)
+  
+               resolve(result);
+  
+             });
+  
+        });
+  
+        return result;
+    }
+  */
   //nonce should just be a securerandom number !
 
   //initiated from a little form - makes a listrow
@@ -73946,6 +74004,90 @@ class LavaPacketHelper {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/*
+LAVA PACKET UTIL for NODEJS
+javascript library for NODEJS
+
+Version 0.10
+
+*/
+
+var sampleLavaPacket = {
+  from: "0xb11ca87e32075817c82cc471994943a4290f4a14",
+  to: "0x357FfaDBdBEe756aA686Ef6843DA359E2a85229c",
+  walletAddress: "0x1d0d66272025d7c59c40257813fc0d7ddf2c4826",
+  tokenAddress: "0x9d2cc383e677292ed87f63586086cff62a009010",
+  tokenAmount: 200000000,
+  relayerReward: 100000000,
+  expires: 3365044,
+  nonce: 0xc18f687c56f1b2749af7d6151fa351,
+  signature: "0x8ef27391a81f77244bf95df58737eecac386ab9a47acd21bdb63757adf71ddf878169c18e4ab7b71d60f333c870258a0644ac7ade789d59c53b0ab75dbcc87d11b"
+};
+
+class LavaPacketHelper {
+
+  static serializePacketData(obj, prefix) {
+    var str = [],
+        p;
+    for (p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p,
+            v = obj[p];
+        str.push(v !== null && typeof v === "object" ? serialize(v, k) : encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      }
+    }
+    return str.join("&");
+  }
+
+  static async sendLavaPacket(lavaNodeURL, lavaPacketData) {
+
+    if (!lavaNodeURL.startsWith("http://")) {
+      lavaNodeURL = "http://" + lavaNodeURL;
+    }
+
+    if (!lavaNodeURL.endsWith("/lavapacket")) {
+      lavaNodeURL = lavaNodeURL + "/lavapacket";
+    }
+
+    return new Promise(async resolve => {
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open('POST', lavaNodeURL);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+          //var response = JSON.parse(xhr.responseText);
+          if (xhr.status === 200) {
+            console.log('successful');
+            resolve({ success: true, packet: lavaPacketData });
+          } else {
+            console.log('failed');
+            resolve({ success: false, message: 'Request failed.  Returned status of ' + xhr.status });
+          }
+        }
+      };
+
+      xhr.send(LavaPacketHelper.serializePacketData(lavaPacketData));
+    });
+  }
+
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = LavaPacketHelper;
+
+
+/***/ }),
+/* 230 */
+/***/ (function(module, exports) {
+
+module.exports = {"seedNodes":[{"address":"104.131.112.200:3000"}]}
+
+/***/ }),
+/* 231 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 
 const $ = __webpack_require__(12);
 
@@ -73972,7 +74114,7 @@ class HomeDashboard {
 
 
 /***/ }),
-/* 230 */
+/* 232 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74117,7 +74259,13 @@ class WalletDashboard {
 
 
 /***/ }),
-/* 231 */
+/* 233 */
+/***/ (function(module, exports) {
+
+module.exports = {"name":"LavaWalletWebsite","version":"0.1.5","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
+
+/***/ }),
+/* 234 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin

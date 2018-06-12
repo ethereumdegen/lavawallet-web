@@ -7,6 +7,7 @@ var sigUtil = require('eth-sig-util')
 import Vue from 'vue'
 
 import LavaPacketHelper from './lava-packet-helper'
+import LavaPacketUtil from './lava-packet-util'
 //const lavaPacketHelper = new LavaPacketHelper();
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
@@ -15,6 +16,8 @@ var erc20TokenABI = require('../contracts/ERC20Interface.json')
 
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
+var lavaSeedNodes = require('../config/lava-seed-nodes.json')
+
 
 var defaultTokenData;
 
@@ -182,19 +185,26 @@ export default class LavaWalletHelper {
     if(this.lavaWalletContract)
     {
 
+      let DEFAULT_RELAY_NODE_URL = lavaSeedNodes.seedNodes[0].address;
+
         actionContainer = new Vue({
          el: '#action-container',
          data: {
                  selectedActionAsset: {name: 'nil'},
                  shouldRender: false,
+                 supportsDelegateCallDeposit: false,
                  selectedActionType: 'deposit',
                  approveTokenQuantity: 0,
                  depositTokenQuantity: 0,
+                 approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
-                 lavaPacketData: null
+                 broadcastMessage: null,
+                 relayNodeURL: DEFAULT_RELAY_NODE_URL,
+                 lavaPacketData: null,
+                 lavaPacketExists: false
               }
 
        });
@@ -395,6 +405,23 @@ export default class LavaWalletHelper {
     });
 
 
+    $('.btn-action-approve-and-deposit').off();
+    $('.btn-action-approve-and-deposit').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('approve and deposit ', tokenAddress,  depositAmount)
+          self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
+
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
 
@@ -461,6 +488,10 @@ export default class LavaWalletHelper {
 
       await Vue.set(actionContainer, "selectedActionAsset" , assetData);
 
+      var supportsDelegateCallDeposit = (assetData.supportsDelegateCallDeposit == true)
+
+      await Vue.set(actionContainer, "supportsDelegateCallDeposit" , supportsDelegateCallDeposit);
+
       await Vue.set(actionContainer, "shouldRender" , true);
 
       Vue.nextTick(function () {
@@ -475,6 +506,8 @@ export default class LavaWalletHelper {
 
         console.log('select active action',actionName);
 
+        self.resetLavaPacket();
+
         await  Vue.set(actionContainer, "selectedActionType" , actionName);
 
         Vue.nextTick(function () {
@@ -483,14 +516,21 @@ export default class LavaWalletHelper {
 
       }
 
+      async resetLavaPacket()
+      {
+        await  Vue.set(actionContainer, "lavaPacketExists" , false);
+      }
+
     getAssetDataFromAddress(address)
     {
       console.log('get asset data ',address);
 
-      console.log(defaultTokenData);
+
 
 
       var matchingToken  = defaultTokenData.find(t => t.address == address );
+
+        console.log(matchingToken);
 
       return matchingToken  ;
 
@@ -1168,6 +1208,28 @@ export default class LavaWalletHelper {
 
   }
 
+
+  async approveAndDepositToken(tokenAddress,amountFormatted,tokenDecimals,callback)
+  {
+
+    console.log('approve and deposit token',tokenAddress,amountRaw);
+
+    var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
+
+
+    var contract = this.ethHelper.getWeb3ContractInstance(
+      this.web3,
+      tokenAddress ,
+      _0xBitcoinABI.abi
+    );
+
+    var spender = this.lavaWalletContract.blockchain_address;
+
+    contract.approveAndCall.sendTransaction( spender, amountRaw , 0x0 , callback);
+
+  }
+
+
   async approveToken(tokenAddress,amountFormatted,tokenDecimals,callback)
   {
      console.log('approve token',tokenAddress,amountRaw);
@@ -1326,11 +1388,12 @@ export default class LavaWalletHelper {
 
       console.log('lava packet json ',  lavaPacketString );
 
+      await  Vue.set(actionContainer, "lavaPacketExists" , true);
       await Vue.set(actionContainer, "lavaPacketData" , lavaPacketString);
 
       Vue.nextTick(function () {
         self.registerLavaPacketDownloadButton(lavaPacketString)
-
+        self.registerLavaPacketBroadcastButton(lavaPacketString)
       })
   }
 
@@ -1344,13 +1407,56 @@ export default class LavaWalletHelper {
 
   }
 
+  async registerLavaPacketBroadcastButton(lavaPacketString)
+  {
+    var self = this;
 
+    $('.btn-broadcast-lava-packet').on('click',function(){
+        self.broadcastLavaPacket(lavaPacketString)
+    })
+
+
+  }
+
+  async broadcastLavaPacket(lavaPacketString)
+  {
+    console.log('broadcast ',lavaPacketString, actionContainer.relayNodeURL)
+
+    var lavaPacketData = JSON.parse(lavaPacketString)
+
+    console.log(lavaPacketData)
+
+    var response = await LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
+
+    if(response.success)
+    {
+      await  Vue.set(actionContainer, "broadcastMessage" , "Success!");
+    }else{
+      await  Vue.set(actionContainer, "broadcastMessage" , response.message);
+    }
+
+    /*for(var i in lavaSeedNodes.seedNodes)
+    {
+      var seed = lavaSeedNodes.seedNodes[i];
+
+
+      $.ajax({
+          url: seed.address,
+          type: 'POST',
+          data: {lavaPacketString:lavaPacketString}
+        });
+
+    }*/
+
+
+  }
 
 
   async signTypedData(params,from)
   {
     var result = await new Promise(async resolve => {
 
+      //personal sign using Metamask
       var method = 'eth_signTypedData'
 
               web3.currentProvider.sendAsync({
@@ -1381,7 +1487,7 @@ export default class LavaWalletHelper {
       return result;
   }
 
-
+/*
   async personalSign(msg,from)
   {
     var result = await new Promise(async resolve => {
@@ -1401,7 +1507,7 @@ export default class LavaWalletHelper {
 
       return result;
   }
-
+*/
 //nonce should just be a securerandom number !
 
   //initiated from a little form - makes a listrow

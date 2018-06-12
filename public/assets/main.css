@@ -13197,7 +13197,7 @@ a {
   display: inline-block; }
 
 .lava-packet-dropzone {
-  background: repeating-linear-gradient(45deg, #e4d1b3, #e4d1b3, 10px, #d3d5da 10px, #d3d5da 20px);
+  background: repeating-linear-gradient(45deg, #ffebcb, #ffebcb, 10px, #ffffff 10px, #ffffff 20px);
   padding: 25px;
   border-radius: 10px; }
   .lava-packet-dropzone .subtitle {
