@@ -289,7 +289,7 @@ export default class LavaWalletHelper {
   async readDroppedFiles(files)
   {
     var self = this ;
-    
+
     for (var i=0, file; file=files[i]; i++) {
 
         if (file.name.endsWith('.lava')) {
@@ -1250,7 +1250,7 @@ export default class LavaWalletHelper {
    var tokenAddress = tokenAddress;
    var tokenAmount = amountRaw;
    var relayerReward = relayerRewardRaw;
-   var expires = ethBlock + 10000;
+   var expires = ethBlock + 1000;
    var nonce = web3utils.randomHex(16);
 
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
