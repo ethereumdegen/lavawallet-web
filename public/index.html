@@ -9,6 +9,11 @@
       <link rel="icon" type="image/png" href="/app/assets/img/favicon.png" />
 
 
+            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+
+
   <link href="/assets/main.css" rel="stylesheet"></head>
 
 
@@ -252,19 +257,19 @@
               <ul class="columns">
                 <li data-action-type="deposit"  v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true, 'is-active':(selectedActionType=='deposit')  } ">
                   <a>
-                    <span class="icon is-small"><i class="fas fa-arrow-alt-circle-down" aria-hidden="true"></i></span>
+                    <span class="icon is-small">   <i class="material-icons">file_download</i> </span>
                     <span>Deposit</span>
                   </a>
                 </li>
                 <li data-action-type="withdraw" v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true,  'is-active':(selectedActionType=='withdraw')  } ">
                   <a>
-                    <span class="icon is-small one-third"><i class="fas fa-arrow-alt-circle-up" aria-hidden="true"></i></span>
+                    <span class="icon is-small one-third"> <i class="material-icons">file_upload</i> </span>
                     <span>Withdraw</span>
                   </a>
                 </li>
                 <li data-action-type="lavatransfer" v-bind:class="{  'tab-action':true, 'column':true, 'column-button':true,  'is-active':(selectedActionType=='lavatransfer')  } ">
                   <a>
-                    <span class="icon is-small one-third"><i class="fas fa-arrows-alt-h" aria-hidden="true"></i></span>
+                    <span class="icon is-small one-third"> <i class="material-icons">fast_forward</i> </span>
                     <span>Lava Transfer</span>
                   </a>
                 </li>
