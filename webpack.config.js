@@ -36,7 +36,8 @@ var webpackPlugins = [
 
 const routesData = {
   routes: [
-    {url: '/', title: 'Lava Wallet', template: 'app/index.html', filename: 'index.html'}
+    {url: '/', title: 'Lava Wallet', template: 'app/index.html', filename: 'index.html'},
+    {url: '/legacy', title: 'Legacy Lava Wallet', template: 'app/legacy.html', filename: 'legacy.html'}
    ]
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "LavaWalletWebsite",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "description": "Decentralized Exchange Platform",
   "main": "index.js",
   "scripts": {
