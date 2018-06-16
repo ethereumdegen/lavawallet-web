@@ -28,6 +28,20 @@ a
    background: #ff7209 !important;
 }
 
+.color-white
+{
+  color:white;
+}
+
+.color-lava
+{
+  color:#e84118;
+}
+.color-lava-secondary
+{
+  color:#c23616;
+}
+
 .page-container
 {
   max-width: 940px;
@@ -325,7 +339,7 @@ a
 
 .lava-packet-dropzone
 {
- 
+
 
   background: repeating-linear-gradient(45deg, #ffebcb, #ffebcb,10px, #ffffff 10px, #ffffff 20px);
   padding: 25px;

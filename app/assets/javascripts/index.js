@@ -19,6 +19,7 @@ import AlertRenderer from './alert-renderer'
 import HomeRenderer from './home-renderer'
 
 import Navbar from './navbar'
+import Landing from './landing'
 
 import EthHelper from './ethhelper'
 
@@ -32,6 +33,7 @@ var homeRenderer= new HomeRenderer()
 var alertRenderer = new AlertRenderer();
 var ethHelper = new EthHelper();
 var navbar = new Navbar();
+var landing = new Landing();
 
 var lavaWalletHelper = new LavaWalletHelper();
 
@@ -63,16 +65,21 @@ $(document).ready(function(){
 
 
 
-    //  var web3 = ethHelper.init( alertRenderer);
+    if($('#landing').length > 0)
+    {
+          console.log('load landing')
 
-      //homeRenderer.init(ethHelper);
+            landing.init();
+    }
 
-      console.log('load free shift')
-  //  wallet.init(alertRenderer,ethHelper);
+    if($('#wallet').length > 0)
+    {
 
-    navbar.init();
+          navbar.init();
 
-   lavaWalletHelper.init(alertRenderer,ethHelper);
+         lavaWalletHelper.init(alertRenderer,ethHelper);
+
+    }
 
 
 });

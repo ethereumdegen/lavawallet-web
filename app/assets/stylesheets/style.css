@@ -880,16 +880,7 @@ Testimonials
     left: auto;
     right: -60px;
 }
-#testimonials{
-    position: relative;
-}
-#testimonials:after{
-    content: url(../img/quote.png);
-    position: absolute;
-    top:15%;
-    opacity: 0.15;
-    right: 4%;
-}
+ 
 
 /*----------------------------------------
 Team
