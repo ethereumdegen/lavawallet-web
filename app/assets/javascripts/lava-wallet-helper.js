@@ -56,9 +56,9 @@ export default class LavaWalletHelper {
 
    this.web3 = this.detectInjectedWeb3();
 
-     var self = this;
+   var self = this;
 
-    self.networkVersion = 'mainnet';
+
 
    if(this.web3 != null)
    {
@@ -70,15 +70,15 @@ export default class LavaWalletHelper {
           switch (netId) {
             case "1":
               self.networkVersion = 'mainnet';
+
               console.log('Web3 is using mainnet');
-              self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
-              self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
+
+
               break
             case "3":
               self.networkVersion = 'testnet';
               console.log('Web3 is using ropsten test network.');
-              self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
-              self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
+
               break
             default:
               console.log('This is an unknown network.')
@@ -87,6 +87,39 @@ export default class LavaWalletHelper {
           resolve();
         })
       })
+
+      console.log('meep',$('.legacy').length )
+      if($('.legacy').length >= 1)
+      {
+        self.networkVersion = 'legacy';
+        console.log('Web3 is using mainnet legacy');
+      }
+
+
+
+      switch (self.networkVersion) {
+        case 'mainnet':
+          self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
+          self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
+          break
+        case 'legacy':
+          self.lavaWalletContract = deployedContractInfo.networks.legacy.contracts.lavawallet;
+          self._0xBitcoinContract = deployedContractInfo.networks.legacy.contracts._0xbitcointoken;
+          break
+        case 'testnet':
+          self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
+          self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
+          break
+
+        default:
+          console.log('This is an unknown network version.')
+      }
+
+      console.log('lw',self.lavaWalletContract)
+
+
+
+
 
 
       // init defaultTokenData
@@ -108,9 +141,7 @@ export default class LavaWalletHelper {
           defaultTokenData.map(t => t.address = t.test_address   )
         }
 
-
-
-
+ 
 
             this.registerDropEvents()
 
