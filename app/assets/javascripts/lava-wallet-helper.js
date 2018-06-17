@@ -11,6 +11,9 @@ import LavaPacketUtil from './lava-packet-util'
 //const lavaPacketHelper = new LavaPacketHelper();
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
+var legacyLavaWalletABI = require('../contracts/LavaWalletLegacy.json')
+var lavaContractABI;
+
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
 var erc20TokenABI = require('../contracts/ERC20Interface.json')
 
@@ -88,13 +91,12 @@ export default class LavaWalletHelper {
         })
       })
 
-      console.log('meep',$('.legacy').length )
       if($('.legacy').length >= 1)
       {
         self.networkVersion = 'legacy';
-        console.log('Web3 is using mainnet legacy');
       }
 
+      lavaContractABI = lavaWalletABI;
 
 
       switch (self.networkVersion) {
@@ -105,6 +107,8 @@ export default class LavaWalletHelper {
         case 'legacy':
           self.lavaWalletContract = deployedContractInfo.networks.legacy.contracts.lavawallet;
           self._0xBitcoinContract = deployedContractInfo.networks.legacy.contracts._0xbitcointoken;
+          lavaContractABI = legacyLavaWalletABI;
+          console.log('Using legacy lavawallet contract');
           break
         case 'testnet':
           self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
@@ -136,12 +140,12 @@ export default class LavaWalletHelper {
 
          defaultTokenData.map(t => t.icon_url = "/app/assets/img/token_icons/"+t.address+".png"   )
 
-        if(self.networkVersion != 'mainnet')
+        if(self.networkVersion == 'ropsten')
         {
           defaultTokenData.map(t => t.address = t.test_address   )
         }
 
- 
+
 
             this.registerDropEvents()
 
@@ -216,6 +220,14 @@ export default class LavaWalletHelper {
     if(this.lavaWalletContract)
     {
 
+
+      var defaultAction = 'deposit';
+
+      if(this.networkVersion == 'legacy')
+      {
+        defaultAction = 'withdraw';
+      }
+
       let DEFAULT_RELAY_NODE_URL = lavaSeedNodes.seedNodes[0].address;
 
         actionContainer = new Vue({
@@ -224,7 +236,7 @@ export default class LavaWalletHelper {
                  selectedActionAsset: {name: 'nil'},
                  shouldRender: false,
                  supportsDelegateCallDeposit: false,
-                 selectedActionType: 'deposit',
+                 selectedActionType: defaultAction,
                  approveTokenQuantity: 0,
                  depositTokenQuantity: 0,
                  approveAndDepositTokenQuantity: 0,
@@ -361,7 +373,7 @@ export default class LavaWalletHelper {
    var contract = this.ethHelper.getWeb3ContractInstance(
      this.web3,
      this.lavaWalletContract.blockchain_address,
-     lavaWalletABI.abi
+     lavaContractABI.abi
    );
 
    contract.transferTokensFromWithSignature.sendTransaction(
@@ -604,8 +616,10 @@ export default class LavaWalletHelper {
       var contract = this.ethHelper.getWeb3ContractInstance(
         this.web3,
         this.lavaWalletContract.blockchain_address,
-        lavaWalletABI.abi
+        lavaContractABI.abi
       );
+
+          console.log('get lava token balance')
 
       console.log(contract)
 
@@ -1105,7 +1119,7 @@ export default class LavaWalletHelper {
        var contract = this.ethHelper.getWeb3ContractInstance(
          this.web3,
          lavaWalletContract.blockchain_address,
-         lavaWalletABI.abi
+         lavaContractABI.abi
        );
 
 
@@ -1140,7 +1154,7 @@ export default class LavaWalletHelper {
     var contract = this.ethHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
-      lavaWalletABI.abi
+      lavaContractABI.abi
     );
 
     var balanceResult =  await new Promise(function (fulfilled,error) {
@@ -1161,7 +1175,7 @@ export default class LavaWalletHelper {
     var contract = this.ethHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
-      lavaWalletABI.abi
+      lavaContractABI.abi
     );
 
 
@@ -1188,7 +1202,7 @@ export default class LavaWalletHelper {
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
+       lavaContractABI.abi
      );
 
      console.log(contract)
@@ -1204,7 +1218,7 @@ export default class LavaWalletHelper {
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
+       lavaContractABI.abi
      );
 
      console.log(contract)
@@ -1290,7 +1304,7 @@ export default class LavaWalletHelper {
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        this.lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
+       lavaContractABI.abi
      );
 
      console.log(contract)
@@ -1312,7 +1326,7 @@ export default class LavaWalletHelper {
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        this.lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
+       lavaContractABI.abi
      );
 
      console.log(contract)
@@ -1549,7 +1563,7 @@ export default class LavaWalletHelper {
      var contract = this.ethHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
-       lavaWalletABI.abi
+       lavaContractABI.abi
      );
 
      console.log(contract)
@@ -1568,7 +1582,7 @@ export default class LavaWalletHelper {
     var contract = this.ethHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
-      lavaWalletABI.abi
+      lavaContractABI.abi
     );
 
      contract.trade.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount, callback);
@@ -1584,7 +1598,7 @@ export default class LavaWalletHelper {
     var contract = this.ethHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
-      lavaWalletABI.abi
+      lavaContractABI.abi
     );
 
      contract.cancelOrder.sendTransaction( tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,  callback);

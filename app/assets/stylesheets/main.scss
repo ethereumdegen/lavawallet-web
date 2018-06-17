@@ -109,6 +109,8 @@ a
   padding:10px 15px;
 }
 
+
+
 .navbar-item
 {
   padding: 2px;
@@ -276,6 +278,18 @@ a
       padding-top: 0.75em;
       padding-bottom: 0.75em;
 }
+
+
+.column-button
+{
+  .disabled{
+    color:#eb4d4b;
+    background-color: #535c68;
+  }
+}
+
+
+
 
 .input-short
 {
