@@ -140,7 +140,7 @@ export default class LavaWalletHelper {
 
          defaultTokenData.map(t => t.icon_url = "/app/assets/img/token_icons/"+t.address+".png"   )
 
-        if(self.networkVersion == 'ropsten')
+        if(self.networkVersion == 'testnet')
         {
           defaultTokenData.map(t => t.address = t.test_address   )
         }
