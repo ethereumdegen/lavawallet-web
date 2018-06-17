@@ -1,533 +1,69 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-    <title>Lava Wallet</title>
+<!DOCTYPE HTML>
+<!--
+	Dimension by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-      <link rel="icon" type="image/png" href="/app/assets/img/favicon.png" />
 
 
-            <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
+<html id="landing">
+	<head>
+		<title>Lava Wallet</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 
+		<link rel="icon" type="image/png" href="/app/assets/img/favicon.png" />
 
-  <link href="/assets/main.css" rel="stylesheet"></head>
 
+	<link href="/assets/main.css" rel="stylesheet"></head>
+	<body  class="is-preload">
 
-  <nav class="navbar " id="navbar">
-  <div class="navbar-container"  >
+		<!-- Wrapper -->
+			<div id="wrapper">
 
+				<!-- Header -->
+					<header id="header">
+						<div class="logo">
+							<img class=" " src="/app/assets/img/lavalogo5.png"></img>
+						</div>
+						<div class="content">
+							<div class="inner">
+								<h1>Lava Wallet</h1>
+								<p class="color-white">Let relayers pay your Ethereum gas costs</p>
 
-  <div class="navbar-brand">
-    <a class="navbar-item" href="/">
+							</div>
+						</div>
 
-      <img :src="titleLogo" height=40px width=40px  ></img>
 
 
-    </a>
+            <nav>
+							<ul>
+								<li class="color-white"><a href="/wallet.html">Modern Wallet</a></li>
+                <li class="color-white"><a href="/about.html">About</a></li>
+								<li class="color-white"><a href="/legacy.html">Legacy Wallet</a></li>
 
-  </div>
+								<!--<li><a href="#elements">Elements</a></li>-->
+							</ul>
+						</nav>
+					</header>
 
 
+				<!-- Footer -->
+					<footer id="footer">
+						<p class="copyright">   Design: <a href="https://html5up.net">HTML5 UP</a>. Images: <a href="https://unsplash.com">UNSPLASH</a></p>
+					</footer>
 
+			</div>
 
+		<!-- BG -->
+			<div id="bg" class="landing-bg"></div>
 
-  <div class="navbar-burger" data-target="navMenu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </div>
- 
+		<!-- Scripts -->
 
 
-
-  <div  class="navbar-menu">
-    <div class="navbar-start">
-
-      <div class="navbar-item">
-        {{ projectVersion }} Beta
-      </div>
-
-      <div class="navbar-item has-dropdown is-active">
-        <div class="navbar-link  is-active acts-as-link dropdown-button"  >
-          Docs
-        </div>
-        <div class="navbar-dropdown ">
-
-          <a class="navbar-item" target="blank" href="https://0x1d00ffff.github.io/0xBTC-Stats/?page=stats">
-            0xBTC Stats
-          </a>
-          <a class="navbar-item "  target="blank" href="https://github.com/0xbitcoin/white-paper">
-            White Paper
-          </a>
-          <a class="navbar-item "  target="blank" href="https://etherscan.io/address/0xb6ed7644c69416d67b522e20bc294a9a9b405b31#code">
-            Smart Contract
-          </a>
-
-          <!--
-          <a class="navbar-item "  target="blank" href="https://github.com/0xbitcoin/active-projects">
-            Active Projects
-          </a>
-          -->
-
-
-
-
-          <hr class="navbar-divider">
-          <div class="navbar-image">
-            <div class="has-text-centered">
-              <img :src="contractQR" height="72" width="72" style="max-height:72px"/>
-
-
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="navbar-item has-dropdown is-active  ">
-        <div class="navbar-link acts-as-link dropdown-button">
-          Community
-        </div>
-        <div class="navbar-dropdown ">
-
-          <a class="navbar-item "  target="blank" href="https://discord.gg/JGEqqmS">
-            Discord
-          </a>
-          <a class="navbar-item "  target="blank" href="https://reddit.com/r/0xbitcoin">
-            Subreddit
-          </a>
-          <a class="navbar-item" target="blank" href="https://github.com/0xbitcoin">
-            Github
-          </a>
-
-
-        </div>
-      </div>
-
-
-    </div>
-
-
-      <div class="navbar-end" style="padding:5px;">
-
-        <div class="navbar-item">
-           <a href="https://reddit.com/r/0xbitcoin" target="_blank">
-             <img :src="redditLogo" height="28" width="28" target="_blank"/>
-           </a>
-         </div>
-
-       <div class="navbar-item">
-          <a href="https://github.com/0xbitcoin/0xbitcoin-token" target="_blank">
-            <img :src="githubLogo" height="28" width="28" target="_blank"/>
-          </a>
-        </div>
-
-      </div>
-
-
-
-
-  </div>
-
-
-
-</div>
-
-
-<div class="navbar-menu is-hidden-desktop" id="navMenu">
-  <!-- navbar-start, navbar-end... -->
-
-
-<div class="navbar-start has-text-centered navbar-collapse-mobile" >
-
-
-    <hr>
-
-  <div class="navbar-item has-dropdown is-active">
-    <div class="navbar-link  is-active acts-as-link dropdown-button"  >
-      Docs
-    </div>
-    <div class="navbar-dropdown ">
-
-      <a class="navbar-item" target="blank" href="https://0x1d00ffff.github.io/0xBTC-Stats/?page=stats">
-        0xBTC Stats
-      </a>
-      <a class="navbar-item "  target="blank" href="https://github.com/0xbitcoin/white-paper">
-        White Paper
-      </a>
-      <a class="navbar-item "  target="blank" href="https://etherscan.io/address/0xb6ed7644c69416d67b522e20bc294a9a9b405b31#code">
-        Smart Contract
-      </a>
-
-      <!--
-      <a class="navbar-item "  target="blank" href="https://github.com/0xbitcoin/active-projects">
-        Active Projects
-      </a>
-      -->
-
-
-
-      <div class="whitespace-md"></div>
-
-
-      <hr class="navbar-divider">
-
-      <div class="navbar-image">
-        <div class="has-text-centered">
-
-          <img :src="contractQR" height="128" width="128" style="max-height:128px"/>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-    <hr>
-
-  <div class="navbar-item has-dropdown is-active  ">
-    <div class="navbar-link acts-as-link dropdown-button">
-      Community
-    </div>
-    <div class="navbar-dropdown ">
-
-      <a class="navbar-item "  target="blank" href="https://discord.gg/JGEqqmS">
-        Discord
-      </a>
-      <a class="navbar-item "  target="blank" href="https://reddit.com/r/0xbitcoin">
-        Subreddit
-      </a>
-      <a class="navbar-item" target="blank" href="https://github.com/0xbitcoin">
-        Github
-      </a>
-
-
-    </div>
-  </div>
-
-  <hr>
-
-
-  </div>
-
-
-
-
-</div>
-</nav>
-
-
-
-
-<div class="page-container" id="home">
-
-
-      <div id="jumbotron" class=" ">
-
-
-
-        <div class="whitespace-sm"></div>
-
-
-        <div class="subtitle color-primary has-text-centered" v-cloak>
-          {{ errorMessage }}
-        </div>
-
-      </div>
-
-      <section class="hero   ">
-        <div class="hero-body">
-
-
-        <div id="action-container" class="action-container box" v-cloak v-if="shouldRender"    >
-          <div class="token-titlebar flex-bar">
-                <div class="token-title flex-start"> {{ selectedActionAsset.name }} </div>
-
-                <div class="token-icon flex-end"> <img  v-bind:src="selectedActionAsset.icon_url" height="42" width="42" ></img> </div>
-          </div>
-          <div class="action-tabs-bar">
-
-            <div class="tabs is-toggle hide-overflow"  >
-
-
-
-              <ul class="columns">
-                <li data-action-type="deposit"  v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true, 'is-active':(selectedActionType=='deposit')  } ">
-                  <a>
-                    <span class="icon is-small">   <i class="material-icons">file_download</i> </span>
-                    <span>Deposit</span>
-                  </a>
-                </li>
-                <li data-action-type="withdraw" v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true,  'is-active':(selectedActionType=='withdraw')  } ">
-                  <a>
-                    <span class="icon is-small one-third"> <i class="material-icons">file_upload</i> </span>
-                    <span>Withdraw</span>
-                  </a>
-                </li>
-                <li data-action-type="lavatransfer" v-bind:class="{  'tab-action':true, 'column':true, 'column-button':true,  'is-active':(selectedActionType=='lavatransfer')  } ">
-                  <a>
-                    <span class="icon is-small one-third"> <i class="material-icons">fast_forward</i> </span>
-                    <span>Lava Transfer</span>
-                  </a>
-                </li>
-
-              </ul>
-            </div>
-
-          </div>
-          <div class="deposit-container" v-if="(selectedActionType=='deposit')" v-cloak>
-
-
-              <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
-
-
-
-
-              <div class="input-container padding-md" v-if="!supportsDelegateCallDeposit" >
-                <div class="label">Approve Tokens</div>
-
-                <div class="columns">
-                  <div class="column">
-                    <div class="form-group">
-                        <input type="text" class="input input-short is-primary " v-model="approveTokenQuantity" placeholder="token amount">
-                        <div class="button is-primary btn-action-approve"> Approve </div>
-                    </div>
-                  </div>
-                  <div class="column">
-                      <div class="is-size-6"> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
-                  </div>
-                </div>
-              </div>
-
-
-
-             <div class="input-container padding-md" v-if="!supportsDelegateCallDeposit">
-               <div class="label">Deposit Tokens</div>
-
-                 <div class="columns">
-                     <div class="column">
-                       <div class="form-group">
-                         <input class="input input-short is-primary" v-model="depositTokenQuantity" placeholder="token amount">
-                          <div class="button is-primary btn-action-deposit"> Deposit </div>
-                       </div>
-                      </div>
-                    <div class="column">
-                        <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-                    </div>
-               </div>
-             </div>
-
-             <div class="input-container padding-md" v-if="supportsDelegateCallDeposit">
-               <div class="label">Deposit Tokens</div>
-
-                 <div class="columns">
-                     <div class="column">
-                       <div class="form-group">
-                         <input class="input input-short is-primary" v-model="approveAndDepositTokenQuantity" placeholder="token amount">
-                          <div class="button is-primary btn-action-approve-and-deposit"> Deposit </div>
-                       </div>
-                      </div>
-                    <div class="column">
-                        <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-                    </div>
-               </div>
-             </div>
-
-
-
-          </div>
-          <div class="withdraw-container" v-if="(selectedActionType=='withdraw')" v-cloak>
-
-            <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
-
-              <div class="input-container padding-md">
-                <div class="label">Withdraw Tokens</div>
-
-                  <div class="columns">
-                      <div class="column">
-                        <div class="form-group">
-                          <input class="input input-short is-primary" v-model="withdrawTokenQuantity" placeholder="token amount">
-                           <div class="button is-primary btn-action-withdraw"> Withdraw </div>
-                        </div>
-                       </div>
-                     <div class="column">
-                         <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-                     </div>
-                </div>
-            </div>
-
-
-          </div>
-          <div class="lava-transfer-container" v-if="(selectedActionType=='lavatransfer')" v-cloak>
-
-            <div class="subtitle-banner has-background-orange has-text-light"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-
-            <div class="input-container padding-md">
-            <div class="label">Transfer Tokens</div>
-
-              <p> Generate a signed Lava Transfer Message.  This message can be submitted to the Ethereum network by anyone, at which point the tokens will be transferred to the recipient's Lava Balance.  </p>
-
-
-              <div class="whitespace-sm"></div>
-
-
-                <div class="columns">
-                    <div class="column">
-                      <div class="form-group padding-md">
-                          <div class="label">Amount</div>
-                          <input class="input input-short is-primary" v-model="transferTokenQuantity" placeholder="token amount">
-                      </div>
-                      <div class="form-group padding-md">
-                          <div class="label">Recipient</div>
-                          <input class="input input-short is-primary" v-model="transferTokenRecipient" placeholder="token recipient">
-                      </div>
-                      <div class="form-group padding-md">
-                          <div class="label">Relay Reward (tokens)</div>
-                          <input class="input input-short is-primary" v-model="transferTokenRelayReward" placeholder="token relay reward">
-                      </div>
-
-                        <div class="button is-primary btn-action-lava-transfer"> Sign </div>
-
-                     </div>
-                   <div class="column">
-                       <div class="is-size-6">   </div>
-
-                       <p v-if="lavaPacketExists"> Specify the URL for a Lava Network Node and broadcast this packet to the Lava Network Relayers.  They will submit the packet to the Ethereum Network if the reward is high enough.  </p>
-
-                       <div class="form-group padding-md" v-if="lavaPacketExists">
-                           <div class="label">Relay Node URL</div>
-                           <input class="input input-short is-primary" v-model="relayNodeURL" placeholder="xxx.xxx.xxx.xxx:yyyy">
-
-                             <div class="whitespace-sm"></div>
-
-                           <div id="btn-broadcast-lava-packet" v-if="lavaPacketExists">
-                             <div class="button is-primary btn-broadcast-lava-packet">Broadcast Lava Packet</div>
-                           </div>
-
-                           <div class="whitespace-sm"></div>
-
-                           <div class="subtitle color-primary has-text-centered" v-cloak v-if="lavaPacketExists" >
-                             {{ broadcastMessage }}
-                           </div>
-                       </div>
-
-
-
-
-                      <div class="whitespace-sm"></div>
-
-                       <div class="form-group padding-md" v-if="lavaPacketExists">
-                           <div class="label">Lava Packet Data</div>
-                           <textarea class="textarea" placeholder="Lava packet data" rows="10"  v-model="lavaPacketData" ></textarea>
-
-                       </div>
-
-
-
-
-                               <div class="whitespace-sm"></div>
-
-                               <div id="btn-download-lava-packet" v-if="lavaPacketExists">
-                               </div>
-                   </div>
-              </div>
-           </div>
-
-
-          </div>
-
-        </div>
-
-
-        <div class="whitespace-md"></div>
-
-
-          <div id="asset-list" class="asset-list">
-
-            <table>
-              <thead>
-                <tr >
-                  <td class="has-text-centered"> Icon </td>
-                  <td class="has-text-centered"> Name </td>
-                  <td class="has-text-centered"> Lava Balance </td>
-                  <td class="has-text-centered"> External Balance </td>
-
-                </tr>
-              </thead>
-              <tbody>
-              <tr    v-for="(item, index) in tokens.token_list" v-bind:data-tokenaddress="item.address" v-bind:class="{   'asset-row':true, 'acts-as-link':true, 'hover-shadow':true   } " >
-                <td class="row-cell has-text-centered icon-url"><img  v-bind:src="item.icon_url" height="42" width="42" ></img></td>
-                <td class="row-cell has-text-centered token-name">{{item.name}}</td>
-                <td class="row-cell has-text-centered"><div class=" token-balance">{{item.lava_balance_formatted}}</div> </td>
-                <td class="row-cell has-text-centered"><div class="has-text-centered token-balance">{{item.wallet_balance_formatted}}</div>  </td>
-
-              </tr>
-            </tbody>
-            </table>
-
-           </div>
-
-
-                 <div class="whitespace-md"></div>
-
-
-             <div id="lava-packet-dropzone" class="lava-packet-dropzone">
-
-               <div class="subtitle is-size-3">Drop Lava Packets Here</div>
-
-               <div class="dropzone"  >
-                  <div class="hand-icon-holder">
-
-                  </div>
-
-                  <div class="dropzone-file-input-container">
-                    <p> Or select a local file </p>
-
-                      <div class="light-box">
-                        <input class="dropzone-file-input" name="lavaPacketFile" type="file">
-                      </div>
-                  </div>
-
-               </div>
-
-
-
-
-             </div>
-
-        </div>
-      </section>
-
-
-
-
-  </div>
-
-
-
-      <footer id="footer" class="footer">
-   <div class=" ">
-     <div class="content has-text-centered">
-       <p>
-         <div class="address-title has-text-centered">
-           Lava Contract: {{ address }}
-         </div>
-
-          <br>
-          The source code is licensed
-         <a href="http://opensource.org/licenses/mit-license.php">MIT</a>. The website content
-         is licensed <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
-       </p>
-     </div>
-   </div>
-</footer>
-
-
-
-      <a id="scrollUp" href="#top" style="position: fixed; z-index: 2147483647;"><i class="icon-arrow-up"></i></a>
-
-  <script type="text/javascript" src="/bundle.js"></script></body>
+	<script type="text/javascript" src="/bundle.js"></script></body>
 </html>
