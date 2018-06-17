@@ -50585,6 +50585,7 @@ class Landing {
 
 	init() {
 
+		console.log('meep1');
 		/* breakpoints.js v1.0 | @ajlkn | MIT licensed */
 		var breakpoints = function () {
 			"use strict";
@@ -50680,12 +50681,15 @@ class Landing {
 			xxsmall: [null, '360px']
 		});
 
+		console.log('meep2');
+
 		// Play initial animations on page load.
-		$window.on('load', function () {
-			window.setTimeout(function () {
-				$body.removeClass('is-preload');
-			}, 100);
-		});
+
+		window.setTimeout(function () {
+			console.log('removed is preload ');
+
+			$body.removeClass('is-preload');
+		}, 100);
 
 		// Fix: Flexbox min-height bug on IE.
 		if (browser.name == 'ie') {
