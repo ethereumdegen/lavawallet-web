@@ -376,21 +376,93 @@ export default class LavaWalletHelper {
      lavaContractABI.abi
    );
 
-   contract.transferTokensFromWithSignature.sendTransaction(
-      lavaPacket.from,
-      lavaPacket.to,
-      lavaPacket.tokenAddress,
-      lavaPacket.tokenAmount,
-      lavaPacket.relayerReward,
-      lavaPacket.expires,
-      lavaPacket.nonce,
-      lavaPacket.signature,
+  if(lavaPacket.method == 'transfer')
+  {
 
-      function(){
-        console.log('done!')
-      }
+     contract.transferTokensFromWithSignature.sendTransaction(
 
-    );
+        lavaPacket.from,
+        lavaPacket.to,
+        lavaPacket.tokenAddress,
+        lavaPacket.tokenAmount,
+        lavaPacket.relayerReward,
+        lavaPacket.expires,
+        lavaPacket.nonce,
+        lavaPacket.signature,
+
+        function(){
+          console.log('done!')
+        }
+
+      );
+
+
+    }else if(lavaPacket.method == 'withdraw')
+    {
+
+       contract.withdrawTokensFromWithSignature.sendTransaction(
+
+          lavaPacket.from,
+          lavaPacket.to,
+          lavaPacket.tokenAddress,
+          lavaPacket.tokenAmount,
+          lavaPacket.relayerReward,
+          lavaPacket.expires,
+          lavaPacket.nonce,
+          lavaPacket.signature,
+
+          function(){
+            console.log('done!')
+          }
+
+        );
+
+
+      }else if(lavaPacket.method == 'approve')
+      {
+
+         contract.approveTokensWithSignature.sendTransaction(
+
+            lavaPacket.from,
+            lavaPacket.to,
+            lavaPacket.tokenAddress,
+            lavaPacket.tokenAmount,
+            lavaPacket.relayerReward,
+            lavaPacket.expires,
+            lavaPacket.nonce,
+            lavaPacket.signature,
+
+            function(){
+              console.log('done!')
+            }
+
+          );
+
+
+        }else
+        {
+
+           contract.approveAndCall.sendTransaction(
+              lavaPacket.method,
+              lavaPacket.from,
+              lavaPacket.to,
+              lavaPacket.tokenAddress,
+              lavaPacket.tokenAmount,
+              lavaPacket.relayerReward,
+              lavaPacket.expires,
+              lavaPacket.nonce,
+              lavaPacket.signature,
+
+              function(){
+                console.log('done!')
+              }
+
+            );
+
+
+          }
+
+    //else if approve , withdraw
 
 
 

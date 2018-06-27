@@ -65058,8 +65058,11 @@ class LavaWalletHelper {
       var transferRelayReward = actionContainer.transferTokenRelayReward;
       var tokenDecimals = selectedActionAsset.decimals;
 
+      var method = 'transfer'; //could also be withdraw or approve
+
+
       console.log('lava transfer gen ', tokenAddress, transferAmount, transferRecipient);
-      self.generateLavaTransaction(tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function (error, response) {
+      self.generateLavaTransaction(method, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function (error, response) {
         console.log(response);
       });
     });
@@ -65691,7 +65694,7 @@ class LavaWalletHelper {
     contract.withdrawTokens.sendTransaction(tokenAddress, amountRaw, callback);
   }
 
-  async generateLavaTransaction(tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals) {
+  async generateLavaTransaction(method, tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals) {
 
     var self = this;
 
@@ -65701,6 +65704,9 @@ class LavaWalletHelper {
     //bytes32 sigHash = sha3("\x19Ethereum Signed Message:\n32",this, from, to, token, tokens, relayerReward, expires, nonce);
     //  address recoveredSignatureSigner = ECRecovery.recover(sigHash,signature);
     var ethBlock = await this.getCurrentEthBlockNumber();
+
+    // var method = 'transfer'; //need a dropdown
+
 
     var walletAddress = this.lavaWalletContract.blockchain_address;
     var from = this.web3.eth.accounts[0];
@@ -65713,41 +65719,7 @@ class LavaWalletHelper {
 
     //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
-    const msgParams = [{
-      type: 'address',
-      name: 'from',
-      value: from
-    }, {
-      type: 'address',
-      name: 'to',
-      value: to
-    }, {
-      type: 'address',
-      name: 'walletAddress',
-      value: walletAddress
-    }, {
-      type: 'address',
-      name: 'tokenAddress',
-      value: tokenAddress
-    }, {
-      type: 'uint256',
-      name: 'tokenAmount',
-      value: tokenAmount
-    }, {
-      type: 'uint256',
-      name: 'relayerReward',
-      value: relayerReward
-    }, {
-      type: 'uint256',
-      name: 'expires',
-      value: expires
-    }, {
-      type: 'uint256',
-      name: 'nonce',
-      value: nonce
-    }];
-
-    //    var solidity_msg = this.web3.toHex( "\x19Ethereum Signed Message:\n" + '32' + msg);
+    const msgParams = __WEBPACK_IMPORTED_MODULE_1__lava_packet_helper__["a" /* default */].getLavaParamsFromData(method, from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce);
 
     console.log('generateLavaTransaction', tokenAddress, amountRaw, transferRecipient);
 
@@ -65762,7 +65734,7 @@ class LavaWalletHelper {
 
     console.log('lava signature', msgParams, signature);
 
-    var packetJson = __WEBPACK_IMPORTED_MODULE_1__lava_packet_helper__["a" /* default */].getLavaPacket(from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce, signature);
+    var packetJson = __WEBPACK_IMPORTED_MODULE_1__lava_packet_helper__["a" /* default */].getLavaPacket(method, from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce, signature);
 
     var lavaPacketString = JSON.stringify(packetJson);
 
@@ -73344,9 +73316,10 @@ var _0xBitcoinContract;
 
 class LavaPacketHelper {
 
-  static getLavaPacket(from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce, signature) {
+  static getLavaPacket(method, from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce, signature) {
 
     return {
+      method: method,
       from: from,
       to: to,
       walletAddress: walletAddress,
@@ -73357,6 +73330,53 @@ class LavaPacketHelper {
       nonce: nonce,
       signature: signature
     };
+  }
+
+  static getLavaPacketSchemaHash() {
+    var hardcodedSchemaHash = '0x8fd4f9177556bbc74d0710c8bdda543afd18cc84d92d64b5620d5f1881dceb37';
+    return hardcodedSchemaHash;
+  }
+
+  static getLavaParamsFromData(method, from, to, walletAddress, tokenAddress, tokenAmount, relayerReward, expires, nonce) {
+    var params = [{
+      type: 'bytes',
+      name: 'method',
+      value: method
+    }, {
+      type: 'address',
+      name: 'from',
+      value: from
+    }, {
+      type: 'address',
+      name: 'to',
+      value: to
+    }, {
+      type: 'address',
+      name: 'walletAddress',
+      value: walletAddress
+    }, {
+      type: 'address',
+      name: 'tokenAddress',
+      value: tokenAddress
+    }, {
+      type: 'uint256',
+      name: 'tokenAmount',
+      value: tokenAmount
+    }, {
+      type: 'uint256',
+      name: 'relayerReward',
+      value: relayerReward
+    }, {
+      type: 'uint256',
+      name: 'expires',
+      value: expires
+    }, {
+      type: 'uint256',
+      name: 'nonce',
+      value: nonce
+    }];
+
+    return params;
   }
 
   static formatAmountWithDecimals(amountRaw, decimals) {
@@ -73385,6 +73405,7 @@ Version 0.10
 */
 
 var sampleLavaPacket = {
+  method: "transfer",
   from: "0xb11ca87e32075817c82cc471994943a4290f4a14",
   to: "0x357FfaDBdBEe756aA686Ef6843DA359E2a85229c",
   walletAddress: "0x1d0d66272025d7c59c40257813fc0d7ddf2c4826",
@@ -73393,7 +73414,7 @@ var sampleLavaPacket = {
   relayerReward: 100000000,
   expires: 3365044,
   nonce: 0xc18f687c56f1b2749af7d6151fa351,
-  signature: "0x8ef27391a81f77244bf95df58737eecac386ab9a47acd21bdb63757adf71ddf878169c18e4ab7b71d60f333c870258a0644ac7ade789d59c53b0ab75dbcc87d11b"
+  signature: "0x0" //fix
 };
 
 class LavaPacketHelper {

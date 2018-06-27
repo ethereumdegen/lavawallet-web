@@ -13068,9 +13068,6 @@ footer p.sucess-message {
 @-ms-viewport {
   #landing {
     width: device-width; } }
-  @media screen and (max-width: 480px) {
-    #landing html, #landing body {
-      min-width: 320px; } }
   #landing html {
     box-sizing: border-box; }
   #landing *, #landing *:before, #landing *:after {
@@ -13903,7 +13900,8 @@ footer p.sucess-message {
     border-style: solid;
     border-color: #ffffff;
     border-top-width: 1px;
-    border-bottom-width: 1px; }
+    border-bottom-width: 1px;
+    width: 100%; }
     #landing #header .about-content .inner {
       -moz-transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
       -webkit-transition: max-height 0.75s ease, padding 0.75s ease, opacity 0.325s ease-in-out;
@@ -14083,7 +14081,6 @@ footer p.sucess-message {
     transition: opacity 0.325s ease-in-out, transform 0.325s ease-in-out;
     padding: 4.5rem 2.5rem 1.5rem 2.5rem;
     position: relative;
-    width: 40rem;
     max-width: 100%;
     background-color: rgba(27, 31, 34, 0.85);
     border-radius: 4px;
@@ -14099,7 +14096,6 @@ footer p.sucess-message {
     position: absolute;
     top: 0;
     right: 0;
-    width: 4rem;
     height: 4rem;
     cursor: pointer;
     text-indent: 4rem;
@@ -14132,7 +14128,6 @@ footer p.sucess-message {
     #landing #main article .close:before {
       top: 0.875rem;
       left: 0.875rem;
-      width: 2.25rem;
       height: 2.25rem;
       background-size: 14px 14px; } }
   @media screen and (max-width: 480px) {
