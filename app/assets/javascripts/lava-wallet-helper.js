@@ -7,8 +7,7 @@ var sigUtil = require('eth-sig-util')
 import Vue from 'vue'
 
 import LavaPacketHelper from './lava-packet-helper'
-import LavaPacketUtil from './lava-packet-util'
-//const lavaPacketHelper = new LavaPacketHelper();
+import LavaPacketUtils from './lava-packet-utils'
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var legacyLavaWalletABI = require('../contracts/LavaWalletLegacy.json')
@@ -241,6 +240,7 @@ export default class LavaWalletHelper {
                  depositTokenQuantity: 0,
                  approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
+                 transferTokenMethod: 'transfer',
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
@@ -520,22 +520,7 @@ export default class LavaWalletHelper {
     });
 
 
-    $('.btn-action-approve-and-deposit').off();
-    $('.btn-action-approve-and-deposit').on('click',  function(){
 
-      var selectedActionAsset = actionContainer.selectedActionAsset ;
-
-      var tokenAddress = selectedActionAsset.address;
-      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-
-          console.log('approve and deposit ', tokenAddress,  depositAmount)
-          self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
-         console.log(response)
-      });
-
-    });
 
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
@@ -572,6 +557,22 @@ export default class LavaWalletHelper {
 
     });
 
+    $('.btn-action-approve-and-deposit').off();
+    $('.btn-action-approve-and-deposit').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('approve and deposit ', tokenAddress,  depositAmount)
+        self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
 
     $('.btn-action-lava-transfer').off();
     $('.btn-action-lava-transfer').on('click',  function(){
@@ -584,7 +585,7 @@ export default class LavaWalletHelper {
       var transferRelayReward = actionContainer.transferTokenRelayReward;
       var tokenDecimals = selectedActionAsset.decimals;
 
-      var method = 'transfer'; //could also be withdraw or approve
+      var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
@@ -1070,7 +1071,7 @@ export default class LavaWalletHelper {
 
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
-   const msgParams = LavaPacketHelper.getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
 
 
    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
@@ -1091,7 +1092,7 @@ export default class LavaWalletHelper {
 
     console.log('lava signature',msgParams,signature)
 
-    var packetJson = LavaPacketHelper.getLavaPacket(
+    var packetJson = LavaPacketUtils.getLavaPacket(
       method,from,to,walletAddress,tokenAddress,tokenAmount,
       relayerReward,expires,nonce,signature)
 
@@ -1137,7 +1138,7 @@ export default class LavaWalletHelper {
 
     console.log(lavaPacketData)
 
-    var response = await LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
+    var response = await LavaPacketHelper.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
 
     if(response.success)
     {
@@ -1303,5 +1304,5 @@ export default class LavaWalletHelper {
     return amountFormatted;
   }
 
- 
+
 }

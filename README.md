@@ -20,9 +20,9 @@ https://programtheblockchain.com/posts/2018/02/17/signing-and-verifying-messages
 
 
 ## todo
-1. Add reference to the contract
-2. Deposit / Withdraw buttons -- for any token + ether  
-3. Show a list of the tokens in the wallet
+1. add more methods
+2. auto update balances every 30 seconds  
+
 
 
 
