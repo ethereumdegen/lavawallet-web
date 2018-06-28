@@ -93,6 +93,19 @@ export default class LavaPacketUtils {
         return hardcodedSchemaHash;
      }
 
+     static signTypedData(privateKey, msgParams)
+    {
+
+      const msgHash = ethSigUtil.typedSignatureHash(msgParams.data)
+      console.log('msghash1',msgHash)
+
+      var msgBuffer= ethUtil.toBuffer(msgHash)
+
+      const sig = ethUtil.ecsign(msgBuffer, privateKey)
+      return ethUtil.bufferToHex(ethSigUtil.concatSig(sig.v, sig.r, sig.s))
+
+    }
+
      static getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
      {
          var params = [
