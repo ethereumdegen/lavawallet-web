@@ -175,10 +175,23 @@
 
                 <div class="columns">
                     <div class="column">
+
                       <div class="form-group padding-md">
                           <div class="label">Amount</div>
                           <input class="input input-short is-primary" v-model="transferTokenQuantity" placeholder="token amount">
                       </div>
+
+                      <div class="form-group padding-md">
+                          <div class="label">Method</div>
+
+                         <div class="select">
+                            <select class=" " onchange=" " v-model="transferTokenMethod" placeholder="lava method">
+                              <option>transfer</option>
+                              <option>withdraw</option>
+                           </select>
+                         </div>
+                      </div>
+                      
                       <div class="form-group padding-md">
                           <div class="label">Recipient</div>
                           <input class="input input-short is-primary" v-model="transferTokenRecipient" placeholder="token recipient">
@@ -188,6 +201,7 @@
                           <input class="input input-short is-primary" v-model="transferTokenRelayReward" placeholder="token relay reward">
                       </div>
 
+                      <div class="whitespace-sm"></div>
                         <div class="button is-primary btn-action-lava-transfer"> Sign </div>
 
                      </div>

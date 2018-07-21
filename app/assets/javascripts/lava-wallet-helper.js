@@ -7,8 +7,7 @@ var sigUtil = require('eth-sig-util')
 import Vue from 'vue'
 
 import LavaPacketHelper from './lava-packet-helper'
-import LavaPacketUtil from './lava-packet-util'
-//const lavaPacketHelper = new LavaPacketHelper();
+import LavaPacketUtils from './lava-packet-utils'
 
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var legacyLavaWalletABI = require('../contracts/LavaWalletLegacy.json')
@@ -241,6 +240,7 @@ export default class LavaWalletHelper {
                  depositTokenQuantity: 0,
                  approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
+                 transferTokenMethod: 'transfer',
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
@@ -520,22 +520,7 @@ export default class LavaWalletHelper {
     });
 
 
-    $('.btn-action-approve-and-deposit').off();
-    $('.btn-action-approve-and-deposit').on('click',  function(){
 
-      var selectedActionAsset = actionContainer.selectedActionAsset ;
-
-      var tokenAddress = selectedActionAsset.address;
-      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-
-          console.log('approve and deposit ', tokenAddress,  depositAmount)
-          self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
-         console.log(response)
-      });
-
-    });
 
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
@@ -572,6 +557,22 @@ export default class LavaWalletHelper {
 
     });
 
+    $('.btn-action-approve-and-deposit').off();
+    $('.btn-action-approve-and-deposit').on('click',  function(){
+
+      var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+      var tokenAddress = selectedActionAsset.address;
+      var depositAmount = actionContainer.approveAndDepositTokenQuantity;
+      var tokenDecimals = selectedActionAsset.decimals;
+
+
+          console.log('approve and deposit ', tokenAddress,  depositAmount)
+        self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
+      });
+
+    });
 
     $('.btn-action-lava-transfer').off();
     $('.btn-action-lava-transfer').on('click',  function(){
@@ -584,7 +585,7 @@ export default class LavaWalletHelper {
       var transferRelayReward = actionContainer.transferTokenRelayReward;
       var tokenDecimals = selectedActionAsset.decimals;
 
-      var method = 'transfer'; //could also be withdraw or approve
+      var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
@@ -839,374 +840,6 @@ export default class LavaWalletHelper {
 
 
 
-
-/*
-  async registerOrderRowClickHandler()
-  {
-
-    var self = this;
-
-    console.log('register order row click handler')
-    console.log('trading rows', $('.trading-row').length)
-     //need to do this after watch/render  happens
-    $('.trading-row').off();
-    $('.trading-row').on('click',async function(){
-      var order_hash = $(this).data('orderhash');
-      console.log('order_hash',order_hash);
-
-      var order_element = JSON.parse( order_hash_table[order_hash] );
-      console.log('perform trade',order_element);
-
-
-      //function trade(address tokenGet, uint amountGet, address tokenGive, uint amountGive, uint expires, uint nonce, address user, uint8 v, bytes32 r, bytes32 s, uint amount) {
-
-      var token_get = order_element.token_get;
-      var token_give = order_element.token_give;
-      var amount_get = order_element.amount_get;
-      var amount_give = order_element.amount_give;
-      var expires = order_element.expires;
-      var nonce = "0x"+order_element.nonce.toString();
-
-      var makerAddress = order_element.user;
-
-
-      //amount get ...pegged at the entire order for now
-      var trade_order_amount = order_element.amount_get;
-
-
-      var lava_wallet_address = lavaWalletContract.blockchain_address;
-
-      //dont need offchain sigs - all orders will be on chain for now
-      var sig_v = 0;
-      var sig_r = 0;
-      var sig_s = 0;
-
-
-      self.performTrade(token_get,amount_get,token_give,amount_give,expires,nonce, makerAddress, sig_v,sig_r,sig_s, trade_order_amount,   function(error,response){
-         console.log(response)
-      });
-
-    })
-
-    $('.monitor-order-row').off();
-    $('.monitor-order-row').on('click',async function(){
-      console.log('should cancel order')
-
-      var order_hash = $(this).data('orderhash');
-      console.log('order_hash',order_hash);
-
-      var order_element = JSON.parse( order_hash_table[order_hash] );
-      console.log('perform trade',order_element);
-
-
-      var token_get = order_element.token_get;
-      var token_give = order_element.token_give;
-      var amount_get = order_element.amount_get;
-      var amount_give = order_element.amount_give;
-      var expires = order_element.expires;
-      var nonce = "0x"+order_element.nonce.toString();
-
-
-      var lava_wallet_address = lavaWalletContract.blockchain_address;
-
-      //dont need offchain sigs - all orders will be on chain for now
-      var sig_v = 0;
-      var sig_r = 0;
-      var sig_s = 0;
-
-
-
-
-      self.cancelOrder(token_get,amount_get,token_give,amount_give,expires,nonce,  sig_v,sig_r,sig_s,   function(error,response){
-         console.log(response)
-      });
-
-    });
-
-
-  }
-
-*/
-
-
-  /*async buildOrderElementFromEvent(order_event, base_pair_token_address,lava_wallet_address,currentEthBlock)
-  {
-    console.log('build from ',order_event);
-    console.log('base_pair_token_address ',base_pair_token_address);
-
-
-
-
-
-    var order_element = {};
-
-    order_element.token_give = order_event.args.tokenGive;
-    order_element.token_get = order_event.args.tokenGet;
-    order_element.amount_give = order_event.args.amountGive.toNumber();
-    order_element.amount_get = order_event.args.amountGet.toNumber();
-
-    order_element.expires = order_event.args.expires.toNumber();
-
-    console.log('order_event.args.nonce',order_event.args.nonce)
-    order_element.nonce = web3utils.toBN(order_event.args.nonce ).toString(16) ;
-    order_element.user = order_event.args.user;
-
-    order_element.tx_hash = order_event.transactionHash;
-    order_element.tx_index = order_event.transactionIndex;
-
-    order_element.order_hash = web3utils.soliditySha3(
-      lava_wallet_address,
-      order_element.token_get,
-      order_element.amount_get,
-      order_element.token_give,
-      order_element.amount_give,
-      order_element.expires,
-      order_element.nonce
-    )
-
-    console.log('order_element.order_hash',order_element.order_hash)
-
-     //laggy but oh well
-    order_element.amount_filled = await this.getOrderAmountFilled(
-                                    order_element.token_get,
-                                    order_element.amount_get,
-                                    order_element.token_give,
-                                    order_element.amount_give,
-                                    order_element.expires,
-                                    order_event.args.nonce,
-                                    order_element.user
-                                  )
-
-
-    var client_taker_balance = client_token_balances[order_element.token_get];
-
-    if(client_taker_balance < order_element.amount_get )
-    {
-      order_element.client_unable = true;
-    }
-
-    var maker_give_balance = await this.getEscrowBalance(order_element.token_give,order_element.user)
-
-    if(maker_give_balance < order_element.amount_give )
-    {
-      order_element.impossible = true;
-    }
-
-    if(order_element.expires < currentEthBlock )
-    {
-      order_element.expired = true;
-    }
-
-    if(order_element.amount_filled >= order_element.amount_get
-    ||  order_element.expired
-    ||  order_element.impossible
-    )
-    {
-      order_element.closed = true;
-    }
-
-    //fix me
-    order_element.amount_get_remaining = 0;
-    order_element.amount_give_remaining = 0;
-
-
-
-        var give_decimal_places = 18;
-        var get_decimal_places = 18;
-
-
-
-    console.log('order_element.nonce',order_element.nonce )
-    //bids give eth
-    if( order_element.token_give == "0x0000000000000000000000000000000000000000"
-        && order_element.token_get.toLowerCase() ==  base_pair_token_address.toLowerCase())
-    {
-      get_decimal_places = 8;
-      order_element.order_type = "bid";
-
-      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
-      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
-
-      order_element.cost_ratio = order_element.amount_give_formatted / order_element.amount_get_formatted;
-
-    }
-
-    //asks get eth
-    if( order_element.token_get == "0x0000000000000000000000000000000000000000"
-        &&  order_element.token_give.toLowerCase() ==  base_pair_token_address.toLowerCase())
-    {
-      give_decimal_places = 8;
-      order_element.order_type = "ask";
-
-      console.log("found ask " , JSON.stringify(order_element))
-
-      order_element.amount_get_formatted = this.formatAmountWithDecimals(order_element.amount_get,get_decimal_places);
-      order_element.amount_give_formatted = this.formatAmountWithDecimals(order_element.amount_give,give_decimal_places);
-
-      order_element.cost_ratio = order_element.amount_get_formatted / order_element.amount_give_formatted;
-
-    }
-
-
-    if(order_element.cost_ratio < 0.0000000001 )
-    {
-      order_element.cost_ratio = 0;
-    }
-
-
-    order_hash_table[order_element.order_hash] = JSON.stringify( order_element );
-
-
-    return order_element;
-  }
-
-*/
-
-  /*collectCancelEvent(cancel_event, base_pair_token_address)
-  {
-    console.log('cancel',cancel_event)
-    var cancel_element = cancel_event;
-
-    cancel_element.tx_hash = cancel_event.transactionHash;
-    cancel_element.cancelled = true;
-
-    order_cancels_list.push(cancel_element)
-
-    closed_order_hash_table[cancel_element.tx_hash] = cancel_element;
-
-  }*/
-
-
-/*  collectTradeEvent(trade_event, base_pair_token_address)
-  {
-    console.log('trade',trade_event)
-    var trade_element = trade_event;
-
-
-    if(traded_order_hash_table[trade_element.tx_hash]!=null)
-    {
-      trade_element = traded_order_hash_table[trade_element.tx_hash]
-
-      trade_element.amount_get_traded += trade_event.args.amountGive.toNumber();
-      trade_element.amount_give_traded += trade_event.args.amountGet.toNumber()
-
-    }
-
-    trade_element.token_give = trade_event.args.tokenGive;
-    trade_element.token_get = trade_event.args.tokenGet;
-    trade_element.amount_give = trade_event.args.amountGive.toNumber();
-    trade_element.amount_get = trade_event.args.amountGet.toNumber();
-
-
-
-    trade_element.tx_hash = trade_event.transactionHash; //not reliable ?
-    trade_element.traded = true;
-
-    recent_trades_list.push(trade_element)
-
-
-
-    if(fully_traded)
-    {
-      trade_element.cancelled = true;
-      closed_order_hash_table[trade_element.tx_hash] = trade_element;
-    }
-
-    traded_order_hash_table[trade_element.tx_hash] = trade_element;
-
-  }*/
-
-   async collectOrderEvent(order_event, base_pair_token_address, lava_wallet_address,currentEthBlock)
-  {
-
-    var self = this;
-
-    var activeAccount = web3.eth.accounts[0];
-
-
-    var order_element = await this.buildOrderElementFromEvent(order_event, base_pair_token_address, lava_wallet_address,currentEthBlock);
-
-    console.log('render',order_element);
-
-    if(order_element.closed != true){
-      if(order_element.order_type == "ask")
-      {
-        order_ask_list.push(order_element);
-        order_ask_list.sort(function(a, b) {
-              return a.cost_ratio - b.cost_ratio;
-       })
-       Vue.set(orderContainer, 'asks',  {ask_list: order_ask_list }  )
-      }
-
-      if(order_element.order_type == "bid")
-      {
-        order_bid_list.push(order_element);
-        order_bid_list.sort(function(a, b) {
-              return b.cost_ratio - a.cost_ratio;
-       })
-       Vue.set(orderContainer, 'bids',  {bid_list: order_bid_list }  )
-      }
-    }
-
-
-
-    if(order_element.user.toLowerCase() == activeAccount.toLowerCase())
-    {
-        this.collectMyOrder(order_element);
-    }
-
-    Vue.nextTick(function () {
-      self.registerOrderRowClickHandler()
-    })
-  }
-
-
-  collectMyOrder(order_element)
-  {
-    console.log('my order',order_element)
-    my_orders_list.push(order_element);
-    my_orders_list.sort(function(a, b) {
-          return a.expires - b.expires;
-   })
-  }
-
-
-
-
-  async loadOrderEvents()
-  {
-      if(this.web3 == null)
-      {
-        console.log("No web3 to load order events.")
-        return;
-      }
-
-      var num_eth_blocks_to_search = 400;
-
-      var web3 = this.web3;
-
-      var current_block = await this.getCurrentEthBlockNumber()
-
-
-       var self = this;
-
-       var contract = this.ethHelper.getWeb3ContractInstance(
-         this.web3,
-         lavaWalletContract.blockchain_address,
-         lavaContractABI.abi
-       );
-
-
-       var lava_wallet_address = lavaWalletContract.blockchain_address;
-
-       var base_pair_token_address = _0xBitcoinContract.blockchain_address;
-
-     //none
-
-
-  }
-
-
   async getCurrentEthBlockNumber()
   {
    return await new Promise(function (fulfilled,error) {
@@ -1438,7 +1071,7 @@ export default class LavaWalletHelper {
 
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
-   const msgParams = LavaPacketHelper.getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
 
 
    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
@@ -1459,7 +1092,7 @@ export default class LavaWalletHelper {
 
     console.log('lava signature',msgParams,signature)
 
-    var packetJson = LavaPacketHelper.getLavaPacket(
+    var packetJson = LavaPacketUtils.getLavaPacket(
       method,from,to,walletAddress,tokenAddress,tokenAmount,
       relayerReward,expires,nonce,signature)
 
@@ -1505,7 +1138,7 @@ export default class LavaWalletHelper {
 
     console.log(lavaPacketData)
 
-    var response = await LavaPacketUtil.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
+    var response = await LavaPacketHelper.sendLavaPacket(actionContainer.relayNodeURL, lavaPacketData)
 
     if(response.success)
     {
@@ -1671,34 +1304,5 @@ export default class LavaWalletHelper {
     return amountFormatted;
   }
 
-/*
 
-  //Use as a reference only!!!
-  async startTransfer(amountRaw,recipient,callback)
-  {
-
-
-    var contract = this.ethHelper.getWeb3ContractInstance(
-      this.web3
-    );
-
-
-    let getDecimals = new Promise(resolve => {
-      contract.decimals( function(error,response){
-         resolve(response.toNumber());
-         })
-    });
-
-    var decimals = await getDecimals;
-
-    var amount = amountRaw * Math.pow(10,decimals)
-
-    console.log('start transfer', amount , recipient)
-
-    contract.transfer.sendTransaction(recipient, amount, callback);
-
-
-  }
-
-*/
 }

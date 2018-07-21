@@ -16,100 +16,66 @@ var _0xBitcoinContract;
 
 export default class LavaPacketHelper {
 
+  static serializePacketData (obj, prefix) {
+    var str = [],
+      p;
+    for (p in obj) {
+      if (obj.hasOwnProperty(p)) {
+        var k = prefix ? prefix + "[" + p + "]" : p,
+          v = obj[p];
+        str.push((v !== null && typeof v === "object") ?
+          serialize(v, k) :
+          encodeURIComponent(k) + "=" + encodeURIComponent(v));
+      }
+    }
+    return str.join("&");
+  }
 
-  static getLavaPacket(
-    method,from,to,walletAddress,tokenAddress,tokenAmount,
-    relayerReward,expires,nonce,signature)
+
+  static async sendLavaPacket(lavaNodeURL, lavaPacketData)
   {
 
-    return {
-      method:method,
-      from: from,
-      to: to,
-      walletAddress:walletAddress,
-      tokenAddress:tokenAddress,
-      tokenAmount:tokenAmount,
-      relayerReward:relayerReward,
-      expires:expires,
-      nonce:nonce,
-      signature:signature
-    }
+
+      if(!lavaNodeURL.startsWith("http://"))
+      {
+        lavaNodeURL = "http://"+lavaNodeURL;
+      }
+
+      if(!lavaNodeURL.endsWith("/lavapacket"))
+      {
+        lavaNodeURL = lavaNodeURL+"/lavapacket";
+      }
+
+      return new Promise(async resolve => {
+
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', lavaNodeURL);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+
+        xhr.onreadystatechange = function() {
+          if (xhr.readyState === 4) {
+            //var response = JSON.parse(xhr.responseText);
+              if (xhr.status === 200  ) {
+                 console.log('successful');
+                 resolve({success:true, packet: lavaPacketData})
+              } else {
+                 console.log('failed');
+                 resolve({success:false, message: 'Request failed.  Returned status of ' + xhr.status});
+
+              }
+          }
+        }
+
+        xhr.send(LavaPacketHelper.serializePacketData( lavaPacketData ));
+
+      })
 
 
   }
 
 
-   static getLavaPacketSchemaHash()
-   {
-      var hardcodedSchemaHash = '0x8fd4f9177556bbc74d0710c8bdda543afd18cc84d92d64b5620d5f1881dceb37' ;
-      return hardcodedSchemaHash;
-   }
 
-   static getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
-   {
-       var params = [
-
-        {
-          type: 'bytes',
-          name: 'method',
-          value: method
-        },
-         {
-           type: 'address',
-           name: 'from',
-           value: from
-         },
-         {
-           type: 'address',
-           name: 'to',
-           value: to
-         },
-         {
-           type: 'address',
-           name: 'walletAddress',
-           value: walletAddress
-         },
-         {
-           type: 'address',
-           name: 'tokenAddress',
-           value: tokenAddress
-         },
-         {
-           type: 'uint256',
-           name: 'tokenAmount',
-           value: tokenAmount
-         },
-         {
-           type: 'uint256',
-           name: 'relayerReward',
-           value: relayerReward
-         },
-         {
-           type: 'uint256',
-           name: 'expires',
-           value: expires
-         },
-         {
-           type: 'uint256',
-           name: 'nonce',
-           value: nonce
-         },
-       ]
-
-       return params;
-   }
-
-
-
-
-
-    static formatAmountWithDecimals(amountRaw,decimals)
-    {
-    var amountFormatted = amountRaw / (Math.pow(10,decimals) * 1.0)
-
-  //  amountFormatted = Math.round(amountFormatted,decimals)
-
-    return amountFormatted;
-  }
 
 }
