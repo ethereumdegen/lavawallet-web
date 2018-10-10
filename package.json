@@ -6,6 +6,7 @@
   "scripts": {
     "webpack": "webpack",
     "dev": "webpack-dev-server ",
+    "test": "mocha ./test",
     "express": "node express-dev.js"
   },
   "author": "0xbitcoin",
@@ -38,8 +39,10 @@
     "worker-loader": "^1.1.0"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "copy-webpack-plugin": "^4.5.1",
     "css-loader": "^0.28.9",
+    "ethereumjs-abi": "^0.6.5",
     "file-loader": "^1.1.6",
     "html-webpack-include-assets-plugin": "^1.0.2",
     "html-webpack-plugin": "^2.30.1",
