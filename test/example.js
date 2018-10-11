@@ -134,7 +134,7 @@ var assert = require('assert');
 
 
 describe('EIP712', function() {
-  describe('#indexOf()', function() {
+  describe('basic functions', function() {
 
     it('encoding type', function() {
       assert.equal( encodeType('Mail')  , 'Mail(Person from,Person to,string contents)Person(string name,address wallet)');
@@ -182,4 +182,3 @@ describe('EIP712', function() {
 
   });
 });
- 

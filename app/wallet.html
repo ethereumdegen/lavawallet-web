@@ -185,17 +185,31 @@
                           <div class="label">Method</div>
 
                          <div class="select">
-                            <select class=" " onchange=" " v-model="transferTokenMethod" placeholder="lava method">
+                            <select class=" " onchange=" " v-model="transferTokenMethod" placeholder="">
                               <option>transfer</option>
                               <option>withdraw</option>
+                              <option>approve</option>
                            </select>
                          </div>
                       </div>
-                      
+
                       <div class="form-group padding-md">
                           <div class="label">Recipient</div>
                           <input class="input input-short is-primary" v-model="transferTokenRecipient" placeholder="token recipient">
                       </div>
+
+
+                      <div class="form-group padding-md">
+                          <div class="label">Relay Config</div>
+
+                         <div class="select">
+                            <select class=" " onchange=" " v-model="replyKingRequired" placeholder="">
+                              <option>any relayer</option>
+                              <option>only king relays</option>
+                           </select>
+                         </div>
+                      </div>
+
                       <div class="form-group padding-md">
                           <div class="label">Relay Reward (tokens)</div>
                           <input class="input input-short is-primary" v-model="transferTokenRelayReward" placeholder="token relay reward">

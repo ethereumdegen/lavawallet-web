@@ -16,6 +16,8 @@ var lavaContractABI;
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
 var erc20TokenABI = require('../contracts/ERC20Interface.json')
 
+var miningKingContractABI = require('../contracts/MiningKing.json')
+
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
 var lavaSeedNodes = require('../config/lava-seed-nodes.json')
@@ -26,12 +28,14 @@ var defaultTokenData;
 var deployedContractInfo = require('../contracts/DeployedContractInfo.json')
 var lavaWalletContract;
 var _0xBitcoinContract;
+var miningKingContract;
 
 var balanceText;
 var accountAddress;
 
 var orderContainer;
 var actionContainer;
+var footer;
 
 var walletTokenList = [];
 
@@ -102,16 +106,19 @@ export default class LavaWalletHelper {
         case 'mainnet':
           self.lavaWalletContract = deployedContractInfo.networks.mainnet.contracts.lavawallet;
           self._0xBitcoinContract = deployedContractInfo.networks.mainnet.contracts._0xbitcointoken;
+          self.miningKingContract = deployedContractInfo.networks.mainnet.contracts.miningking;
           break
         case 'legacy':
           self.lavaWalletContract = deployedContractInfo.networks.legacy.contracts.lavawallet;
           self._0xBitcoinContract = deployedContractInfo.networks.legacy.contracts._0xbitcointoken;
+          self.miningKingContract = deployedContractInfo.networks.legacy.contracts.miningking;
           lavaContractABI = legacyLavaWalletABI;
           console.log('Using legacy lavawallet contract');
           break
         case 'testnet':
           self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
           self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
+          self.miningKingContract = deployedContractInfo.networks.ropsten.contracts.miningking;
           break
 
         default:
@@ -156,7 +163,7 @@ export default class LavaWalletHelper {
 
 
         var userAddress = web3.eth.accounts[0];
-       //await this.updateWalletRender();
+
 
        try{
          await this.collectClientTokenBalances(walletTokenList,userAddress);
@@ -173,12 +180,7 @@ export default class LavaWalletHelper {
       await this.initVueComponents();
 
 
-
-
-      // await this.loadOrderEvents()
-
-
-
+      await this.updateWalletRender();
 
 
 
@@ -252,19 +254,19 @@ export default class LavaWalletHelper {
 
        });
 
-      var footer = new Vue({
+
+
+
+        footer = new Vue({
          el: '#footer',
          data: {
            address: this.lavaWalletContract.blockchain_address,
+           kingRelayeraddress: '',
               }
 
        });
 
    }
-
-
-
-
 
 
 
@@ -759,16 +761,41 @@ export default class LavaWalletHelper {
     //not used
       async updateWalletRender()
       {
+        var self = this;
+
         if(this.web3 == null)
         {
           console.log("No web3 to load wallet data.")
           return;
         }
 
-          console.log( 'loading wallet data ')
+          console.log( 'update wallet render ')
 
 
-          var activeAccount = web3.eth.accounts[0];
+          var kingContract = this.ethHelper.getWeb3ContractInstance(
+            this.web3,
+            this.miningKingContract.blockchain_address,
+            miningKingContractABI.abi
+          );
+
+
+
+          //var kingRelayeraddress = await kingContract.getKing.call( (error,result) => {} );
+
+          var kingRelayeraddress = await new Promise(resolve => {
+            kingContract.getKing.call(  (error,response) => {
+                resolve(response);
+               })
+          }); 
+
+          await Vue.set(footer,'kingRelayeraddress', kingRelayeraddress)
+
+
+
+           setTimeout(function(){ self.updateWalletRender }, 20 * 1000);
+
+
+        /*  var activeAccount = web3.eth.accounts[0];
 
           accountAddress = activeAccount;
 
@@ -794,7 +821,7 @@ export default class LavaWalletHelper {
           var decimals = await getDecimals ;
           var tokenBalance = await getTokenBalance ;
 
-          balanceText = tokenBalance / Math.pow(10,decimals);
+          balanceText = tokenBalance / Math.pow(10,decimals);*/
 
       }
 
