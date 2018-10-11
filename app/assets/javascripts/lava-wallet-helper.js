@@ -243,6 +243,7 @@ export default class LavaWalletHelper {
                  approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
                  transferTokenMethod: 'transfer',
+                 relayKingRequired: 'any relayers',
                  transferTokenQuantity: 0,
                  transferTokenRecipient : 0,
                  transferTokenRelayReward: 0,
@@ -584,6 +585,7 @@ export default class LavaWalletHelper {
       var tokenAddress = selectedActionAsset.address;
       var transferAmount = actionContainer.transferTokenQuantity;
       var transferRecipient = actionContainer.transferTokenRecipient;
+      var relayKingRequired = actionContainer.relayKingRequired;
       var transferRelayReward = actionContainer.transferTokenRelayReward;
       var tokenDecimals = selectedActionAsset.decimals;
 
@@ -786,7 +788,7 @@ export default class LavaWalletHelper {
             kingContract.getKing.call(  (error,response) => {
                 resolve(response);
                })
-          }); 
+          });
 
           await Vue.set(footer,'kingRelayeraddress', kingRelayeraddress)
 
