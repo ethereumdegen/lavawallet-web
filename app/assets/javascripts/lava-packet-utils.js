@@ -460,6 +460,47 @@ export default class LavaPacketUtils {
 
 
 
+        //updating to spec
+        // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
+
+        //https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.sol
+        
+      static getEIP712TypedData()
+      {
+
+        return {
+          type: 'object',
+          properties: {
+            types: {
+              type: 'object',
+              properties: {
+                EIP712Domain: {type: 'array'},
+              },
+              additionalProperties: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: {type: 'string'},
+                    type: {type: 'string'}
+                  },
+                  required: ['name', 'type']
+                }
+              },
+              required: ['EIP712Domain']
+            },
+            primaryType: {type: 'string'},
+            domain: {type: 'object'},
+            message: {type: 'object'}
+          },
+          required: ['types', 'primaryType', 'domain', 'message']
+        }
+
+
+
+      }
+
+
 
 
 }
