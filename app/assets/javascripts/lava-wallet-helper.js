@@ -388,12 +388,14 @@ export default class LavaWalletHelper {
   if(lavaPacket.method == 'transfer')
   {
 
-     contract.transferTokensFromWithSignature.sendTransaction(
-
+     contract.transferTokensWithSignature.sendTransaction(
+        lavaPacket.method, //
+        lavaPacket.relayAuthority, //
         lavaPacket.from,
         lavaPacket.to,
         lavaPacket.tokenAddress,
         lavaPacket.tokenAmount,
+        lavaPacket.walletAddress, //
         lavaPacket.relayerReward,
         lavaPacket.expires,
         lavaPacket.nonce,
@@ -406,15 +408,18 @@ export default class LavaWalletHelper {
       );
 
 
-    }else if(lavaPacket.method == 'withdraw')
+  /*  }else if(lavaPacket.method == 'withdraw')
     {
 
        contract.withdrawTokensFromWithSignature.sendTransaction(
 
+         lavaPacket.from
+         lavaPacket.from
           lavaPacket.from,
           lavaPacket.to,
           lavaPacket.tokenAddress,
           lavaPacket.tokenAmount,
+          lavaPacket.wallet,
           lavaPacket.relayerReward,
           lavaPacket.expires,
           lavaPacket.nonce,
@@ -424,7 +429,7 @@ export default class LavaWalletHelper {
             console.log('done!')
           }
 
-        );
+        );*/
 
 
       }else if(lavaPacket.method == 'approve')
@@ -593,13 +598,16 @@ export default class LavaWalletHelper {
       var transferRecipient = actionContainer.transferTokenRecipient;
       var relayKingRequired = actionContainer.relayKingRequired;
       var transferRelayReward = actionContainer.transferTokenRelayReward;
-      var tokenDecimals = selectedActionAsset.decimals;
+       var tokenDecimals = selectedActionAsset.decimals;
+    //var tokenDecimals = 8;
+
+      var relayAuthority = '0x0' //for now
 
       var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
 
 
             console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
-            self.generateLavaTransaction(method,tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function(error,response){
+            self.generateLavaTransaction(method,relayAuthority, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function(error,response){
            console.log(response)
       });
 
@@ -1061,11 +1069,13 @@ export default class LavaWalletHelper {
   }
 
 
-  async generateLavaTransaction(method, tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals)
+  async generateLavaTransaction(method, relayAuthority, tokenAddress, amountFormatted, transferRecipient, relayerRewardFormatted, tokenDecimals)
   {
 
     var self = this;
 
+
+    console.log('token decimals', tokenDecimals)
 
       var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
       var relayerRewardRaw = this.getRawFromDecimalFormat(relayerRewardFormatted,tokenDecimals)
@@ -1080,16 +1090,22 @@ export default class LavaWalletHelper {
 
    var walletAddress = this.lavaWalletContract.blockchain_address;
    var from = this.web3.eth.accounts[0];
+   var relayAuthority = relayAuthority
    var to = transferRecipient;
    var tokenAddress = tokenAddress;
+
    var tokenAmount = amountRaw;
    var relayerReward = relayerRewardRaw;
+
    var expires = ethBlock + 1000;
    var nonce = web3utils.randomHex(16);
 
+   console.log('relay auth is ',relayAuthority)
+
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
-   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   console.log('lava msgParams',msgParams)
 
 
    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
@@ -1111,7 +1127,7 @@ export default class LavaWalletHelper {
     console.log('lava signature',msgParams,signature)
 
     var packetJson = LavaPacketUtils.getLavaPacket(
-      method,from,to,walletAddress,tokenAddress,tokenAmount,
+      method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,
       relayerReward,expires,nonce,signature)
 
       var lavaPacketString = JSON.stringify(packetJson);

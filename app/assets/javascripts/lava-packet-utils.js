@@ -11,6 +11,7 @@ Version 0.10
 var sampleLavaPacket = {
   method: "transfer",
   from: "0xb11ca87e32075817c82cc471994943a4290f4a14",
+  relayAuthority: "0x0",
   to: "0x357FfaDBdBEe756aA686Ef6843DA359E2a85229c",
   walletAddress:"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826",
   tokenAddress:"0x9d2cc383e677292ed87f63586086cff62a009010",
@@ -30,12 +31,13 @@ export default class LavaPacketUtils {
 
 
     static getLavaPacket(
-      method,from,to,walletAddress,tokenAddress,tokenAmount,
+      method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,
       relayerReward,expires,nonce,signature)
     {
 
       return {
         method:method,
+        relayAuthority: relayAuthority,
         from: from,
         to: to,
         walletAddress:walletAddress,
@@ -106,7 +108,7 @@ export default class LavaPacketUtils {
 
     }
 
-     static getLavaParamsFromData(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+     static getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
      {
          var params = [
 
@@ -114,6 +116,11 @@ export default class LavaPacketUtils {
             type: 'bytes',
             name: 'method',
             value: method
+          },
+          {
+            type: 'address',
+            name: 'relayAuthority',
+            value: relayAuthority
           },
            {
              type: 'address',
@@ -464,7 +471,7 @@ export default class LavaPacketUtils {
         // https://github.com/ethereum/EIPs/blob/master/EIPS/eip-712.md
 
         //https://github.com/ethereum/EIPs/blob/master/assets/eip-712/Example.sol
-        
+
       static getEIP712TypedData()
       {
 
