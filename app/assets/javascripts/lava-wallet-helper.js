@@ -1087,6 +1087,8 @@ export default class LavaWalletHelper {
 
   // var method = 'transfer'; //need a dropdown
 
+  var signer = this.web3.eth.accounts[0];
+
 
    var walletAddress = this.lavaWalletContract.blockchain_address;
    var from = this.web3.eth.accounts[0];
@@ -1104,23 +1106,62 @@ export default class LavaWalletHelper {
 
    //need to append everything together !! to be ..like in solidity.. :  len(message) + message
 
-   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
-   console.log('lava msgParams',msgParams)
+//   const msgParams = LavaPacketUtils.getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   //console.log('lava msgParams',msgParams)
+   const typedData = LavaPacketUtils.getLavaTypedDataFromParams(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+   console.log('lava typedData',typedData)
 
 
    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
 
 
     //testing
-    var sigHash = sigUtil.typedSignatureHash(msgParams);
-
-    console.log('lava sigHash',msgParams,sigHash)
-
+  //  var sigHash = sigUtil.typedSignatureHash(typedData);
+  //  console.log('test: lava sigHash',typedData,sigHash)
 
 
-    var params = [msgParams, from]
 
-    var signature = await this.signTypedData(params,from);
+  //  const typedDataHash = LavaPacketUtils.getLavaTypedDataHash(typedData, typedData.types);
+
+    // https://medium.com/metamask/eip712-is-coming-what-to-expect-and-how-to-use-it-bb92fd1a7a26
+
+    const testdata = JSON.stringify({
+          types: {
+                 EIP712Domain: [
+                      { name: "name", type: "string" },
+                      { name: "version", type: "string" },
+                      { name: "chainId", type: "uint256" },
+                      { name: "verifyingContract", type: "address" },
+                      { name: "salt", type: "bytes32" },
+                  ],
+              Bid: [
+                    { name: "amount", type: "uint256" },
+                    { name: "bidder", type: "Identity" },
+                ],
+              Identity: [
+                    { name: "userId", type: "uint256" },
+                    { name: "wallet", type: "address" },
+                ],
+          },
+          domain: {
+                  name: "My amazing dApp",
+                  version: "2",
+                  chainId: parseInt(web3.version.network, 10),
+                  verifyingContract: "0x1C56346CD2A2Bf3202F771f50d3D14a367B48070",
+                  salt: "0xf2d857f4a3edcb9b78b4d503bfe733db1e3f6cdc2b7971ee739626c97e86a558"
+              },
+          primaryType: "Bid",
+          message: {
+                amount: 100,
+                bidder: {
+                    userId: 323,
+                    wallet: "0x3333333333333333333333333333333333333333"
+                }
+            }
+      });
+
+
+    var signature = await this.signTypedData(signer, testdata);
 
 
 
@@ -1198,17 +1239,36 @@ export default class LavaWalletHelper {
   }
 
 
-  async signTypedData(params,from)
+  async signTypedData(signer,data )
   {
     var result = await new Promise(async resolve => {
 
+            web3.currentProvider.sendAsync(
+              {
+                  method: "eth_signTypedData_v3",
+                  params: [signer, data],
+                  from: signer
+              },
+              function(err, result) {
+                  if (err) {
+                      return console.error(err);
+                  }    const signature = result.result.substring(2);
+                  const r = "0x" + signature.substring(0, 64);
+                  const s = "0x" + signature.substring(64, 128);
+                  const v = parseInt(signature.substring(128, 130), 16);    // The signature is now comprised of r, s, and v.
+
+
+                  resolve(result.result)
+                  }
+              );
+
       //personal sign using Metamask
-      var method = 'eth_signTypedData'
+          /*  var method = 'eth_signTypedData_v3'
 
               web3.currentProvider.sendAsync({
                 method,
-                params,
-                from,
+                [signer,data],
+                params.signer,
               }, function (err, result) {
                 if (err) return console.dir(err)
                 if (result.error) {
@@ -1219,13 +1279,13 @@ export default class LavaWalletHelper {
 
 
                   //this method needs to be in solidity!
-                const recovered = sigUtil.recoverTypedSignature({ data: params[0], sig: result.result })
+                // const recovered = sigUtil.recoverTypedSignature({ data: params.message, sig: result.result })
 
 
 
                   resolve(result.result)
 
-              })
+              })*/
 
 
       });

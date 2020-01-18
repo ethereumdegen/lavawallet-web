@@ -52,9 +52,9 @@ export default class LavaPacketUtils {
 
     }
 
-    static lavaPacketHasValidSignature(packetData){
+    /*static lavaPacketHasValidSignature(packetData){
 
-      var sigHash = LavaPacketUtils.getLavaTypedDataHash(packetData.method, packetData.from,packetData.to,packetData.walletAddress,packetData.tokenAddress,packetData.tokenAmount,packetData.relayerReward,packetData.expires,packetData.nonce);
+      var sigHash = LavaPacketUtils.getLavaTypedDataHash(packetData.method, packetData.relayAuthority, packetData.from,packetData.to,packetData.walletAddress,packetData.tokenAddress,packetData.tokenAmount,packetData.relayerReward,packetData.expires,packetData.nonce);
 
 
       var msgBuf = ethjsutil.toBuffer(packetData.signature)
@@ -71,9 +71,9 @@ export default class LavaPacketUtils {
       //make sure the signer is the depositor of the tokens
       return packetData.from.toLowerCase() == recoveredSignatureSigner.toLowerCase();
 
-    }
+    }*/
 
-      static getLavaTypedDataHash(method,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
+    /*  static getLavaTypedDataHash(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
       {
         var  hardcodedSchemaHash =  LavaPacketUtils.getLavaPacketSchemaHash();
 
@@ -86,6 +86,21 @@ export default class LavaPacketUtils {
 
 
         return typedDataHash;
+      }*/
+
+      static getLavaTypedDataHash(typedData,types)
+      {
+        var typedDataHash = ethUtil.sha3(
+            Buffer.concat([
+                Buffer.from('1901', 'hex'),
+                EIP712HelperV3.structHash('EIP712Domain', typedData.domain, types),
+                EIP712HelperV3.structHash(typedData.primaryType, typedData.message, types),
+            ]),
+        );
+
+        console.log('meep 1', EIP712HelperV3.structHash('EIP712Domain', typedData.domain, types))
+        console.log('meep 2', EIP712HelperV3.structHash(typedData.primaryType, typedData.message, types))
+        return typedDataHash;
       }
 
 
@@ -94,6 +109,31 @@ export default class LavaPacketUtils {
         var hardcodedSchemaHash = '0x8fd4f9177556bbc74d0710c8bdda543afd18cc84d92d64b5620d5f1881dceb37' ;
         return hardcodedSchemaHash;
      }
+
+
+     static getLavaPackerSigner(  typedData, signature){
+
+       var sigHash = LavaPacketUtils.getLavaTypedDataHash( typedData, typedData.types);
+       var msgBuf = ethUtil.toBuffer(signature)
+       const res = ethUtil.fromRpcSig(msgBuf);
+
+
+       var hashBuf = ethUtil.toBuffer(sigHash)
+
+       const pubKey  = ethUtil.ecrecover(hashBuf, res.v, res.r, res.s);
+       const addrBuf = ethUtil.pubToAddress(pubKey);
+       const recoveredSignatureSigner    = ethUtil.bufferToHex(addrBuf);
+
+       var message = typedData.message
+
+       console.log('recovered signer pub address',recoveredSignatureSigner.toLowerCase())
+       //make sure the signer is the depositor of the tokens
+       return recoveredSignatureSigner.toLowerCase();
+
+     }
+
+
+
 
      static signTypedData(privateKey, msgParams)
     {
@@ -108,6 +148,61 @@ export default class LavaPacketUtils {
 
     }
 
+
+    static getLavaTypedDataFromParams(   methodName,relayAuthority,from,
+      to,walletAddress,tokenAddress, tokenAmount, relayerRewardTokens,expires,nonce )
+    {
+      const typedData = {
+              types: {
+                  EIP712Domain: [
+                      { name: "contractName", type: "string" },
+                      { name: "version", type: "string" },
+                      { name: "chainId", type: "uint256" },
+                      { name: "verifyingContract", type: "address" }
+                  ],
+                  LavaPacket: [
+                      { name: 'methodName', type: 'string' },
+                      { name: 'relayAuthority', type: 'address' },
+                      { name: 'from', type: 'address' },
+                      { name: 'to', type: 'address' },
+                      { name: 'wallet', type: 'address' },
+                      { name: 'token', type: 'address' },
+                      { name: 'tokens', type: 'uint256' },
+                      //{ name: 'relayerRewardToken', type: 'address' },
+                      { name: 'relayerRewardTokens', type: 'uint256' },
+                      { name: 'expires', type: 'uint256' },
+                      { name: 'nonce', type: 'uint256' }
+                  ],
+              },
+              primaryType: 'LavaPacket',
+              domain: {
+                  contractName: 'Lava Wallet',
+                  version: '1',
+                  chainId: 1,
+                  verifyingContract: walletAddress
+              },
+              message: {
+                  methodName: methodName,
+                  relayAuthority: relayAuthority,
+                  from: from,
+                  to: to,
+                  wallet: walletAddress,
+                  token: tokenAddress,
+                  tokens: tokenAmount,
+               //   relayerRewardToken: relayerRewardToken,
+                  relayerRewardTokens: relayerRewardTokens,
+                  expires: expires,
+                  nonce: nonce
+              }
+          };
+
+
+
+
+
+        return typedData;
+    }
+    
      static getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
      {
          var params = [
