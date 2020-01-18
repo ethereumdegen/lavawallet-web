@@ -12,19 +12,48 @@ var web3utils = require('web3-utils')
 export default class EthHelper {
 
 
-    init( alertRenderer ){
+    async init( alertRenderer ){
         this.alertRenderer = alertRenderer;
 
 
-        return this.connectWeb3(new embeddedWeb3());
+          await this.connectWeb3( );
     }
 
-    connectWeb3(web3){
-      if (typeof web3 !== 'undefined') {
+    static async connectWeb3(web3){
 
-            window.web3 = new Web3(new Web3.providers.HttpProvider(INFURA_MAINNET_URL));
-            console.log('connected to web3!')
-            return window.web3;
+
+      console.log('try to connect')
+
+      if (window.ethereum) {
+          window.web3 = new Web3(window.ethereum);
+          try {
+              // Request account access if needed
+              await window.ethereum.enable();
+              // Acccounts now exposed
+
+              console.log('chain id is', window.web3.currentProvider.chainId)
+
+            //  await Vue.set(ethContainer, "connected" , true);
+            //  await self.updateEthAccountInfo(web3)
+
+              console.log('web3 iss',window.web3)
+
+              return window.web3
+            //  web3.eth.sendTransaction({/* ... */});
+          } catch (error) {
+              // User denied account access...
+          }
+      }
+      // Legacy dapp browsers...
+      else if (window.web3) {
+          window.web3 = new Web3(web3.currentProvider);
+          // Acccounts always exposed
+          //web3.eth.sendTransaction({/* ... */});
+
+        //  await Vue.set(ethContainer, "connected" , true);
+        //  await self.updateEthAccountInfo(web3)
+
+          return window.web3
 
       } else {
 
@@ -34,6 +63,12 @@ export default class EthHelper {
           //window.web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
 
       }
+
+
+
+
+
+
     }
 
 
@@ -110,7 +145,7 @@ export default class EthHelper {
 
     }
 
-    getWeb3ContractInstance(web3, contract_address, contract_abi )
+    static getWeb3ContractInstance(web3, contract_address, contract_abi )
     {
       if(contract_address == null)
       {

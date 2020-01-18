@@ -9,14 +9,15 @@ import Vue from 'vue'
 import LavaPacketHelper from './lava-packet-helper'
 import LavaPacketUtils from './lava-packet-utils'
 
+
+import EthHelper from './ethhelper'
+
 var lavaWalletABI = require('../contracts/LavaWallet.json')
 var legacyLavaWalletABI = require('../contracts/LavaWalletLegacy.json')
 var lavaContractABI;
 
 var _0xBitcoinABI = require('../contracts/_0xBitcoinToken.json')
 var erc20TokenABI = require('../contracts/ERC20Interface.json')
-
-var miningKingContractABI = require('../contracts/MiningKing.json')
 
 var tokenData = require('../config/token-data.json')
 var defaultTokens = require('../config/default-tokens.json')
@@ -28,7 +29,7 @@ var defaultTokenData;
 var deployedContractInfo = require('../contracts/DeployedContractInfo.json')
 var lavaWalletContract;
 var _0xBitcoinContract;
-var miningKingContract;
+
 
 var balanceText;
 var accountAddress;
@@ -60,7 +61,9 @@ export default class LavaWalletHelper {
 
 
 
-   this.web3 = this.detectInjectedWeb3();
+   this.web3 = await EthHelper.connectWeb3();
+
+   console.log('web3 is ', this.web3)
 
    var self = this;
 
@@ -73,6 +76,9 @@ export default class LavaWalletHelper {
 
       await new Promise(async resolve => {
         web3.version.getNetwork((err, netId) => {
+
+          console.log('netid is '+netId)
+
           switch (netId) {
             case "1":
               self.networkVersion = 'mainnet';
@@ -81,9 +87,9 @@ export default class LavaWalletHelper {
 
 
               break
-            case "3":
+            case "5":
               self.networkVersion = 'testnet';
-              console.log('Web3 is using ropsten test network.');
+              console.log('Web3 is using goerli test network.');
 
               break
             default:
@@ -94,7 +100,7 @@ export default class LavaWalletHelper {
         })
       })
 
-      if($('.legacy').length >= 1)
+      if($('#legacy-wallet').length >= 1)
       {
         self.networkVersion = 'legacy';
       }
@@ -116,9 +122,9 @@ export default class LavaWalletHelper {
           console.log('Using legacy lavawallet contract');
           break
         case 'testnet':
-          self.lavaWalletContract = deployedContractInfo.networks.ropsten.contracts.lavawallet;
-          self._0xBitcoinContract = deployedContractInfo.networks.ropsten.contracts._0xbitcointoken;
-          self.miningKingContract = deployedContractInfo.networks.ropsten.contracts.miningking;
+          self.lavaWalletContract = deployedContractInfo.networks.testnet.contracts.lavawallet;
+          self._0xBitcoinContract = deployedContractInfo.networks.testnet.contracts._0xbitcointoken;
+          self.miningKingContract = deployedContractInfo.networks.testnet.contracts.miningking;
           break
 
         default:
@@ -373,7 +379,7 @@ export default class LavaWalletHelper {
 
 
 
-   var contract = this.ethHelper.getWeb3ContractInstance(
+   var contract = EthHelper.getWeb3ContractInstance(
      this.web3,
      this.lavaWalletContract.blockchain_address,
      lavaContractABI.abi
@@ -677,8 +683,8 @@ export default class LavaWalletHelper {
         tokenData.approved_balance_formatted = this.formatAmountWithDecimals(tokenAllowance,tokenDecimals);
 
 
-        var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
-        tokenData.lava_balance_formatted = this.formatAmountWithDecimals(lavaTokenBalance,tokenDecimals);
+      //  var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
+      //  tokenData.lava_balance_formatted = this.formatAmountWithDecimals(lavaTokenBalance,tokenDecimals);
 
         //get wallet balance and get lava balance
 
@@ -690,9 +696,11 @@ export default class LavaWalletHelper {
 
     }
 
+
+    //get number of approved tokens
     async getLavaTokenBalance(tokenAddress,tokenOwner)
     {
-      var contract = this.ethHelper.getWeb3ContractInstance(
+      var contract = EthHelper.getWeb3ContractInstance(
         this.web3,
         this.lavaWalletContract.blockchain_address,
         lavaContractABI.abi
@@ -716,7 +724,7 @@ export default class LavaWalletHelper {
 
     async getTokenBalance(tokenAddress,tokenOwner)
     {
-      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+      var contract = EthHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
 
       var balance = await new Promise(resolve => {
         contract.balanceOf(tokenOwner, function(error,response){
@@ -732,7 +740,7 @@ export default class LavaWalletHelper {
 
     async getTokenAllowance(tokenAddress,tokenOwner)
     {
-      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+      var contract = EthHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
 
       var wallet_address = this.lavaWalletContract.blockchain_address;
 
@@ -748,7 +756,7 @@ export default class LavaWalletHelper {
 
     async getTokenDecimals(tokenAddress)
     {
-      var contract = this.ethHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
+      var contract = EthHelper.getWeb3ContractInstance(this.web3,tokenAddress,erc20TokenABI.abi );
 
 
       var decimals = await new Promise(resolve => {
@@ -774,24 +782,6 @@ export default class LavaWalletHelper {
           console.log( 'update wallet render ')
 
 
-          var kingContract = this.ethHelper.getWeb3ContractInstance(
-            this.web3,
-            this.miningKingContract.blockchain_address,
-            miningKingContractABI.abi
-          );
-
-
-
-          //var kingRelayeraddress = await kingContract.getKing.call( (error,result) => {} );
-
-          var kingRelayeraddress = await new Promise(resolve => {
-            kingContract.getKing.call(  (error,response) => {
-                resolve(response);
-               })
-          });
-
-          await Vue.set(footer,'kingRelayeraddress', kingRelayeraddress)
-
 
 
            setTimeout(function(){ self.updateWalletRender }, 20 * 1000);
@@ -805,7 +795,7 @@ export default class LavaWalletHelper {
 
 
 
-          var contract = this.ethHelper.getWeb3ContractInstance(this.web3  );
+          var contract = EthHelper.getWeb3ContractInstance(this.web3  );
 
 
           let getDecimals = new Promise(resolve => {
@@ -831,7 +821,6 @@ export default class LavaWalletHelper {
 
     detectInjectedWeb3()
     {
-
 
 
       if (typeof web3 !== 'undefined') {
@@ -887,7 +876,7 @@ export default class LavaWalletHelper {
 
   async getEscrowBalance(token_address,user)
   {
-    var contract = this.ethHelper.getWeb3ContractInstance(
+    var contract = EthHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
       lavaContractABI.abi
@@ -908,7 +897,7 @@ export default class LavaWalletHelper {
   {
 
     console.log('amount filledd',token_get,amount_get,token_give,amount_give,expires,nonce,user)
-    var contract = this.ethHelper.getWeb3ContractInstance(
+    var contract = EthHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
       lavaContractABI.abi
@@ -935,7 +924,7 @@ export default class LavaWalletHelper {
      var amountRaw = this.getRawFromDecimalFormat(amountFormatted,18)
 
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
        lavaContractABI.abi
@@ -951,7 +940,7 @@ export default class LavaWalletHelper {
   {
     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,18)
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
        lavaContractABI.abi
@@ -975,7 +964,7 @@ export default class LavaWalletHelper {
 
      var remoteCallData = '0x01';
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        tokenAddress,
        _0xBitcoinABI.abi
@@ -998,7 +987,7 @@ export default class LavaWalletHelper {
     var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
 
 
-    var contract = this.ethHelper.getWeb3ContractInstance(
+    var contract = EthHelper.getWeb3ContractInstance(
       this.web3,
       tokenAddress ,
       _0xBitcoinABI.abi
@@ -1018,7 +1007,7 @@ export default class LavaWalletHelper {
      var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
 
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        tokenAddress ,
        erc20TokenABI.abi
@@ -1037,7 +1026,7 @@ export default class LavaWalletHelper {
      var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
 
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        this.lavaWalletContract.blockchain_address,
        lavaContractABI.abi
@@ -1059,7 +1048,7 @@ export default class LavaWalletHelper {
      var amountRaw = this.getRawFromDecimalFormat(amountFormatted,tokenDecimals)
 
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        this.lavaWalletContract.blockchain_address,
        lavaContractABI.abi
@@ -1256,7 +1245,7 @@ export default class LavaWalletHelper {
   {
      console.log('create order ',tokenGet,amountGet,tokenGive,amountGive,expires);
 
-     var contract = this.ethHelper.getWeb3ContractInstance(
+     var contract = EthHelper.getWeb3ContractInstance(
        this.web3,
        lavaWalletContract.blockchain_address,
        lavaContractABI.abi
@@ -1275,7 +1264,7 @@ export default class LavaWalletHelper {
   {
     console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce, user, v,r,s, amount,  callback)
 
-    var contract = this.ethHelper.getWeb3ContractInstance(
+    var contract = EthHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
       lavaContractABI.abi
@@ -1291,7 +1280,7 @@ export default class LavaWalletHelper {
   {
     console.log(  'performTrade',tokenGet,amountGet,tokenGive,amountGive,expires,nonce,  v,r,s,   callback)
 
-    var contract = this.ethHelper.getWeb3ContractInstance(
+    var contract = EthHelper.getWeb3ContractInstance(
       this.web3,
       lavaWalletContract.blockchain_address,
       lavaContractABI.abi

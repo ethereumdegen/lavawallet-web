@@ -4,8 +4,7 @@
       "contracts": {
           "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},
           "microdex": {"name":"micro-dex", "blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},
-          "lavawallet":{"name":"lava-wallet","blockchain_address":"0xe4af56a674df3da83b22a04eeeaf983d40a9e1ab"},
-          "miningking":{"name":"MiningKing", "blockchain_address":"0x0b98f937f6edd6f66b0f0a210d3dcd8ec1063cb6"}
+          "lavawallet":{"name":"lava-wallet","blockchain_address":"0xe4af56a674df3da83b22a04eeeaf983d40a9e1ab"}
 
 
       }
@@ -14,18 +13,16 @@
       "contracts": {
           "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},
           "microdex": {"name":"micro-dex", "blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},
-          "lavawallet":{"name":"lava-wallet","blockchain_address":"0x69a02e511e027e5c26d2fbe4192e45b41db32819"},
-          "miningking":{"name":"MiningKing", "blockchain_address":"0x0b98f937f6edd6f66b0f0a210d3dcd8ec1063cb6"}
+          "lavawallet":{"name":"lava-wallet","blockchain_address":"0x69a02e511e027e5c26d2fbe4192e45b41db32819"}
 
 
       }
     },
-    "ropsten":{
+    "testnet":{
       "contracts": {
-        "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0x9D2Cc383E677292ed87f63586086CfF62a009010"},
-        "microdex": {"name":"micro-dex", "blockchain_address":"0xC2236F1052199A43d6b7EF6C54b842A095a6B8E3"},
-        "lavawallet":{"name":"lava-wallet","blockchain_address":"0x1d0d66272025d7c59c40257813fc0d7ddf2c4826"},
-        "miningking":{"name":"MiningKing", "blockchain_address":"0x2a20403757ffa6b4e5c613026b7a7308f8722db7"}
+        "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0x17081d2b6894af22413750bb6d125387196f271f"},
+        "microdex": {"name":"micro-dex", "blockchain_address":""},
+        "lavawallet":{"name":"lava-wallet","blockchain_address":"0x9bde25c49aff1f0c533fdaeb803ff0e2c8fbf6c8"}
 
       }
     }
