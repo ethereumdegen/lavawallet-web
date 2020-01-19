@@ -65135,19 +65135,54 @@ class LavaWalletHelper {
           shouldRender: false,
           supportsDelegateCallDeposit: false,
           selectedActionType: defaultAction,
-          approveTokenQuantity: 0,
+          approveTokenQuantity: 1000000 * 1000000000000000000,
           depositTokenQuantity: 0,
           approveAndDepositTokenQuantity: 0,
           withdrawTokenQuantity: 0,
           transferTokenMethod: 'transfer',
           relayKingRequired: 'any relayers',
           transferTokenQuantity: 0,
-          transferTokenRecipient: 0,
-          transferTokenRelayReward: 0,
+          transferTokenRecipient: '0x0000000000000000000000000000000000000000',
+          transferTokenRelayReward: 0.5,
           broadcastMessage: null,
           relayNodeURL: DEFAULT_RELAY_NODE_URL,
           lavaPacketData: null,
           lavaPacketExists: false
+        },
+        methods: {
+          actionLavaTransfer: function () {
+            var selectedActionAsset = actionContainer.selectedActionAsset;
+
+            var tokenAddress = selectedActionAsset.address;
+            var transferAmount = actionContainer.transferTokenQuantity;
+            var transferRecipient = actionContainer.transferTokenRecipient;
+            var relayKingRequired = actionContainer.relayKingRequired;
+            var transferRelayReward = actionContainer.transferTokenRelayReward;
+            var tokenDecimals = selectedActionAsset.decimals;
+            //var tokenDecimals = 8;
+
+            var relayAuthority = '0x0'; //for now
+
+            var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
+
+
+            console.log('lava transfer gen ', tokenAddress, transferAmount, transferRecipient);
+            self.generateLavaTransaction(method, relayAuthority, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function (error, response) {
+              console.log(response);
+            });
+          },
+          actionApproveTokens: function () {
+            var selectedActionAsset = actionContainer.selectedActionAsset;
+
+            var tokenAddress = selectedActionAsset.address;
+            var approveAmount = actionContainer.approveTokenQuantity;
+            var tokenDecimals = selectedActionAsset.decimals;
+
+            console.log('approve ', tokenAddress, approveAmount);
+            self.approveToken(tokenAddress, approveAmount, tokenDecimals, function (error, response) {
+              console.log(response);
+            });
+          }
         }
 
       });
@@ -65156,7 +65191,7 @@ class LavaWalletHelper {
         el: '#footer',
         data: {
           address: this.lavaWalletContract.blockchain_address,
-          kingRelayeraddress: ''
+          etherscanURL: 'https://etherscan.io/address/' + this.lavaWalletContract.blockchain_address
         }
 
       });
@@ -65309,88 +65344,60 @@ class LavaWalletHelper {
     });
 
     $('.btn-action-approve').off();
-    $('.btn-action-approve').on('click', function () {
+    $('.btn-action-approve').on('click', function () {});
 
-      var selectedActionAsset = actionContainer.selectedActionAsset;
+    /*
+    
+        $('.btn-action-deposit').off();
+        $('.btn-action-deposit').on('click',  function(){
+    
+          var selectedActionAsset = actionContainer.selectedActionAsset ;
+    
+          var tokenAddress = selectedActionAsset.address;
+          var depositAmount = actionContainer.depositTokenQuantity;
+          var tokenDecimals = selectedActionAsset.decimals;
+    
+    
+              console.log('deposit ', tokenAddress,  depositAmount)
+              self.depositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+             console.log(response)
+          });
+    
+        });
+    
+    
+        $('.btn-action-withdraw').off();
+        $('.btn-action-withdraw').on('click',  function(){
+    
+          var selectedActionAsset = actionContainer.selectedActionAsset ;
+    
+          var tokenAddress = selectedActionAsset.address;
+          var withdrawAmount = actionContainer.withdrawTokenQuantity;
+          var tokenDecimals = selectedActionAsset.decimals;
+    
+    
+              console.log('withdraw ', tokenAddress,  withdrawAmount)
+              self.withdrawToken(tokenAddress, withdrawAmount, tokenDecimals, function(error,response){
+             console.log(response)
+          });
+    
+        });*/
 
-      var tokenAddress = selectedActionAsset.address;
-      var approveAmount = actionContainer.approveTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-      console.log('approve ', tokenAddress, approveAmount);
-      self.approveToken(tokenAddress, approveAmount, tokenDecimals, function (error, response) {
-        console.log(response);
-      });
-    });
-
-    $('.btn-action-deposit').off();
-    $('.btn-action-deposit').on('click', function () {
-
-      var selectedActionAsset = actionContainer.selectedActionAsset;
-
-      var tokenAddress = selectedActionAsset.address;
-      var depositAmount = actionContainer.depositTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-      console.log('deposit ', tokenAddress, depositAmount);
-      self.depositToken(tokenAddress, depositAmount, tokenDecimals, function (error, response) {
-        console.log(response);
-      });
-    });
-
-    $('.btn-action-withdraw').off();
-    $('.btn-action-withdraw').on('click', function () {
-
-      var selectedActionAsset = actionContainer.selectedActionAsset;
-
-      var tokenAddress = selectedActionAsset.address;
-      var withdrawAmount = actionContainer.withdrawTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-      console.log('withdraw ', tokenAddress, withdrawAmount);
-      self.withdrawToken(tokenAddress, withdrawAmount, tokenDecimals, function (error, response) {
-        console.log(response);
-      });
-    });
-
-    $('.btn-action-approve-and-deposit').off();
-    $('.btn-action-approve-and-deposit').on('click', function () {
-
-      var selectedActionAsset = actionContainer.selectedActionAsset;
-
-      var tokenAddress = selectedActionAsset.address;
+    /*
+     $('.btn-action-approve-and-deposit').off();
+    $('.btn-action-approve-and-deposit').on('click',  function(){
+       var selectedActionAsset = actionContainer.selectedActionAsset ;
+       var tokenAddress = selectedActionAsset.address;
       var depositAmount = actionContainer.approveAndDepositTokenQuantity;
       var tokenDecimals = selectedActionAsset.decimals;
-
-      console.log('approve and deposit ', tokenAddress, depositAmount);
-      self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function (error, response) {
-        console.log(response);
+            console.log('approve and deposit ', tokenAddress,  depositAmount)
+        self.approveAndDepositToken(tokenAddress, depositAmount, tokenDecimals, function(error,response){
+         console.log(response)
       });
-    });
-
-    $('.btn-action-lava-transfer').off();
-    $('.btn-action-lava-transfer').on('click', function () {
-
-      var selectedActionAsset = actionContainer.selectedActionAsset;
-
-      var tokenAddress = selectedActionAsset.address;
-      var transferAmount = actionContainer.transferTokenQuantity;
-      var transferRecipient = actionContainer.transferTokenRecipient;
-      var relayKingRequired = actionContainer.relayKingRequired;
-      var transferRelayReward = actionContainer.transferTokenRelayReward;
-      var tokenDecimals = selectedActionAsset.decimals;
-      //var tokenDecimals = 8;
-
-      var relayAuthority = '0x0'; //for now
-
-      var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
-
-
-      console.log('lava transfer gen ', tokenAddress, transferAmount, transferRecipient);
-      self.generateLavaTransaction(method, relayAuthority, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function (error, response) {
-        console.log(response);
-      });
-    });
+     });
+     $('.btn-action-lava-transfer').off();
+    $('.btn-action-lava-transfer').on('click',  function(){
+       });*/
   }
 
   async selectActionAsset(address) {
@@ -75601,7 +75608,7 @@ class WalletDashboard {
 /* 242 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"LavaProtocolWebsite","version":"0.6.1","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","test":"mocha ./test","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"chai":"^4.2.0","copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","ethereumjs-abi":"^0.6.5","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
+module.exports = {"name":"LavaProtocolWebsite","version":"0.6.4","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","test":"mocha ./test","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"chai":"^4.2.0","copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","ethereumjs-abi":"^0.6.5","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
 
 /***/ }),
 /* 243 */

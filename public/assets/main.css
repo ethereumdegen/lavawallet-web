@@ -14163,6 +14163,7 @@ footer p.sucess-message {
     opacity: 0; }
 
 html {
+  background-color: #eee;
   font-family: "Arial, Helvetica, sans-serif"; }
 
 a {
@@ -14270,7 +14271,7 @@ a {
   cursor: pointer; }
 
 .hover-shadow:hover {
-  background-color: #eee; }
+  background-color: #fff; }
 
 .subtitle-banner {
   text-align: center;

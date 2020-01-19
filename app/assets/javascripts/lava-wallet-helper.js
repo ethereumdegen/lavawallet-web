@@ -244,19 +244,55 @@ export default class LavaWalletHelper {
                  shouldRender: false,
                  supportsDelegateCallDeposit: false,
                  selectedActionType: defaultAction,
-                 approveTokenQuantity: 0,
+                 approveTokenQuantity: (1000000 * 1000000000000000000),
                  depositTokenQuantity: 0,
                  approveAndDepositTokenQuantity: 0,
                  withdrawTokenQuantity: 0,
                  transferTokenMethod: 'transfer',
                  relayKingRequired: 'any relayers',
                  transferTokenQuantity: 0,
-                 transferTokenRecipient : 0,
-                 transferTokenRelayReward: 0,
+                 transferTokenRecipient : '0x0000000000000000000000000000000000000000',
+                 transferTokenRelayReward: 0.5,
                  broadcastMessage: null,
                  relayNodeURL: DEFAULT_RELAY_NODE_URL,
                  lavaPacketData: null,
                  lavaPacketExists: false
+              },
+              methods: {
+                actionLavaTransfer: function(){
+                  var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+                  var tokenAddress = selectedActionAsset.address;
+                  var transferAmount = actionContainer.transferTokenQuantity;
+                  var transferRecipient = actionContainer.transferTokenRecipient;
+                  var relayKingRequired = actionContainer.relayKingRequired;
+                  var transferRelayReward = actionContainer.transferTokenRelayReward;
+                   var tokenDecimals = selectedActionAsset.decimals;
+                //var tokenDecimals = 8;
+
+                  var relayAuthority = '0x0' //for now
+
+                  var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
+
+
+                        console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
+                        self.generateLavaTransaction(method,relayAuthority, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function(error,response){
+                       console.log(response)
+                  });
+                },
+                actionApproveTokens: function(){
+                  var selectedActionAsset = actionContainer.selectedActionAsset ;
+
+                  var tokenAddress = selectedActionAsset.address;
+                  var approveAmount = actionContainer.approveTokenQuantity;
+                  var tokenDecimals = selectedActionAsset.decimals;
+
+
+                      console.log('approve ', tokenAddress,  approveAmount)
+                  self.approveToken(tokenAddress, approveAmount, tokenDecimals, function(error,response){
+                     console.log(response)
+                  });
+                }
               }
 
        });
@@ -268,7 +304,7 @@ export default class LavaWalletHelper {
          el: '#footer',
          data: {
            address: this.lavaWalletContract.blockchain_address,
-           kingRelayeraddress: '',
+           etherscanURL: 'https://etherscan.io/address/'+this.lavaWalletContract.blockchain_address,
               }
 
        });
@@ -518,22 +554,12 @@ export default class LavaWalletHelper {
     $('.btn-action-approve').off();
     $('.btn-action-approve').on('click',  function(){
 
-      var selectedActionAsset = actionContainer.selectedActionAsset ;
 
-      var tokenAddress = selectedActionAsset.address;
-      var approveAmount = actionContainer.approveTokenQuantity;
-      var tokenDecimals = selectedActionAsset.decimals;
-
-
-          console.log('approve ', tokenAddress,  approveAmount)
-      self.approveToken(tokenAddress, approveAmount, tokenDecimals, function(error,response){
-         console.log(response)
-      });
 
     });
 
 
-
+/*
 
     $('.btn-action-deposit').off();
     $('.btn-action-deposit').on('click',  function(){
@@ -568,7 +594,9 @@ export default class LavaWalletHelper {
          console.log(response)
       });
 
-    });
+    });*/
+
+    /*
 
     $('.btn-action-approve-and-deposit').off();
     $('.btn-action-approve-and-deposit').on('click',  function(){
@@ -590,27 +618,9 @@ export default class LavaWalletHelper {
     $('.btn-action-lava-transfer').off();
     $('.btn-action-lava-transfer').on('click',  function(){
 
-      var selectedActionAsset = actionContainer.selectedActionAsset ;
-
-      var tokenAddress = selectedActionAsset.address;
-      var transferAmount = actionContainer.transferTokenQuantity;
-      var transferRecipient = actionContainer.transferTokenRecipient;
-      var relayKingRequired = actionContainer.relayKingRequired;
-      var transferRelayReward = actionContainer.transferTokenRelayReward;
-       var tokenDecimals = selectedActionAsset.decimals;
-    //var tokenDecimals = 8;
-
-      var relayAuthority = '0x0' //for now
-
-      var method = actionContainer.transferTokenMethod; //could also be withdraw or approve
 
 
-            console.log('lava transfer gen ', tokenAddress,  transferAmount, transferRecipient)
-            self.generateLavaTransaction(method,relayAuthority, tokenAddress, transferAmount, transferRecipient, transferRelayReward, tokenDecimals, function(error,response){
-           console.log(response)
-      });
-
-    });
+    });*/
 
   }
 
