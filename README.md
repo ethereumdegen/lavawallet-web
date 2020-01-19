@@ -42,6 +42,11 @@
 
 
 
+## Relay Authorities
+Typically, you will use address 0x0 as the relay authority to allow msg.sender to relay that packet.  However you can also set that to a specific non-contract address so then only that address will be able to submit the packet.  YOu can also set that to a contract address and that contract's 'RelayAuthorityInterface' method will be queried to get the 'master relayer' address for that particular moment in time.
+
+This means that a relay authority contract X can be built which, for example, cycles through many ethereum addresses of different relays over time.  At any given time, only the address being returned by that method of the contract can relay that packet!   This means you can even build a PoS or PoA relay authority.  Or even a PoW one!?   Whatever you could possibly imagine.  It is abstracted out on a per-packet basis.
+
 
 
 
