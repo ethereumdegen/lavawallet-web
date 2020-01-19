@@ -58,7 +58,7 @@ This means that a relay authority contract X can be built which, for example, cy
 
 
 
-# You can run the tests for the truffle contract at https://github.com/admazzola/lava-wallet
+  You can run the tests for the truffle contract at https://github.com/admazzola/lava-wallet
 
 
 
