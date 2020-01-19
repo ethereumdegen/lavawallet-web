@@ -228,7 +228,7 @@ export default class LavaWalletHelper {
     {
 
 
-      var defaultAction = 'deposit';
+      var defaultAction = 'approve';
 
       if(this.networkVersion == 'legacy')
       {
@@ -395,7 +395,6 @@ export default class LavaWalletHelper {
         lavaPacket.to,
         lavaPacket.tokenAddress,
         lavaPacket.tokenAmount,
-        lavaPacket.walletAddress, //
         lavaPacket.relayerReward,
         lavaPacket.expires,
         lavaPacket.nonce,

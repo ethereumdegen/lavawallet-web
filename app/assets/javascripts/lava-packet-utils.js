@@ -179,7 +179,7 @@ export default class LavaPacketUtils {
               domain: {
                   contractName: 'Lava Wallet',
                   version: '1',
-                  chainId: 5,  // change me
+                  chainId: 1,  // change me
                   verifyingContract: walletAddress
               },
               message: {

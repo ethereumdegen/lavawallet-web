@@ -54,18 +54,15 @@
 
 
               <ul class="columns">
-                <li data-action-type="deposit"  v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true, 'is-active':(selectedActionType=='deposit')  } ">
+                <li data-action-type="approve"  v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true, 'is-active':(selectedActionType=='approve')  } ">
                   <a>
                     <span class="icon is-small">   <i class="material-icons">file_download</i> </span>
-                    <span>Deposit</span>
+                    <span>Approve For Lava</span>
                   </a>
                 </li>
-                <li data-action-type="withdraw" v-bind:class="{ 'tab-action':true,  'column':true, 'column-button':true,  'is-active':(selectedActionType=='withdraw')  } ">
-                  <a>
-                    <span class="icon is-small one-third"> <i class="material-icons">file_upload</i> </span>
-                    <span>Withdraw</span>
-                  </a>
-                </li>
+
+
+
                 <li data-action-type="lavatransfer" v-bind:class="{  'tab-action':true, 'column':true, 'column-button':true,  'is-active':(selectedActionType=='lavatransfer')  } ">
                   <a>
                     <span class="icon is-small one-third"> <i class="material-icons">fast_forward</i> </span>
@@ -85,21 +82,7 @@
 
 
 
-              <div class="input-container padding-md" v-if="!supportsDelegateCallDeposit" >
-                <div class="label">Approve Tokens</div>
 
-                <div class="columns">
-                  <div class="column">
-                    <div class="form-group">
-                        <input type="text" class="input input-short is-primary " v-model="approveTokenQuantity" placeholder="token amount">
-                        <div class="button is-primary btn-action-approve"> Approve </div>
-                    </div>
-                  </div>
-                  <div class="column">
-                      <div class="is-size-6"> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
-                  </div>
-                </div>
-              </div>
 
 
 
@@ -138,25 +121,26 @@
 
 
           </div>
-          <div class="withdraw-container" v-if="(selectedActionType=='withdraw')" v-cloak>
+          <div class="approve-container" v-if="(selectedActionType=='approve')" v-cloak>
 
             <div class="subtitle-banner has-background-info has-text-light"> External Balance: {{ selectedActionAsset.wallet_balance_formatted }} </div>
 
-              <div class="input-container padding-md">
-                <div class="label">Withdraw Tokens</div>
+            <div class="input-container padding-md"   >
+              <div class="label">Approve Tokens</div>
 
-                  <div class="columns">
-                      <div class="column">
-                        <div class="form-group">
-                          <input class="input input-short is-primary" v-model="withdrawTokenQuantity" placeholder="token amount">
-                           <div class="button is-primary btn-action-withdraw"> Withdraw </div>
-                        </div>
-                       </div>
-                     <div class="column">
-                         <div class="is-size-6"> Lava Balance: {{ selectedActionAsset.lava_balance_formatted }} </div>
-                     </div>
+              <div class="columns">
+                <div class="column">
+                  <div class="form-group">
+                      <input type="text" class="input input-short is-primary " v-model="approveTokenQuantity" placeholder="token amount">
+                      <div class="button is-primary btn-action-approve"> Approve </div>
+                  </div>
                 </div>
+                <div class="column">
+                    <div class="is-size-6"> Quantity Approved: {{ selectedActionAsset.approved_balance_formatted }} </div>
+                </div>
+              </div>
             </div>
+           
 
 
           </div>

@@ -4,7 +4,7 @@
       "contracts": {
           "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31"},
           "microdex": {"name":"micro-dex", "blockchain_address":"0x728325a626ef65b5ecff44310c6808b3736c686c"},
-          "lavawallet":{"name":"lava-wallet","blockchain_address":"0xe4af56a674df3da83b22a04eeeaf983d40a9e1ab"}
+          "lavawallet":{"name":"lava-wallet","blockchain_address":"0x5c5cA8c79bf69a5449F1F621215E9Cfc91189Cc5"}
 
 
       }
@@ -22,7 +22,7 @@
       "contracts": {
         "_0xbitcointoken": {"name":"0xBitcoinToken", "blockchain_address":"0x17081d2b6894af22413750bb6d125387196f271f"},
         "microdex": {"name":"micro-dex", "blockchain_address":""},
-        "lavawallet":{"name":"lava-wallet","blockchain_address":"0x405a6600960664d41242333234bc967d4bf2b7e5"}
+        "lavawallet":{"name":"lava-wallet","blockchain_address":"0xf9454ac1dd9d55f23ff97fb0b06b6b0874ffd606"}
 
       }
     }
