@@ -46490,7 +46490,7 @@ module.exports = {"contractName":"ERC20Interface","abi":[{"constant":false,"inpu
 /* 84 */
 /***/ (function(module, exports) {
 
-module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","decimals":18,"address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","decimals":8,"supportsDelegateCallDeposit":true,"address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x17081d2b6894af22413750bb6d125387196f271f"},{"name":"DAI Stablecoin","symbol":"DAI","decimals":18,"address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359","test_address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"}]}
+module.exports = {"tokens":[{"name":"Wrapped Ether","symbol":"wEth","decimals":18,"address":"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2","test_address":"0xc778417e063141139fce010982780140aa0cd5ab"},{"name":"0xBitcoin","symbol":"0xBTC","decimals":8,"supportsDelegateCallDeposit":true,"address":"0xb6ed7644c69416d67b522e20bc294a9a9b405b31","test_address":"0x17081d2b6894af22413750bb6d125387196f271f"},{"name":"DAI Stablecoin","symbol":"DAI","decimals":18,"address":"0x6b175474e89094c44da98b954eedeac495271d0f","test_address":"0x89d24a6b4ccb1b6faa2625fe562bdd9a23260359"}]}
 
 /***/ }),
 /* 85 */
@@ -65738,7 +65738,7 @@ class LavaWalletHelper {
     var walletAddress = this.lavaWalletContract.blockchain_address;
     var from = this.web3.eth.accounts[0];
 
-    var relayAuthority = from; //for now
+    var relayAuthority = '0x0'; //for now
 
 
     var to = transferRecipient;
@@ -75601,7 +75601,7 @@ class WalletDashboard {
 /* 242 */
 /***/ (function(module, exports) {
 
-module.exports = {"name":"LavaWalletWebsite","version":"0.3.1","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","test":"mocha ./test","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"chai":"^4.2.0","copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","ethereumjs-abi":"^0.6.5","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
+module.exports = {"name":"LavaProtocolWebsite","version":"0.6.1","description":"Decentralized Exchange Platform","main":"index.js","scripts":{"webpack":"webpack","dev":"webpack-dev-server ","test":"mocha ./test","express":"node express-dev.js"},"author":"0xbitcoin","license":"MIT","dependencies":{"babel-core":"^6.26.0","babel-loader":"^7.1.2","babel-plugin-transform-es3-member-expression-literals":"^6.22.0","babel-plugin-transform-es3-property-literals":"^6.22.0","babel-plugin-transform-object-rest-spread":"^6.26.0","babel-preset-es2015":"^6.24.1","babel-preset-es2016":"^6.24.1","browserify":"^15.2.0","bulma":"^0.6.2","eth-sig-util":"^1.4.2","ethereumjs-util":"^5.1.5","express":"^4.16.2","extract-text-webpack-plugin":"^3.0.2","html-loader":"^0.5.5","jquery":"^3.3.1","js-sha3":"^0.7.0","owl.carousel":"^2.2.0","sha3":"^1.2.0","slick-carousel":"^1.8.1","typed.js":"^2.0.6","vue":"^2.5.13","web3":"^0.14.0","web3-utils":"^1.0.0-beta.30","webpack":"^3.10.0","worker-loader":"^1.1.0"},"devDependencies":{"chai":"^4.2.0","copy-webpack-plugin":"^4.5.1","css-loader":"^0.28.9","ethereumjs-abi":"^0.6.5","file-loader":"^1.1.6","html-webpack-include-assets-plugin":"^1.0.2","html-webpack-plugin":"^2.30.1","node-sass":"^4.7.2","sass-loader":"^6.0.6","static-site-generator-webpack-plugin":"^3.4.1","style-loader":"^0.20.1","webpack-dev-server":"^2.11.1"}}
 
 /***/ }),
 /* 243 */
