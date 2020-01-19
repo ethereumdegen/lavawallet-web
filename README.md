@@ -14,14 +14,14 @@
  This application uses EIP712 and PersonalSign in order to allow you to sign an 'offchain packet of data' which contains data describing a transaction that you want to be performed, like transferring ERC20 tokens. You can attach a fee in terms of those ERC20 tokens.
 
 
- Anyone can pay gas to submit to signed 'datagram' to the Ethereum network and to the Lava smart contract. When the tx is mined, the contract checks the signature and if it is good, the submitter will be rewarded with the fee in tokens and the transaction that you specified will be performed.
+ Anyone can pay gas to submit the signed 'datagram' to the Ethereum network and to the Lava smart contract. When the tx is mined, the contract checks the signature and if it is good, the submitter will be rewarded with the fee in tokens and the transaction that you specified will be performed.
 
 
- This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. This is part of the Metamask Meta TX competition going on.
+ This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. 
 
  ## Arbitrary Code Execution
 
-  In order to use Lava Packets to execute arbitrary code, all you have to do is set the 'method' string field to some data (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall() method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
+  In order to use Lava Packets to execute arbitrary code, all you have to do is set the 'methodName' string field of the packet to the data for the call (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall(from,token,tokens,mdata) method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
 
 
 
@@ -58,7 +58,7 @@ This means that a relay authority contract X can be built which, for example, cy
 
 
 
-# You can run the tests for the truffle contract at https://github.com/admazzola/lava-wallet
+  You can run the tests for the truffle contract at https://github.com/admazzola/lava-wallet
 
 
 
