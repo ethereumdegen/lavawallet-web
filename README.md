@@ -2,7 +2,7 @@
  ## Lava Protocol Wallet
 
 
- This new dapp lets you transfer tokens with Meta Transactions
+ This dapp lets you transfer tokens with Meta Transactions
 
  https://lavaprotocol.com/
 
@@ -15,6 +15,10 @@
 
 
  This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. This is part of the Metamask Meta TX competition going on.
+ 
+ ## Arbitrary Code Execution
+ 
+  In order to use Lava Packets to execute arbitray code, all you have to do is set the 'method' string field to some data (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall() method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
 
 
 
