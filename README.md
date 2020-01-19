@@ -23,6 +23,19 @@
 
 
 
+     struct LavaPacket {
+       string methodName;
+       address relayAuthority; //either a contract or an account
+       address from;
+       address to;
+       address wallet;  //this contract address
+       address token;
+       uint256 tokens;
+       uint256 relayerRewardTokens;
+       uint256 expires;
+       uint256 nonce;
+     }
+
 
 
 
