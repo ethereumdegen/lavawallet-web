@@ -17,7 +17,7 @@
  Anyone can pay gas to submit to signed 'datagram' to the Ethereum network and to the Lava smart contract. When the tx is mined, the contract checks the signature and if it is good, the submitter will be rewarded with the fee in tokens and the transaction that you specified will be performed.
 
 
- This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. This is part of the Metamask Meta TX competition going on.
+ This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. 
 
  ## Arbitrary Code Execution
 
