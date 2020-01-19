@@ -21,7 +21,7 @@
 
  ## Arbitrary Code Execution
 
-  In order to use Lava Packets to execute arbitray code, all you have to do is set the 'method' string field to some data (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall() method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
+  In order to use Lava Packets to execute arbitrary code, all you have to do is set the 'method' string field to some data (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall() method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
 
 
 
@@ -41,6 +41,11 @@
 
 
 
+
+## Relay Authorities
+Typically, you will use address 0x0 as the relay authority to allow msg.sender to relay that packet.  However you can also set that to a specific non-contract address so then only that address will be able to submit the packet.  YOu can also set that to a contract address and that contract's 'RelayAuthorityInterface' method will be queried to get the 'master relayer' address for that particular moment in time.
+
+This means that a relay authority contract X can be built which, for example, cycles through many ethereum addresses of different relays over time.  At any given time, only the address being returned by that method of the contract can relay that packet!   This means you can even build a PoS or PoA relay authority.  Or even a PoW one!?   Whatever you could possibly imagine.  It is abstracted out on a per-packet basis.
 
 
 
