@@ -21,7 +21,7 @@
 
  ## Arbitrary Code Execution
 
-  In order to use Lava Packets to execute arbitrary code, all you have to do is set the 'methodName' string field of the packet to the data for the call (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall(data) method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
+  In order to use Lava Packets to execute arbitrary code, all you have to do is set the 'methodName' string field of the packet to the data for the call (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall(from,token,tokens,mdata) method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
 
 
 
