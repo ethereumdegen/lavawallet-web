@@ -689,6 +689,7 @@ export default class LavaWalletHelper {
         var tokenAllowance = await this.getTokenAllowance(tokenData.address, userAddress);
         tokenData.approved_balance_formatted = this.formatAmountWithDecimals(tokenAllowance,tokenDecimals);
 
+        
 
       //  var lavaTokenBalance = await this.getLavaTokenBalance(tokenData.address, userAddress);
       //  tokenData.lava_balance_formatted = this.formatAmountWithDecimals(lavaTokenBalance,tokenDecimals);
