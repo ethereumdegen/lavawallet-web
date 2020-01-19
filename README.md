@@ -2,11 +2,14 @@
  ## Lava Protocol Wallet
 
 
- This new dapp lets you transfer tokens with Meta Transactions
+ This dapp lets you transfer tokens with Meta Transactions
 
  https://lavaprotocol.com/
 
  https://etherscan.io/address/0x5c5ca8c79bf69a5449f1f621215e9cfc91189cc5#code
+
+![image](https://user-images.githubusercontent.com/6249263/72673879-ed7c8c00-3a3d-11ea-8aa0-df98f0cff530.png)
+
 
  This application uses EIP712 and PersonalSign in order to allow you to sign an 'offchain packet of data' which contains data describing a transaction that you want to be performed, like transferring ERC20 tokens. You can attach a fee in terms of those ERC20 tokens.
 
@@ -16,8 +19,25 @@
 
  This new update for the contract makes it totally NON-ESCROW and compatible with ANY ERC20 TOKEN. This means that MetaTX can be performed on any standard ERC20 tokens without any modifications or hassle or re-escrowing. This is part of the Metamask Meta TX competition going on.
 
+ ## Arbitrary Code Execution
+
+  In order to use Lava Packets to execute arbitray code, all you have to do is set the 'method' string field to some data (or leave it blank -- anything but the word 'transfer') and then in the packet data set the 'To' field (recipient) to a smart contract's address.  That smart contract's RecieveApproveAndCall() method will be executed when the relayer submits the lava packet to the eth network, using the tokens in the lava packet!  
 
 
+
+
+     struct LavaPacket {
+       string methodName;
+       address relayAuthority; //either a contract or an account
+       address from;
+       address to;
+       address wallet;  //this contract address
+       address token;
+       uint256 tokens;
+       uint256 relayerRewardTokens;
+       uint256 expires;
+       uint256 nonce;
+     }
 
 
 
@@ -32,4 +52,13 @@
 3.  npm run dev
 
 
+
 # You can run the tests for the truffle contract at https://github.com/admazzola/lava-wallet
+
+
+
+
+
+
+## HOW TO TEST
+npm run dev 
