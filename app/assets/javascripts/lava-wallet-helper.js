@@ -1092,7 +1092,11 @@ export default class LavaWalletHelper {
 
    var walletAddress = this.lavaWalletContract.blockchain_address;
    var from = this.web3.eth.accounts[0];
-   var relayAuthority = relayAuthority
+
+
+   var relayAuthority = from//for now
+
+
    var to = transferRecipient;
    var tokenAddress = tokenAddress;
 
@@ -1115,6 +1119,9 @@ export default class LavaWalletHelper {
    console.log('generateLavaTransaction',tokenAddress,amountRaw,transferRecipient)
 
 
+
+   var stringifiedData = JSON.stringify(  typedData );
+
     //testing
   //  var sigHash = sigUtil.typedSignatureHash(typedData);
   //  console.log('test: lava sigHash',typedData,sigHash)
@@ -1125,7 +1132,7 @@ export default class LavaWalletHelper {
 
     // https://medium.com/metamask/eip712-is-coming-what-to-expect-and-how-to-use-it-bb92fd1a7a26
 
-    const testdata = JSON.stringify({
+  /*  const testdata = JSON.stringify({
           types: {
                  EIP712Domain: [
                       { name: "name", type: "string" },
@@ -1158,14 +1165,21 @@ export default class LavaWalletHelper {
                     wallet: "0x3333333333333333333333333333333333333333"
                 }
             }
-      });
-
-
-    var signature = await this.signTypedData(signer, testdata);
+      });*/
 
 
 
-    console.log('lava signature',msgParams,signature)
+
+      //test sign
+
+
+
+      //request the sig from metamask
+    var signature = await this.signTypedData(signer, stringifiedData);
+
+
+
+    console.log('lava signature',stringifiedData,signature)
 
     var packetJson = LavaPacketUtils.getLavaPacket(
       method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,
@@ -1257,8 +1271,8 @@ export default class LavaWalletHelper {
                   const s = "0x" + signature.substring(64, 128);
                   const v = parseInt(signature.substring(128, 130), 16);    // The signature is now comprised of r, s, and v.
 
-
-                  resolve(result.result)
+                  console.log('sign returned ', result)
+                  resolve(result.result )
                   }
               );
 

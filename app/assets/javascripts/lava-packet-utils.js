@@ -6,7 +6,8 @@ Version 0.10
 
 */
 
-
+var EIP712HelperV3 = require("./EIP712HelperV3");
+var web3utils = require('web3-utils')
 
 var sampleLavaPacket = {
   method: "transfer",
@@ -88,18 +89,18 @@ export default class LavaPacketUtils {
         return typedDataHash;
       }*/
 
-      static getLavaTypedDataHash(typedData,types)
+      static getLavaTypedDataHash(typedData )
       {
-        var typedDataHash = ethUtil.sha3(
+        var typedDataHash = web3utils.sha3(
             Buffer.concat([
                 Buffer.from('1901', 'hex'),
-                EIP712HelperV3.structHash('EIP712Domain', typedData.domain, types),
-                EIP712HelperV3.structHash(typedData.primaryType, typedData.message, types),
+                EIP712HelperV3.structHash('EIP712Domain', typedData.domain, typedData.types),
+                EIP712HelperV3.structHash(typedData.primaryType, typedData.message, typedData.types),
             ]),
         );
 
-        console.log('meep 1', EIP712HelperV3.structHash('EIP712Domain', typedData.domain, types))
-        console.log('meep 2', EIP712HelperV3.structHash(typedData.primaryType, typedData.message, types))
+        console.log('meep 1', EIP712HelperV3.structHash('EIP712Domain', typedData.domain, typedData.types))
+        console.log('meep 2', EIP712HelperV3.structHash(typedData.primaryType, typedData.message, typedData.types))
         return typedDataHash;
       }
 
@@ -178,7 +179,7 @@ export default class LavaPacketUtils {
               domain: {
                   contractName: 'Lava Wallet',
                   version: '1',
-                  chainId: 1,
+                  chainId: 5,  // change me
                   verifyingContract: walletAddress
               },
               message: {
@@ -202,7 +203,7 @@ export default class LavaPacketUtils {
 
         return typedData;
     }
-    
+
      static getLavaParamsFromData(method,relayAuthority,from,to,walletAddress,tokenAddress,tokenAmount,relayerReward,expires,nonce)
      {
          var params = [
